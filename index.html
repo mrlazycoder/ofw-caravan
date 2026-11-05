@@ -212,6 +212,7 @@ body.noanim *,body.noanim *:before,body.noanim *:after{animation:none!important;
         <div class="full"><label style="display:flex;gap:8px;align-items:center"><input type="checkbox" data-k="regOpen"> REGISTRATION IS OPEN</label></div>
         <div><label>CLOSING DATE (OPTIONAL)</label><input type="date" data-k="deadline"></div>
         <div><label>MAX REGISTRANTS (OPTIONAL)</label><input type="number" min="0" data-k="maxReg" placeholder="UNLIMITED"></div>
+        <div class="full" id="bst" style="font-size:.8rem;font-weight:700"></div>
         <div class="full"><label>MESSAGE SHOWN WHEN CLOSED</label><textarea data-k="closedMsg"></textarea></div>
       </div></div>
       <div class="card"><h3>LOOK &amp; FEEL</h3><div class="g">
@@ -240,7 +241,7 @@ const DEF = { siteTitle: 'OWWA SERBISYO CARAVAN', siteSub: 'ONLINE REGISTRATION'
 
 const $ = s => document.querySelector(s), U = v => (v == null ? '' : String(v)).trim().toUpperCase();
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-let COUNT = 0, CFG = { ...DEF }, PW = '', DATA = [], HEAD = [], EDIT = null, PK = '', PWID = 0;
+let VER = 0, COUNT = 0, CFG = { ...DEF }, PW = '', DATA = [], HEAD = [], EDIT = null, PK = '', PWID = 0;
 const STEP = { consent: 1, form: 2, done: 3 };
 function show(id) {
   document.querySelectorAll('section').forEach(s => s.hidden = s.id !== id);
@@ -348,11 +349,15 @@ function showImg(src) {
 async function dl() {
   const el = $('#pass .tk'); if (!el) return;
   const fname = 'ACCESS-PASS-' + $('#pass .id').textContent + '.png';
+  const cap = ext => html2canvas(el, { scale: 2, backgroundColor: '#ffffff', useCORS: true, logging: false,
+    ignoreElements: ext ? n => n.tagName === 'IMG' && /^https?:/.test(n.getAttribute('src') || '') : () => false,
+    onclone: d => d.querySelectorAll('*').forEach(n => { n.style.animation = 'none'; }) }); // don't capture mid-animation
   let c;
-  try {
-    c = await html2canvas(el, { scale: 2, backgroundColor: '#ffffff', useCORS: true, logging: false,
-      onclone: d => d.querySelectorAll('*').forEach(n => { n.style.animation = 'none'; }) }); // don't capture mid-animation
-  } catch (e) { console.error(e); return alert('COULD NOT CREATE THE IMAGE. PLEASE TAKE A SCREENSHOT OF YOUR ACCESS PASS INSTEAD.'); }
+  try { c = await cap(false); c.toDataURL(); }          // toDataURL throws if a remote image blocked the export
+  catch (e) {
+    try { c = await cap(true); }                        // retry without remote (Drive) images
+    catch (e2) { console.error(e2); return alert('COULD NOT CREATE THE IMAGE. PLEASE TAKE A SCREENSHOT OF YOUR ACCESS PASS INSTEAD.'); }
+  }
   try {
     const blob = await new Promise(r => c.toBlob(r, 'image/png'));
     if (!blob) throw new Error('empty image');
@@ -385,12 +390,19 @@ async function adminLogin() {
 function tab(t) {
   ['L', 'D', 'S'].forEach((k, i) => { $('#tab' + k).hidden = t !== k; $('#b' + (i + 1)).className = t === k ? 'on' : ''; });
   $('#sv').hidden = t === 'L'; $('#dmsg').textContent = '';
-  if (t !== 'L') { document.querySelectorAll('[data-k]').forEach(i => { const v = CFG[i.dataset.k]; i.type === 'checkbox' ? i.checked = !!v : i.value = v == null ? '' : v }); if (t === 'D') prev(); }
+  if (t !== 'L') { document.querySelectorAll('[data-k]').forEach(i => { const v = CFG[i.dataset.k]; i.type === 'checkbox' ? i.checked = !!v : i.value = v == null ? '' : v }); if (t === 'D') prev(); if (t === 'S') bstat(); }
+}
+function bstat() {
+  const el = $('#bst'); if (!el) return; const m = +CFG.maxReg;
+  el.style.color = VER >= 3 ? '#166534' : '#b91c1c';
+  el.textContent = VER >= 3
+    ? 'BACKEND OK \u00b7 REGISTERED: ' + COUNT + (m > 0 ? ' / ' + m + (COUNT >= m ? ' \u00b7 FULL - NEW REGISTRATIONS ARE BLOCKED' : '') : ' \u00b7 NO LIMIT')
+    : 'WARNING: BACKEND IS OUTDATED, SO LIMITS ARE NOT ENFORCED. In Apps Script: Deploy > Manage deployments > pencil > Version: New version > Deploy.';
 }
 const prev = () => { $('#pv').innerHTML = passHTML('OSC-0001-ABC', 'JUAN D. DELA CRUZ', 'CABANATUAN CITY, NUEVA ECIJA'); mkQR($('#pv')); };
 ['input', 'change'].forEach(ev => document.addEventListener(ev, e => {
   const k = e.target.dataset && e.target.dataset.k; if (!k) return;
-  CFG[k] = e.target.type === 'checkbox' ? e.target.checked : e.target.value; prev(); hero();
+  CFG[k] = e.target.type === 'checkbox' ? e.target.checked : e.target.value; prev(); hero(); bstat();
 }));
 function pick(k, w) { PK = k; PWID = w; $('#fi').value = ''; $('#fi').click(); }
 function clr(k) { CFG[k] = ''; prev(); hero(); }
@@ -404,12 +416,12 @@ $('#fi').onchange = e => {
 };
 async function saveCfg() {
   $('#dmsg').textContent = 'SAVING...';
-  try { const r = await api({ action: 'setConfig', pw: PW, config: CFG }); $('#dmsg').textContent = r.ok ? 'SAVED. IT IS NOW LIVE FOR EVERYONE.' : (r.error || 'FAILED'); }
+  try { const r = await api({ action: 'setConfig', pw: PW, config: CFG }); if (r.ok && r.config) { CFG = { ...CFG, ...r.config }; hero(); prev(); bstat(); } $('#dmsg').textContent = r.ok ? 'SAVED. IT IS NOW LIVE FOR EVERYONE.' : (r.error || 'FAILED'); }
   catch (e) { $('#dmsg').textContent = 'SAVE FAILED. TRY AGAIN.'; }
 }
 async function load() {
   const r = await api({ action: 'list', pw: PW }); if (!r.ok) return alert(r.error);
-  HEAD = r.head; DATA = r.rows; render();
+  HEAD = r.head; DATA = r.rows; COUNT = DATA.length; render(); bstat();
 }
 function render() {
   const q = U($('#q').value), rows = DATA.filter(r => !q || r.join(' ').toUpperCase().includes(q));
@@ -439,7 +451,7 @@ function csv() {
 
 // ---- init
 show('consent');
-fetch(API, { cache: 'no-store' }).then(r => r.json()).then(r => { CFG = { ...DEF, ...(r.config || {}) }; COUNT = +r.count || 0; hero(); if (isClosed() && location.hash !== '#admin') closed(); }).catch(() => {});
+fetch(API, { cache: 'no-store' }).then(r => r.json()).then(r => { CFG = { ...DEF, ...(r.config || {}) }; COUNT = +r.count || 0; VER = +r.ver || 0; hero(); if (isClosed() && location.hash !== '#admin') closed(); }).catch(() => {});
 if (location.hash === '#admin') show('login');
 </script>
 </body>
