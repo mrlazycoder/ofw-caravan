@@ -57,6 +57,11 @@ td button{padding:5px 9px;font-size:12px;margin-right:3px}
 </section>
 
 <section id="form" hidden>
+  <div class="c" style="margin-bottom:6px">
+    <h2 style="font-size:1.3rem;margin:0">OWWA SERBISYO CARAVAN</h2>
+    <div style="font-weight:700;letter-spacing:1px">REGISTRATION FORM</div>
+    <p style="font-size:.82rem;color:#475569;margin:6px 0 0">Fields marked with <i style="color:#dc2626;font-style:normal">*</i> are required. All entries are automatically converted to CAPITAL LETTERS.</p>
+  </div>
   <form id="f" autocomplete="off" novalidate>
     <h3>PERSONAL INFORMATION</h3>
     <div class="g">
@@ -81,7 +86,7 @@ td button{padding:5px 9px;font-size:12px;margin-right:3px}
       <div class="g" style="margin-top:12px">
         <div><label>OFW'S LAST NAME <i>*</i></label><input id="oLast"></div>
         <div><label>OFW'S FIRST NAME <i>*</i></label><input id="oFirst"></div>
-        <div><label>OFW'S MIDDLE NAME <i>*</i></label><input id="oMid" placeholder="TYPE N/A IF NONE"></div>
+        <div><label>OFW'S MIDDLE NAME</label><input id="oMid"></div>
         <div><label>OFW'S SUFFIX <i>*</i></label><select id="oSuf"><option>N/A</option><option>JR.</option><option>SR.</option><option>II</option><option>III</option><option>IV</option><option>V</option></select></div>
         <div class="full"><label>RELATIONSHIP TO OFW <i>*</i></label><select id="relSel"><option value="">SELECT</option><option>SPOUSE</option><option>CHILD</option><option>PARENT</option><option>SIBLING</option><option>GRANDPARENT</option><option>OTHER RELATIVE</option><option>OTHER</option></select></div>
       </div>
@@ -127,8 +132,8 @@ td button{padding:5px 9px;font-size:12px;margin-right:3px}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
 // ====== CONFIG: paste your Apps Script Web App URL ======
-const API = 'https://script.google.com/macros/s/AKfycbwxIKGNlCelLpJnQfG9W3gPsl2qv_jFwLz6TyfJPl2T6KxpPfTrWqI63M5Tq7dZ8b4M/exec';
-const EVENT_DATE = 'EVENT DATE: TO BE ANNOUNCED', VENUE = 'VENUE: TO BE ANNOUNCED';
+const API = 'script.google.com/macros/s/AKfycbwxIKGNlCelLpJnQfG9W3gPsl2qv_jFwLz6TyfJPl2T6KxpPfTrWqI63M5Tq7dZ8b4M/exec';
+const EVENT_DATE = 'EVENT DATE: NOVEMBER 20, 2026', VENUE = 'VENUE: LIMAY BATAAN';
 const PSGC = 'https://psgc.gitlab.io/api/';
 const COUNTRIES = 'Afghanistan,Albania,Algeria,Angola,Argentina,Australia,Austria,Bahrain,Bangladesh,Belgium,Brazil,Brunei,Bulgaria,Cambodia,Canada,Chile,China,Colombia,Croatia,Cyprus,Czech Republic,Denmark,Egypt,Ethiopia,Fiji,Finland,France,Germany,Ghana,Greece,Guam,Hong Kong,Hungary,India,Indonesia,Iran,Iraq,Ireland,Israel,Italy,Japan,Jordan,Kazakhstan,Kenya,Kuwait,Laos,Lebanon,Libya,Macau,Malaysia,Maldives,Malta,Mexico,Morocco,Myanmar,Nepal,Netherlands,New Zealand,Nigeria,Northern Mariana Islands,Norway,Oman,Pakistan,Palau,Panama,Papua New Guinea,Peru,Poland,Portugal,Qatar,Romania,Russia,Saipan,Saudi Arabia,Singapore,Slovakia,South Africa,South Korea,Spain,Sri Lanka,Sudan,Sweden,Switzerland,Syria,Taiwan,Thailand,Turkey,Ukraine,United Arab Emirates,United Kingdom,United States,Vietnam,Yemen,Other / Vessel (International Waters)'.split(',');
 
@@ -170,7 +175,7 @@ $('#muni').onchange = () => { $('#brgy').innerHTML = ''; code($('#muni')) ? fill
 document.querySelectorAll('[name=isOfw]').forEach(r => r.onchange = () => {
   const no = document.querySelector('[name=isOfw]:checked').value === 'NO';
   $('#rel').hidden = !no;
-  ['oLast', 'oFirst', 'oMid', 'oSuf', 'relSel'].forEach(i => $('#' + i).required = no);
+  ['oLast', 'oFirst', 'oSuf', 'relSel'].forEach(i => $('#' + i).required = no);
 });
 
 // ---- submit
