@@ -324,7 +324,7 @@ body.noanim *,body.noanim *:before,body.noanim *:after{animation:none!important;
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js';document.head.appendChild(s)"></script>
 <script>
-const API = 'script.google.com/macros/s/AKfycbwxIKGNlCelLpJnQfG9W3gPsl2qv_jFwLz6TyfJPl2T6KxpPfTrWqI63M5Tq7dZ8b4M/exec';
+const API = 'https://script.google.com/macros/s/AKfycbwxIKGNlCelLpJnQfG9W3gPsl2qv_jFwLz6TyfJPl2T6KxpPfTrWqI63M5Tq7dZ8b4M/exec';
 const PSGC = 'https://psgc.gitlab.io/api/';
 const COUNTRIES = 'Afghanistan,Albania,Algeria,Angola,Argentina,Australia,Austria,Bahrain,Bangladesh,Belgium,Brazil,Brunei,Bulgaria,Cambodia,Canada,Chile,China,Colombia,Croatia,Cyprus,Czech Republic,Denmark,Egypt,Ethiopia,Fiji,Finland,France,Germany,Ghana,Greece,Guam,Hong Kong,Hungary,India,Indonesia,Iran,Iraq,Ireland,Israel,Italy,Japan,Jordan,Kazakhstan,Kenya,Kuwait,Laos,Lebanon,Libya,Macau,Malaysia,Maldives,Malta,Mexico,Morocco,Myanmar,Nepal,Netherlands,New Zealand,Nigeria,Northern Mariana Islands,Norway,Oman,Pakistan,Palau,Panama,Papua New Guinea,Peru,Poland,Portugal,Qatar,Romania,Russia,Saipan,Saudi Arabia,Singapore,Slovakia,South Africa,South Korea,Spain,Sri Lanka,Sudan,Sweden,Switzerland,Syria,Taiwan,Thailand,Turkey,Ukraine,United Arab Emirates,United Kingdom,United States,Vietnam,Yemen,Other / Vessel (International Waters)'.split(',');
 const DEF = { siteTitle: 'OWWA SERBISYO CARAVAN', siteSub: 'ONLINE REGISTRATION', siteText: true, siteBanner: '', passTitle: 'OWWA SERBISYO CARAVAN', passSub: 'ACCESS PASS', eventDate: 'EVENT DATE: TO BE ANNOUNCED', venue: 'VENUE: TO BE ANNOUNCED', footer: 'PRESENT THIS PASS AT THE VENUE', color1: '#1e3a8a', color2: '#2563eb', passBanner: '', showQR: true, showLoc: true, showAgency: true, logo: '', agencyName: 'OVERSEAS WORKERS WELFARE ADMINISTRATION', colP: '#1d4ed8', colA: '#f5b700', regOpen: true, deadline: '', maxReg: '', closedMsg: 'REGISTRATION IS NOW CLOSED. THANK YOU FOR YOUR INTEREST.', consentText: '', anim: true };
@@ -338,7 +338,20 @@ function show(id) {
   $('#main').className = id === 'admin' ? 'wide' : '';
   const n = STEP[id]; $('#steps').hidden = !n; [...$('#steps').children].forEach((s, i) => s.classList.toggle('on', i + 1 === n)); scrollTo(0, 0);
 }
-const api = o => fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(o) }).then(r => r.json());
+// Apps Script sometimes answers with an HTML error page instead of JSON (busy / redeploying / wrong URL).
+// Read-only actions retry once automatically; otherwise the real message is shown so the problem can be identified.
+const READONLY = ['login', 'list', 'slogin', 'sinfo', 'users', 'scanlog'];
+const api = async (o, retry = true) => {
+  let t = '';
+  try {
+    t = await (await fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(o) })).text();
+    return JSON.parse(t);
+  } catch (e) {
+    if (retry && READONLY.includes(o.action)) { await new Promise(r => setTimeout(r, 1200)); return api(o, false); }
+    if (t) throw new Error('SERVER SENT A WEB PAGE INSTEAD OF DATA: ' + t.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 220));
+    throw e;
+  }
+};
 
 // ---- website banner
 const DEFNOTE = $('#cnote').innerHTML;
