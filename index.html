@@ -151,7 +151,7 @@ body.noanim *,body.noanim *:before,body.noanim *:after{animation:none!important;
   <h2>THANK YOU FOR REGISTERING FOR THE OWWA SERBISYO CARAVAN!</h2>
   <p style="color:var(--mu)">Here is your Access Pass. Please present it at the venue &mdash; it will serve as your pass for the event.</p>
   <div id="pass"></div>
-  <div class="row"><button onclick="dl()">&#11015; DOWNLOAD ACCESS PASS</button></div>
+  <div class="row"><button onclick="dl()">&#11015; DOWNLOAD ACCESS PASS</button><button class="alt" onclick="newReg()">&#43; REGISTER ANOTHER PERSON</button></div>
   <p style="font-size:.8rem;color:#64748b">Tip: save the image or take a screenshot. A copy of your Pass ID was also sent to your email.</p>
 </section>
 
@@ -240,7 +240,7 @@ const DEF = { siteTitle: 'OWWA SERBISYO CARAVAN', siteSub: 'ONLINE REGISTRATION'
 
 const $ = s => document.querySelector(s), U = v => (v == null ? '' : String(v)).trim().toUpperCase();
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-let CFG = { ...DEF }, PW = '', DATA = [], HEAD = [], EDIT = null, PK = '', PWID = 0;
+let COUNT = 0, CFG = { ...DEF }, PW = '', DATA = [], HEAD = [], EDIT = null, PK = '', PWID = 0;
 const STEP = { consent: 1, form: 2, done: 3 };
 function show(id) {
   document.querySelectorAll('section').forEach(s => s.hidden = s.id !== id);
@@ -263,7 +263,7 @@ function hero() {
   document.body.classList.toggle('noanim', !CFG.anim);
   $('#cnote').innerHTML = CFG.consentText && CFG.consentText.trim() ? esc(CFG.consentText).replace(/\n/g, '<br>') : DEFNOTE;
 }
-function isClosed() { return CFG.regOpen === false || (CFG.deadline && new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Manila' }) > CFG.deadline); }
+function isClosed() { return CFG.regOpen === false || (CFG.deadline && new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Manila' }) > CFG.deadline) || (+CFG.maxReg > 0 && COUNT >= +CFG.maxReg); }
 function closed(msg) { $('#cmsg').textContent = msg || CFG.closedMsg; show('closed'); }
 function confetti() {
   if (!CFG.anim) return; const cl = ['#f5b700', '#22c55e', '#3b82f6', '#ef4444', '#a855f7'];
@@ -337,8 +337,44 @@ function passHTML(id, name, loc) {
     `<div class="ft">${esc(c.eventDate)}<br>${esc(c.venue)}<br><br>${esc(c.footer)}</div></div>`;
 }
 const mkQR = el => el.querySelectorAll('.qr').forEach(q => { q.innerHTML = ''; new QRCode(q, { text: q.dataset.t, width: 112, height: 112 }); });
-function pass(id, name, loc) { $('#pass').innerHTML = passHTML(id, name, loc); mkQR($('#pass')); show('done'); confetti(); }
-const dl = () => html2canvas($('#pass .tk'), { scale: 2, backgroundColor: null }).then(c => { const a = document.createElement('a'); a.download = 'ACCESS-PASS-' + $('#pass .id').textContent + '.png'; a.href = c.toDataURL(); a.click(); });
+function pass(id, name, loc) { COUNT++; $('#pass').innerHTML = passHTML(id, name, loc); mkQR($('#pass')); show('done'); confetti(); }
+// shows the pass as a plain image (long-press / right-click to save) - used when a direct download is blocked
+function showImg(src) {
+  const o = document.createElement('div');
+  o.style.cssText = 'position:fixed;inset:0;background:#0b1b4dcc;z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:16px;overflow:auto';
+  o.innerHTML = '<div style="color:#fff;font-weight:700;text-align:center;font-size:.9rem">PRESS AND HOLD THE IMAGE, THEN CHOOSE "SAVE IMAGE" / "DOWNLOAD IMAGE"</div><img src="' + src + '" style="max-width:340px;width:100%;border-radius:12px;background:#fff"><button class="alt" style="max-width:340px;width:100%">CLOSE</button>';
+  o.querySelector('button').onclick = () => o.remove(); document.body.appendChild(o);
+}
+async function dl() {
+  const el = $('#pass .tk'); if (!el) return;
+  const fname = 'ACCESS-PASS-' + $('#pass .id').textContent + '.png';
+  let c;
+  try {
+    c = await html2canvas(el, { scale: 2, backgroundColor: '#ffffff', useCORS: true, logging: false,
+      onclone: d => d.querySelectorAll('*').forEach(n => { n.style.animation = 'none'; }) }); // don't capture mid-animation
+  } catch (e) { console.error(e); return alert('COULD NOT CREATE THE IMAGE. PLEASE TAKE A SCREENSHOT OF YOUR ACCESS PASS INSTEAD.'); }
+  try {
+    const blob = await new Promise(r => c.toBlob(r, 'image/png'));
+    if (!blob) throw new Error('empty image');
+    const file = new File([blob], fname, { type: 'image/png' });
+    // phones: the share sheet has "Save Image" (plain downloads are unreliable on iOS / in-app browsers)
+    if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent) && navigator.canShare && navigator.canShare({ files: [file] })) {
+      try { await navigator.share({ files: [file], title: 'OWWA Access Pass' }); return; } catch (e) { if (e.name === 'AbortError') return; }
+    }
+    if (/FBAN|FBAV|FB_IAB|Messenger|Instagram|Line\//i.test(navigator.userAgent)) return showImg(c.toDataURL('image/png')); // in-app browsers block downloads
+    const url = URL.createObjectURL(blob), a = document.createElement('a');
+    a.href = url; a.download = fname; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 15000);
+  } catch (e) { console.error(e); showImg(c.toDataURL('image/png')); }
+}
+// register another person: back to a clean form (consent already accepted in this visit)
+function newReg() {
+  $('#f').reset();
+  ['muni', 'brgy'].forEach(i => { $('#' + i).innerHTML = ''; $('#' + i).disabled = true; });
+  $('#rel').hidden = true; ['oLast', 'oFirst', 'oSuf', 'relSel'].forEach(i => $('#' + i).required = false);
+  $('#err').hidden = true; $('#pass').innerHTML = '';
+  isClosed() ? closed() : show('form');
+}
 
 // ---- admin
 async function adminLogin() {
@@ -368,7 +404,7 @@ $('#fi').onchange = e => {
 };
 async function saveCfg() {
   $('#dmsg').textContent = 'SAVING...';
-  try { const r = await api({ action: 'setConfig', pw: PW, config: CFG }); $('#dmsg').textContent = r.ok ? 'DESIGN SAVED. IT IS NOW LIVE FOR EVERYONE.' : (r.error || 'FAILED'); }
+  try { const r = await api({ action: 'setConfig', pw: PW, config: CFG }); $('#dmsg').textContent = r.ok ? 'SAVED. IT IS NOW LIVE FOR EVERYONE.' : (r.error || 'FAILED'); }
   catch (e) { $('#dmsg').textContent = 'SAVE FAILED. TRY AGAIN.'; }
 }
 async function load() {
@@ -403,7 +439,7 @@ function csv() {
 
 // ---- init
 show('consent');
-fetch(API).then(r => r.json()).then(r => { CFG = { ...DEF, ...(r.config || {}) }; hero(); if (isClosed() && location.hash !== '#admin') closed(); }).catch(() => {});
+fetch(API, { cache: 'no-store' }).then(r => r.json()).then(r => { CFG = { ...DEF, ...(r.config || {}) }; COUNT = +r.count || 0; hero(); if (isClosed() && location.hash !== '#admin') closed(); }).catch(() => {});
 if (location.hash === '#admin') show('login');
 </script>
 </body>
