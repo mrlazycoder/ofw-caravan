@@ -5,14 +5,15 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>OWWA Serbisyo Caravan Registration</title>
 <style>
-:root{--p:#1d4ed8;--pd:#0b2a6f;--ac:#f5b700;--bg:#f3f6fc;--tx:#0f1b3d;--mu:#64748b;--bd:#d9e0ee}
+:root{--p:#1d4ed8;--p2:color-mix(in srgb,var(--p) 70%,#fff);--pd:color-mix(in srgb,var(--p) 50%,#000);--ac:#f5b700;--bg:#f3f6fc;--tx:#0f1b3d;--mu:#64748b;--bd:#d9e0ee}
 *{box-sizing:border-box}
 body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;background:var(--bg);color:var(--tx)}
-#hero{position:relative;background:linear-gradient(135deg,#0b2a6f,#1d4ed8 60%,#3b82f6) center/cover;color:#fff;text-align:center;padding:34px 16px 74px;min-height:200px;display:flex;flex-direction:column;justify-content:center;align-items:center}
+#hero{position:relative;background:linear-gradient(120deg,var(--pd),var(--p),var(--p2),var(--p));background-size:300% 300%;animation:grad 14s ease infinite;color:#fff;text-align:center;padding:34px 16px 74px;min-height:200px;display:flex;flex-direction:column;justify-content:center;align-items:center}
 #hero:after{content:"";position:absolute;left:0;right:0;bottom:0;height:5px;background:var(--ac)}
 #hero h1{margin:0;font-size:clamp(1.3rem,4.5vw,2.1rem);font-weight:800;letter-spacing:.5px;text-shadow:0 2px 8px #0005}
 #hero p{margin:6px 0 0;opacity:.92;letter-spacing:3px;font-size:.8rem;font-weight:600}
-#hero.notext h1,#hero.notext p{display:none}
+#hero.img{animation:none;background-size:cover;background-position:center}
+#hero.notext h1,#hero.notext p,#hero.notext #logo,#hero.notext #agency{display:none}
 #steps{display:flex;gap:8px;margin-top:16px;font-size:.72rem}
 #steps span{padding:5px 13px;border-radius:99px;background:#ffffff2e;color:#fff;backdrop-filter:blur(4px)}
 #steps span.on{background:var(--ac);color:#1a1a1a;font-weight:700}
@@ -30,7 +31,7 @@ input[type=email],#modal input[data-h="EMAIL ADDRESS"]{text-transform:lowercase}
 input[type=color]{padding:3px;text-transform:none}input[type=checkbox]{width:auto;height:auto}
 input:focus,select:focus{outline:0;border-color:var(--p);box-shadow:0 0 0 4px #1d4ed824}input:disabled,select:disabled{background:#f1f5f9;color:#94a3b8}
 input:invalid:not(:placeholder-shown):not([type=date]){border-color:#f87171}
-button{background:linear-gradient(135deg,var(--p),#3b82f6);color:#fff;border:0;border-radius:10px;padding:13px 20px;font-size:15px;font-weight:700;cursor:pointer;transition:.15s;box-shadow:0 4px 12px #1d4ed833}
+button{background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;border:0;border-radius:10px;padding:13px 20px;font-size:15px;font-weight:700;cursor:pointer;transition:.15s;box-shadow:0 4px 12px #1d4ed833}
 button:hover{transform:translateY(-1px);filter:brightness(1.07)}button:disabled{opacity:.6;transform:none}
 button.alt{background:#eef2fa;color:var(--pd);box-shadow:none}button.red{background:linear-gradient(135deg,#dc2626,#ef4444)}button.grn{background:linear-gradient(135deg,#15803d,#22c55e)}
 .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}.row>button{flex:1;min-width:140px}
@@ -41,7 +42,7 @@ button.alt{background:#eef2fa;color:var(--pd);box-shadow:none}button.red{backgro
 .seg input:checked+span{background:var(--p);border-color:var(--p);color:#fff}
 .tk{width:340px;max-width:100%;margin:16px auto;background:#fff;border-radius:20px;overflow:hidden;text-align:center;box-shadow:0 14px 36px #0b2a6f33;border:1px solid #dbe5fb}
 .tk .th{padding:20px 12px;color:#fff;font-weight:800;font-size:1.05rem;letter-spacing:.5px}.tk img{width:100%;display:block}
-.tk .ps{background:#f5b700;color:#1a1a1a;font-weight:800;font-size:.8rem;letter-spacing:3px;padding:7px}
+.tk .ps{background:var(--ac);color:#1a1a1a;font-weight:800;font-size:.8rem;letter-spacing:3px;padding:7px}
 .tk .bd{padding:16px 14px 6px}.tk .nm{font-size:1.2rem;font-weight:800;margin-bottom:2px}.tk small{color:#64748b;display:block;font-size:.75rem;margin:2px 0}
 .tk .qr{display:flex;justify-content:center;margin:12px 0 6px}.tk .id{font-family:Consolas,monospace;font-size:1.3rem;font-weight:800;letter-spacing:1px;margin:4px 0 12px}
 .tk .ft{border-top:2px dashed #cbd5e1;margin-top:8px;padding:10px 14px 14px;font-size:.72rem;color:#475569;font-weight:600}
@@ -54,17 +55,38 @@ td button{padding:6px 10px;font-size:11px;margin-right:3px;box-shadow:none}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:16px}.card{border:1px solid var(--bd);border-radius:14px;padding:18px}.card h3{margin:0 0 12px;font-size:.95rem;color:var(--pd)}.card .g{gap:10px}
 #modal{position:fixed;inset:0;background:#0b1b4d99;display:flex;align-items:flex-start;justify-content:center;overflow:auto;padding:20px;z-index:9}#modal[hidden]{display:none}#modal>div{background:#fff;border-radius:18px;padding:22px;max-width:720px;width:100%}
 .ok{color:#166534;font-weight:700;margin-top:10px}
+textarea{width:100%;padding:10px 12px;border:1.5px solid var(--bd);border-radius:10px;font:inherit;font-size:15px;min-height:72px;resize:vertical}textarea:focus{outline:0;border-color:var(--p);box-shadow:0 0 0 4px #1d4ed824}
+#logo{max-height:88px;max-width:220px;margin-bottom:8px;filter:drop-shadow(0 3px 8px #0006);animation:flt 3.5s ease-in-out infinite}
+#agency{font-size:.72rem;letter-spacing:2px;font-weight:700;opacity:.92;margin-bottom:6px}
+.tk .th{line-height:1.3}.tk .th .ag{display:block;font-size:.6rem;letter-spacing:1.5px;opacity:.92;margin-bottom:4px}.tk .th img.lg{width:auto;max-height:56px;margin:0 auto 6px;display:block}
+@keyframes fu{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes grad{0%,100%{background-position:0 50%}50%{background-position:100% 50%}}
+@keyframes flt{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes pop{0%{transform:scale(.3);opacity:0}60%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
+@keyframes pls{0%{box-shadow:0 0 0 0 #22c55e77}100%{box-shadow:0 0 0 16px #22c55e00}}
+@keyframes fall{to{transform:translate3d(var(--dx),108vh,0) rotate(720deg)}}
+section:not([hidden]){animation:fu .5s ease both}
+#form .g>div,#form .seg{animation:fu .55s ease both}
+#form .g>div:nth-child(2){animation-delay:.05s}#form .g>div:nth-child(3){animation-delay:.1s}#form .g>div:nth-child(4){animation-delay:.15s}#form .g>div:nth-child(n+5){animation-delay:.2s}
+#rel:not([hidden]){animation:fu .4s ease both}
+.ic{animation:pop .6s ease both}
+#consent .grn{animation:pls 2s infinite}
+#pass .tk{animation:pop .8s .1s cubic-bezier(.2,.9,.3,1.3) both}
+#steps span{transition:.3s}
+.cf{position:fixed;top:-16px;width:9px;height:15px;z-index:99;pointer-events:none;animation:fall linear forwards}
+body.noanim *,body.noanim *:before,body.noanim *:after{animation:none!important;transition:none!important}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
-<div id="hero"><h1>OWWA SERBISYO CARAVAN</h1><p>ONLINE REGISTRATION</p>
+<div id="hero"><img id="logo" hidden alt="Logo"><div id="agency"></div><h1>OWWA SERBISYO CARAVAN</h1><p>ONLINE REGISTRATION</p>
   <div id="steps"><span>1 CONSENT</span><span>2 DETAILS</span><span>3 ACCESS PASS</span></div></div>
 <main id="main">
 
 <section id="consent" class="c">
   <div class="ic">🛡️</div>
   <h2>DATA PRIVACY CONSENT NOTICE</h2>
-  <div class="note">
+  <div class="note" id="cnote">
     <p>In compliance with the <b>Data Privacy Act of 2012 (Republic Act No. 10173)</b>, the organizers of the OWWA Serbisyo Caravan collect your personal information solely for event registration, verification of identity and eligibility, queue management, and service delivery during the caravan.</p>
     <p>Your information will be kept confidential, accessed only by authorized personnel, and will not be shared with third parties except as required by law. By proceeding, you confirm that the information you provide is true and correct, and you consent to its collection and processing for the stated purposes.</p>
     <p>You may request correction or deletion of your data by contacting the event organizers.</p>
@@ -77,6 +99,8 @@ td button{padding:6px 10px;font-size:11px;margin-right:3px;box-shadow:none}
   <p>You chose not to accept the Data Privacy Consent Notice, so we cannot proceed with your registration. You may now close this page.</p>
   <button class="alt" onclick="show('consent')">GO BACK</button>
 </section>
+
+<section id="closed" hidden class="c"><div class="ic">⏳</div><h2>REGISTRATION CLOSED</h2><p id="cmsg" style="color:var(--mu)"></p></section>
 
 <section id="form" hidden>
   <div class="c">
@@ -140,7 +164,7 @@ td button{padding:6px 10px;font-size:11px;margin-right:3px;box-shadow:none}
 
 <section id="admin" hidden>
   <h2>ADMIN DASHBOARD</h2>
-  <div class="tabs"><button id="b1" class="on" onclick="tab('L')">REGISTRANTS</button><button id="b2" onclick="tab('D')">DESIGN</button></div>
+  <div class="tabs"><button id="b1" class="on" onclick="tab('L')">REGISTRANTS</button><button id="b2" onclick="tab('D')">DESIGN</button><button id="b3" onclick="tab('S')">SETTINGS</button></div>
 
   <div id="tabL">
     <div class="stats"><div><b id="s1">0</b>REGISTERED</div><div><b id="s2">0</b>CHECKED IN</div><div><b id="s3">0</b>OFW SELF-REGISTERED</div></div>
@@ -151,6 +175,10 @@ td button{padding:6px 10px;font-size:11px;margin-right:3px;box-shadow:none}
 
   <div id="tabD" hidden>
     <div class="two">
+      <div class="card"><h3>AGENCY BRANDING</h3><div class="g">
+        <div class="full"><label>LOGO (PNG WITH TRANSPARENT BACKGROUND WORKS BEST)</label><div class="row" style="margin:0"><button onclick="pick('logo',400)">UPLOAD LOGO</button><button class="alt" onclick="clr('logo')">REMOVE</button></div></div>
+        <div class="full"><label>AGENCY NAME</label><input data-k="agencyName"></div>
+      </div></div>
       <div class="card"><h3>WEBSITE BANNER</h3>
         <div class="g">
           <div class="full"><label>BANNER IMAGE (RECOMMENDED 1400 &times; 400)</label><div class="row" style="margin:0"><button onclick="pick('siteBanner',1400)">UPLOAD IMAGE</button><button class="alt" onclick="clr('siteBanner')">REMOVE</button></div></div>
@@ -171,12 +199,31 @@ td button{padding:6px 10px;font-size:11px;margin-right:3px;box-shadow:none}
           <div class="full"><label>FOOTER NOTE</label><input data-k="footer"></div>
           <div><label style="display:flex;gap:8px;align-items:center"><input type="checkbox" data-k="showQR"> SHOW QR CODE</label></div>
           <div><label style="display:flex;gap:8px;align-items:center"><input type="checkbox" data-k="showLoc"> SHOW ADDRESS</label></div>
+          <div><label style="display:flex;gap:8px;align-items:center"><input type="checkbox" data-k="showAgency"> SHOW AGENCY &amp; LOGO</label></div>
         </div>
       </div>
     </div>
     <h3 style="color:var(--pd)" class="c">LIVE PASS PREVIEW</h3><div id="pv"></div>
-    <div class="row"><button class="grn" onclick="saveCfg()">SAVE DESIGN</button></div><div id="dmsg" class="ok c"></div>
   </div>
+
+  <div id="tabS" hidden>
+    <div class="two">
+      <div class="card"><h3>REGISTRATION CONTROL</h3><div class="g">
+        <div class="full"><label style="display:flex;gap:8px;align-items:center"><input type="checkbox" data-k="regOpen"> REGISTRATION IS OPEN</label></div>
+        <div><label>CLOSING DATE (OPTIONAL)</label><input type="date" data-k="deadline"></div>
+        <div><label>MAX REGISTRANTS (OPTIONAL)</label><input type="number" min="0" data-k="maxReg" placeholder="UNLIMITED"></div>
+        <div class="full"><label>MESSAGE SHOWN WHEN CLOSED</label><textarea data-k="closedMsg"></textarea></div>
+      </div></div>
+      <div class="card"><h3>LOOK &amp; FEEL</h3><div class="g">
+        <div><label>THEME COLOR</label><input type="color" data-k="colP"></div>
+        <div><label>ACCENT COLOR</label><input type="color" data-k="colA"></div>
+        <div class="full"><label style="display:flex;gap:8px;align-items:center"><input type="checkbox" data-k="anim"> ENABLE ANIMATIONS</label></div>
+        <div class="full"><label>CUSTOM DATA PRIVACY NOTICE (BLANK = DEFAULT TEXT)</label><textarea data-k="consentText" rows="6"></textarea></div>
+      </div></div>
+    </div>
+  </div>
+
+  <div id="sv" hidden><div class="row"><button class="grn" onclick="saveCfg()">SAVE CHANGES</button></div><div id="dmsg" class="ok c"></div></div>
 </section>
 </main>
 
@@ -189,7 +236,7 @@ td button{padding:6px 10px;font-size:11px;margin-right:3px;box-shadow:none}
 const API = 'https://script.google.com/macros/s/AKfycbwxIKGNlCelLpJnQfG9W3gPsl2qv_jFwLz6TyfJPl2T6KxpPfTrWqI63M5Tq7dZ8b4M/exec';
 const PSGC = 'https://psgc.gitlab.io/api/';
 const COUNTRIES = 'Afghanistan,Albania,Algeria,Angola,Argentina,Australia,Austria,Bahrain,Bangladesh,Belgium,Brazil,Brunei,Bulgaria,Cambodia,Canada,Chile,China,Colombia,Croatia,Cyprus,Czech Republic,Denmark,Egypt,Ethiopia,Fiji,Finland,France,Germany,Ghana,Greece,Guam,Hong Kong,Hungary,India,Indonesia,Iran,Iraq,Ireland,Israel,Italy,Japan,Jordan,Kazakhstan,Kenya,Kuwait,Laos,Lebanon,Libya,Macau,Malaysia,Maldives,Malta,Mexico,Morocco,Myanmar,Nepal,Netherlands,New Zealand,Nigeria,Northern Mariana Islands,Norway,Oman,Pakistan,Palau,Panama,Papua New Guinea,Peru,Poland,Portugal,Qatar,Romania,Russia,Saipan,Saudi Arabia,Singapore,Slovakia,South Africa,South Korea,Spain,Sri Lanka,Sudan,Sweden,Switzerland,Syria,Taiwan,Thailand,Turkey,Ukraine,United Arab Emirates,United Kingdom,United States,Vietnam,Yemen,Other / Vessel (International Waters)'.split(',');
-const DEF = { siteTitle: 'OWWA SERBISYO CARAVAN', siteSub: 'ONLINE REGISTRATION', siteText: true, siteBanner: '', passTitle: 'OWWA SERBISYO CARAVAN', passSub: 'ACCESS PASS', eventDate: 'EVENT DATE: TO BE ANNOUNCED', venue: 'VENUE: TO BE ANNOUNCED', footer: 'PRESENT THIS PASS AT THE VENUE', color1: '#1e3a8a', color2: '#2563eb', passBanner: '', showQR: true, showLoc: true };
+const DEF = { siteTitle: 'OWWA SERBISYO CARAVAN', siteSub: 'ONLINE REGISTRATION', siteText: true, siteBanner: '', passTitle: 'OWWA SERBISYO CARAVAN', passSub: 'ACCESS PASS', eventDate: 'EVENT DATE: TO BE ANNOUNCED', venue: 'VENUE: TO BE ANNOUNCED', footer: 'PRESENT THIS PASS AT THE VENUE', color1: '#1e3a8a', color2: '#2563eb', passBanner: '', showQR: true, showLoc: true, showAgency: true, logo: '', agencyName: 'OVERSEAS WORKERS WELFARE ADMINISTRATION', colP: '#1d4ed8', colA: '#f5b700', regOpen: true, deadline: '', maxReg: '', closedMsg: 'REGISTRATION IS NOW CLOSED. THANK YOU FOR YOUR INTEREST.', consentText: '', anim: true };
 
 const $ = s => document.querySelector(s), U = v => (v == null ? '' : String(v)).trim().toUpperCase();
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -203,11 +250,28 @@ function show(id) {
 const api = o => fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(o) }).then(r => r.json());
 
 // ---- website banner
+const DEFNOTE = $('#cnote').innerHTML;
 function hero() {
-  const h = $('#hero'), b = CFG.siteBanner;
+  const h = $('#hero'), b = CFG.siteBanner, r = document.documentElement.style;
   h.style.backgroundImage = b ? (CFG.siteText ? `linear-gradient(180deg,#0b1b4d88,#0b1b4dcc),url(${b})` : `url(${b})`) : '';
+  h.classList.toggle('img', !!b);
   h.querySelector('h1').textContent = CFG.siteTitle; h.querySelector('p').textContent = CFG.siteSub;
   h.classList.toggle('notext', !CFG.siteText && !!b);
+  $('#logo').hidden = !CFG.logo; if (CFG.logo) $('#logo').src = CFG.logo;
+  $('#agency').textContent = CFG.agencyName || '';
+  r.setProperty('--p', CFG.colP); r.setProperty('--ac', CFG.colA);
+  document.body.classList.toggle('noanim', !CFG.anim);
+  $('#cnote').innerHTML = CFG.consentText && CFG.consentText.trim() ? esc(CFG.consentText).replace(/\n/g, '<br>') : DEFNOTE;
+}
+function isClosed() { return CFG.regOpen === false || (CFG.deadline && new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Manila' }) > CFG.deadline); }
+function closed(msg) { $('#cmsg').textContent = msg || CFG.closedMsg; show('closed'); }
+function confetti() {
+  if (!CFG.anim) return; const cl = ['#f5b700', '#22c55e', '#3b82f6', '#ef4444', '#a855f7'];
+  for (let i = 0; i < 70; i++) {
+    const e = document.createElement('span'); e.className = 'cf'; e.style.left = Math.random() * 100 + 'vw'; e.style.background = cl[i % 5];
+    e.style.setProperty('--dx', (Math.random() * 160 - 80) + 'px'); e.style.animationDuration = 2 + Math.random() * 2.5 + 's'; e.style.animationDelay = Math.random() * .8 + 's';
+    document.body.appendChild(e); setTimeout(() => e.remove(), 5500);
+  }
 }
 
 // ---- CAPS on typing (email stays lowercase)
@@ -256,7 +320,7 @@ $('#f').addEventListener('submit', async e => {
   try {
     const r = await api({ action: 'register', data: d });
     if (r.ok) pass(r.id, d.first + ' ' + (d.middle ? d.middle[0] + '. ' : '') + d.last + (d.suffix && d.suffix !== 'N/A' ? ' ' + d.suffix : ''), d.muni + ', ' + d.prov);
-    else { er.textContent = r.error || 'SOMETHING WENT WRONG.'; er.hidden = false; }
+    else if (r.closed) closed(r.error); else { er.textContent = r.error || 'SOMETHING WENT WRONG.'; er.hidden = false; }
   } catch (x) { er.textContent = 'NETWORK ERROR. PLEASE TRY AGAIN.'; er.hidden = false; }
   b.disabled = false; b.textContent = 'SUBMIT REGISTRATION';
 });
@@ -265,15 +329,15 @@ $('#f').addEventListener('submit', async e => {
 function passHTML(id, name, loc) {
   const c = CFG;
   return `<div class="tk">` +
-    (c.passBanner ? `<img src="${c.passBanner}">` : `<div class="th" style="background:linear-gradient(135deg,${esc(c.color1)},${esc(c.color2)})">${esc(c.passTitle)}</div>`) +
-    `<div class="ps" style="background:${c.passBanner ? esc(c.color1) : '#f5b700'};color:${c.passBanner ? '#fff' : '#1a1a1a'}">${esc(c.passSub)}</div>` +
+    (c.passBanner ? `<img src="${c.passBanner}">` : `<div class="th" style="background:linear-gradient(135deg,${esc(c.color1)},${esc(c.color2)})">${c.logo && c.showAgency ? `<img class="lg" src="${c.logo}">` : ''}${c.showAgency && c.agencyName ? `<span class="ag">${esc(c.agencyName)}</span>` : ''}${esc(c.passTitle)}</div>`) +
+    `<div class="ps" style="background:${c.passBanner ? esc(c.color1) : esc(c.colA)};color:${c.passBanner ? '#fff' : '#1a1a1a'}">${esc(c.passSub)}</div>` +
     `<div class="bd"><div class="nm">${esc(name)}</div>${c.showLoc ? `<small>${esc(loc)}</small>` : ''}` +
     (c.showQR ? `<div class="qr" data-t="${esc(id)}"></div>` : '<div style="height:10px"></div>') +
     `<small>ACCESS PASS ID</small><div class="id" style="color:${esc(c.color1)}">${esc(id)}</div></div>` +
     `<div class="ft">${esc(c.eventDate)}<br>${esc(c.venue)}<br><br>${esc(c.footer)}</div></div>`;
 }
 const mkQR = el => el.querySelectorAll('.qr').forEach(q => { q.innerHTML = ''; new QRCode(q, { text: q.dataset.t, width: 112, height: 112 }); });
-function pass(id, name, loc) { $('#pass').innerHTML = passHTML(id, name, loc); mkQR($('#pass')); show('done'); }
+function pass(id, name, loc) { $('#pass').innerHTML = passHTML(id, name, loc); mkQR($('#pass')); show('done'); confetti(); }
 const dl = () => html2canvas($('#pass .tk'), { scale: 2, backgroundColor: null }).then(c => { const a = document.createElement('a'); a.download = 'ACCESS-PASS-' + $('#pass .id').textContent + '.png'; a.href = c.toDataURL(); a.click(); });
 
 // ---- admin
@@ -283,8 +347,9 @@ async function adminLogin() {
   catch (e) { $('#lerr').textContent = e || 'LOGIN FAILED'; $('#lerr').hidden = false; }
 }
 function tab(t) {
-  $('#tabL').hidden = t !== 'L'; $('#tabD').hidden = t !== 'D'; $('#b1').className = t === 'L' ? 'on' : ''; $('#b2').className = t === 'D' ? 'on' : '';
-  if (t === 'D') { document.querySelectorAll('[data-k]').forEach(i => { const v = CFG[i.dataset.k]; i.type === 'checkbox' ? i.checked = !!v : i.value = v || '' }); prev(); }
+  ['L', 'D', 'S'].forEach((k, i) => { $('#tab' + k).hidden = t !== k; $('#b' + (i + 1)).className = t === k ? 'on' : ''; });
+  $('#sv').hidden = t === 'L'; $('#dmsg').textContent = '';
+  if (t !== 'L') { document.querySelectorAll('[data-k]').forEach(i => { const v = CFG[i.dataset.k]; i.type === 'checkbox' ? i.checked = !!v : i.value = v == null ? '' : v }); if (t === 'D') prev(); }
 }
 const prev = () => { $('#pv').innerHTML = passHTML('OSC-0001-ABC', 'JUAN D. DELA CRUZ', 'CABANATUAN CITY, NUEVA ECIJA'); mkQR($('#pv')); };
 ['input', 'change'].forEach(ev => document.addEventListener(ev, e => {
@@ -297,8 +362,8 @@ $('#fi').onchange = e => {
   const f = e.target.files[0]; if (!f) return; const im = new Image();
   im.onload = () => {
     const w = Math.min(PWID, im.width), c = document.createElement('canvas'), x = c.getContext('2d'); c.width = w; c.height = im.height * w / im.width;
-    x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); x.drawImage(im, 0, 0, c.width, c.height);
-    CFG[PK] = c.toDataURL('image/jpeg', .82); prev(); hero(); $('#dmsg').textContent = 'IMAGE ADDED. CLICK "SAVE DESIGN" TO PUBLISH.';
+    const lg = PK === 'logo'; if (!lg) { x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); } x.drawImage(im, 0, 0, c.width, c.height);
+    CFG[PK] = lg ? c.toDataURL('image/png') : c.toDataURL('image/jpeg', .82); prev(); hero(); $('#dmsg').textContent = 'IMAGE ADDED. CLICK "SAVE CHANGES" TO PUBLISH.';
   }; im.src = URL.createObjectURL(f);
 };
 async function saveCfg() {
@@ -338,7 +403,7 @@ function csv() {
 
 // ---- init
 show('consent');
-fetch(API).then(r => r.json()).then(r => { CFG = { ...DEF, ...(r.config || {}) }; hero(); }).catch(() => {});
+fetch(API).then(r => r.json()).then(r => { CFG = { ...DEF, ...(r.config || {}) }; hero(); if (isClosed() && location.hash !== '#admin') closed(); }).catch(() => {});
 if (location.hash === '#admin') show('login');
 </script>
 </body>
