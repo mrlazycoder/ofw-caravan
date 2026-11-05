@@ -86,7 +86,7 @@ body.noanim *,body.noanim *:before,body.noanim *:after{animation:none!important;
 @media(max-width:620px){
   main{padding:0 10px}main.wide section{padding:18px 12px}
   #admin h2{font-size:1.05rem;margin:0}
-  .tabs{gap:6px;margin:12px 0}.tabs button{flex:1;min-width:0;padding:11px 2px;font-size:11px;letter-spacing:0;white-space:nowrap}
+  .tabs{gap:6px;margin:12px 0;flex-wrap:wrap}.tabs button{flex:1 1 calc(50% - 6px);min-width:0;padding:11px 4px;font-size:12px;letter-spacing:0;white-space:nowrap}
   .stats{gap:6px}.stats div{padding:10px 3px;font-size:.58rem;line-height:1.25}.stats b{font-size:1.35rem}
   .row>button{flex:1 1 calc(50% - 5px);min-width:0;padding:12px 8px;font-size:13px}
   #login .row>button,#sv .row>button{flex-basis:100%}
@@ -96,14 +96,24 @@ body.noanim *,body.noanim *:before,body.noanim *:after{animation:none!important;
   #modal{padding:10px}#modal>div{padding:16px}
   /* registrants table -> one card per person */
   .tw{max-height:none;border:0;overflow:visible}
-  #tb,#tb tbody,#tb tr,#tb td{display:block;width:100%}
-  #tb tr:first-child{display:none}
-  #tb tr{border:1px solid var(--bd);border-radius:12px;margin:0 0 10px;padding:8px 12px;background:#fff}
-  #tb td{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;border:0;padding:5px 0;white-space:normal;text-align:right;overflow-wrap:anywhere}
-  #tb td::before{content:attr(data-l);flex:none;font-size:.66rem;font-weight:700;color:var(--mu);letter-spacing:.4px;text-align:left}
-  #tb td.act{gap:6px;padding-top:10px;margin-top:4px;border-top:1px solid #edf1f9}#tb td.act::before{display:none}
-  #tb td.act button{flex:1;margin:0;padding:10px 4px;font-size:12px}
+  .rt,.rt tbody,.rt tr,.rt td{display:block;width:100%}
+  .rt tr:first-child{display:none}
+  .rt tr{border:1px solid var(--bd);border-radius:12px;margin:0 0 10px;padding:8px 12px;background:#fff}
+  .rt td{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;border:0;padding:5px 0;white-space:normal;text-align:right;overflow-wrap:anywhere}
+  .rt td::before{content:attr(data-l);flex:none;font-size:.66rem;font-weight:700;color:var(--mu);letter-spacing:.4px;text-align:left}
+  .rt td.act{gap:6px;padding-top:10px;margin-top:4px;border-top:1px solid #edf1f9}.rt td.act::before{display:none}
+  .rt td.act button{flex:1;margin:0;padding:10px 4px;font-size:12px}
 }
+
+.stats.s4{grid-template-columns:repeat(4,1fr)}
+.bg.o{background:#fef3c7;color:#92400e}
+@media(max-width:620px){.stats.s4{grid-template-columns:repeat(2,1fr)}.stats.s4 div{font-size:.62rem}}
+/* ---- scanner ---- */
+#cam{position:relative;border-radius:14px;overflow:hidden;background:#000;margin:14px auto 0;aspect-ratio:1/1;max-width:420px;max-height:60vh}#cam[hidden]{display:none}
+#cam video{width:100%;height:100%;object-fit:cover;display:block}
+#cam .frame{position:absolute;inset:16%;border:3px solid #fff;border-radius:16px;box-shadow:0 0 0 999px #0006;pointer-events:none}
+.rec{display:flex;justify-content:space-between;gap:10px;padding:9px 12px;border:1px solid var(--bd);border-radius:10px;margin-top:6px;font-size:.82rem;align-items:center}.rec b{display:block}
+#um{position:fixed;inset:0;background:#0b1b4d99;display:flex;align-items:flex-start;justify-content:center;overflow:auto;padding:20px;z-index:9}#um[hidden]{display:none}#um>div{background:#fff;border-radius:18px;padding:22px;max-width:520px;width:100%}
 </style>
 </head>
 <body>
@@ -190,15 +200,37 @@ body.noanim *,body.noanim *:before,body.noanim *:after{animation:none!important;
   <div class="row"><button onclick="adminLogin()">LOGIN</button></div>
 </section>
 
+<section id="slogin" hidden>
+  <h2>SCANNER STAFF LOGIN</h2>
+  <label>USERNAME</label><input id="su" style="text-transform:none" autocapitalize="none" autocomplete="username">
+  <label style="margin-top:12px">PASSWORD</label><input id="sp" type="password" style="text-transform:none" autocomplete="current-password">
+  <div id="slerr" class="err" hidden></div>
+  <div class="row"><button onclick="staffLogin()">LOGIN</button></div>
+</section>
+
+<section id="scan" hidden>
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2 style="margin:0">QR SCANNER</h2><button class="alt" onclick="staffLogout()" style="padding:8px 14px;font-size:12px">LOGOUT</button></div>
+  <div id="swho" style="font-size:.78rem;color:var(--mu);font-weight:700;margin:4px 0 12px"></div>
+  <div class="seg"><label><input type="radio" name="sm" value="IN" checked><span>&#9989; CHECK IN</span></label><label><input type="radio" name="sm" value="OUT"><span>&#128682; CHECK OUT</span></label></div>
+  <div class="stats" style="margin-top:12px"><div><b id="t1">0</b>REGISTERED</div><div><b id="t2">0</b>CHECKED IN</div><div><b id="t3">0</b>INSIDE NOW</div></div>
+  <div id="cam" hidden><video id="vid" playsinline muted></video><div class="frame"></div></div>
+  <div class="row" style="margin-top:12px"><button id="scb" onclick="camToggle()">START CAMERA</button></div>
+  <div id="cerr" class="err" hidden></div>
+  <div id="sres"></div>
+  <label style="margin-top:18px">CAMERA NOT WORKING? TYPE THE PASS ID</label>
+  <div style="display:flex;gap:8px"><input id="mid" placeholder="OSC-0001-ABC" autocomplete="off"><button onclick="manualScan()" style="white-space:nowrap">SUBMIT</button></div>
+  <h3 style="color:var(--pd);margin:20px 0 0;font-size:.95rem">RECENT SCANS (THIS DEVICE)</h3><div id="slog"></div>
+</section>
+
 <section id="admin" hidden>
   <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2 style="margin:0">ADMIN DASHBOARD</h2><button class="alt" onclick="logout()" style="padding:8px 14px;font-size:12px">LOGOUT</button></div>
-  <div class="tabs"><button id="b1" class="on" onclick="tab('L')">REGISTRANTS</button><button id="b2" onclick="tab('D')">DESIGN</button><button id="b3" onclick="tab('S')">SETTINGS</button></div>
+  <div class="tabs"><button id="b1" class="on" onclick="tab('L')">REGISTRANTS</button><button id="b2" onclick="tab('D')">DESIGN</button><button id="b3" onclick="tab('S')">SETTINGS</button><button id="b4" onclick="tab('U')">USERS</button></div>
 
   <div id="tabL">
-    <div class="stats"><div><b id="s1">0</b>REGISTERED</div><div><b id="s2">0</b>CHECKED IN</div><div><b id="s3">0</b>OFW SELF-REGISTERED</div></div>
+    <div class="stats s4"><div><b id="s1">0</b>REGISTERED</div><div><b id="s2">0</b>CHECKED IN</div><div><b id="s3">0</b>INSIDE NOW</div><div><b id="s4">0</b>OFW SELF-REGISTERED</div></div>
     <input id="q" placeholder="SEARCH NAME, PASS ID, CONTACT, MUNICIPALITY...">
     <div class="row" style="margin-top:12px"><button class="alt" onclick="load()">&#8635; REFRESH</button><button onclick="csv()">EXPORT CSV</button></div>
-    <div class="tw" style="margin-top:14px"><table id="tb"></table></div>
+    <div class="tw" style="margin-top:14px"><table id="tb" class="rt"></table></div>
   </div>
 
   <div id="tabD" hidden>
@@ -252,17 +284,45 @@ body.noanim *,body.noanim *:before,body.noanim *:after{animation:none!important;
     </div>
   </div>
 
+
+  <div id="tabU" hidden>
+    <div class="two">
+      <div class="card"><h3>ADD SCANNER STAFF ACCOUNT</h3><div class="g">
+        <div class="full"><label>FULL NAME</label><input id="nn" autocomplete="off"></div>
+        <div><label>USERNAME</label><input id="nu" style="text-transform:none" autocapitalize="none" autocomplete="off"></div>
+        <div><label>PASSWORD (MIN. 6 CHARACTERS)</label><input id="np" style="text-transform:none" autocomplete="off"></div>
+        <div class="full"><div class="row" style="margin:0"><button onclick="addUser()">+ ADD ACCOUNT</button><button class="alt" onclick="window.open(location.pathname+'#scan','_blank')">OPEN SCANNER &#8599;</button></div><div id="umsg" class="ok"></div></div>
+      </div></div>
+      <div class="card"><h3>SCANNER LINK FOR STAFF</h3>
+        <div style="font-size:.85rem;line-height:1.7;color:var(--mu)">Give each scanning officer their own account and this link. They sign in, choose <b>CHECK IN</b> or <b>CHECK OUT</b>, then point the phone camera at the QR code on the Access Pass.<div id="surl" style="margin-top:8px;padding:10px;background:#f5f8ff;border-radius:10px;font-family:Consolas,monospace;font-size:.78rem;word-break:break-all;color:var(--tx)"></div></div>
+      </div>
+    </div>
+    <h3 style="color:var(--pd)">STAFF ACCOUNTS</h3>
+    <div class="tw"><table id="ut" class="rt"></table></div>
+    <h3 style="color:var(--pd);margin-top:20px">RECENT SCANS (LAST 300)</h3>
+    <div class="row" style="margin:0 0 10px"><button class="alt" onclick="loadLog()">&#8635; REFRESH LOG</button></div>
+    <div class="tw"><table id="lt" class="rt"></table></div>
+  </div>
+
   <div id="sv" hidden><div class="row"><button class="grn" onclick="saveCfg()">SAVE CHANGES</button></div><div id="dmsg" class="ok c"></div></div>
 </section>
 </main>
 
 <div id="cx" hidden><div><div class="ic">&#9888;</div><h2>CONFIRM EXIT?</h2><p>Have you saved your Access Pass or taken a screenshot of it?</p><p style="font-size:.8rem;color:var(--mu)">You will need it at the venue, and it cannot be shown again after you leave this page.</p><div class="row"><button class="grn" onclick="newReg()">YES</button><button class="alt" onclick="$('#cx').hidden=true">NO</button></div></div></div>
 
+<div id="um" hidden><div><h2>EDIT STAFF ACCOUNT</h2><div class="g">
+  <div class="full"><label>USERNAME</label><input id="eu" disabled style="text-transform:none"></div>
+  <div class="full"><label>FULL NAME</label><input id="en"></div>
+  <div><label>NEW PASSWORD (BLANK = KEEP)</label><input id="ep" style="text-transform:none" autocomplete="off"></div>
+  <div><label>STATUS</label><select id="ea"><option value="YES">ACTIVE</option><option value="NO">DISABLED</option></select></div>
+</div><div class="row"><button onclick="saveUser()">SAVE</button><button class="alt" onclick="$('#um').hidden=true">CANCEL</button></div></div></div>
+
 <div id="modal" hidden><div><h2>EDIT RECORD</h2><div class="g" id="mf"></div><div class="row"><button onclick="saveEdit()">SAVE</button><button class="alt" onclick="$('#modal').hidden=true">CANCEL</button></div></div></div>
 <input type="file" id="fi" accept="image/*" hidden>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js';document.head.appendChild(s)"></script>
 <script>
 const API = 'https://script.google.com/macros/s/AKfycbwxIKGNlCelLpJnQfG9W3gPsl2qv_jFwLz6TyfJPl2T6KxpPfTrWqI63M5Tq7dZ8b4M/exec';
 const PSGC = 'https://psgc.gitlab.io/api/';
@@ -271,7 +331,7 @@ const DEF = { siteTitle: 'OWWA SERBISYO CARAVAN', siteSub: 'ONLINE REGISTRATION'
 
 const $ = s => document.querySelector(s), U = v => (v == null ? '' : String(v)).trim().toUpperCase();
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-let VER = 0, COUNT = 0, CFG = { ...DEF }, PW = '', DATA = [], HEAD = [], EDIT = null, PK = '', PWID = 0;
+let UL = [], VER = 0, COUNT = 0, CFG = { ...DEF }, PW = '', DATA = [], HEAD = [], EDIT = null, PK = '', PWID = 0;
 const STEP = { consent: 1, form: 2, done: 3 };
 function show(id) {
   document.querySelectorAll('section').forEach(s => s.hidden = s.id !== id);
@@ -420,9 +480,10 @@ async function adminLogin() {
   catch (e) { $('#lerr').textContent = e || 'LOGIN FAILED'; $('#lerr').hidden = false; }
 }
 function tab(t) {
-  ['L', 'D', 'S'].forEach((k, i) => { $('#tab' + k).hidden = t !== k; $('#b' + (i + 1)).className = t === k ? 'on' : ''; });
-  $('#sv').hidden = t === 'L'; $('#dmsg').textContent = '';
-  if (t !== 'L') { document.querySelectorAll('[data-k]').forEach(i => { const v = CFG[i.dataset.k]; i.type === 'checkbox' ? i.checked = !!v : i.value = v == null ? '' : v }); if (t === 'D') prev(); if (t === 'S') bstat(); }
+  ['L', 'D', 'S', 'U'].forEach((k, i) => { $('#tab' + k).hidden = t !== k; $('#b' + (i + 1)).className = t === k ? 'on' : ''; });
+  $('#sv').hidden = t === 'L' || t === 'U'; $('#dmsg').textContent = '';
+  if (t === 'U') loadUsers();
+  if (t === 'D' || t === 'S') { document.querySelectorAll('[data-k]').forEach(i => { const v = CFG[i.dataset.k]; i.type === 'checkbox' ? i.checked = !!v : i.value = v == null ? '' : v }); if (t === 'D') prev(); if (t === 'S') bstat(); }
 }
 function bstat() {
   const el = $('#bst'); if (!el) return; const m = +CFG.maxReg;
@@ -457,11 +518,15 @@ async function load() {
 }
 function render() {
   const q = U($('#q').value), rows = DATA.filter(r => !q || r.join(' ').toUpperCase().includes(q));
-  $('#s1').textContent = DATA.length; $('#s2').textContent = DATA.filter(r => r[23] === 'YES').length; $('#s3').textContent = DATA.filter(r => r[14] === 'YES').length;
-  $('#tb').innerHTML = '<tr><th>PASS ID</th><th>NAME</th><th>BIRTHDATE</th><th>CONTACT</th><th>EMAIL</th><th>MUNICIPALITY</th><th>OFW?</th><th>STATUS</th><th>ACTIONS</th></tr>' +
-    rows.map(r => `<tr><td data-l="PASS ID"><b>${esc(r[0])}</b></td><td data-l="NAME">${esc(r[2])}, ${esc(r[3])} ${esc(r[4])}</td><td data-l="BIRTHDATE">${esc(r[6])}</td><td data-l="CONTACT">${esc(r[8])}</td><td data-l="EMAIL">${esc(r[9])}</td><td data-l="MUNICIPALITY">${esc(r[11])}</td><td data-l="OFW?">${esc(r[14])}</td>` +
-      `<td data-l="STATUS"><span class="bg ${r[23] === 'YES' ? 'y' : ''}">${r[23] === 'YES' ? 'CHECKED IN' : 'REGISTERED'}</span></td>` +
-      `<td class="act"><button onclick="edit('${esc(r[0])}')">EDIT</button><button class="grn" onclick="chk('${esc(r[0])}',${r[23] !== 'YES'})">${r[23] === 'YES' ? 'UNDO' : 'CHECK-IN'}</button><button class="red" onclick="del('${esc(r[0])}')">DEL</button></td></tr>`).join('');
+  const isIn = r => r[23] === 'YES';
+  $('#s1').textContent = DATA.length; $('#s2').textContent = DATA.filter(isIn).length; $('#s3').textContent = DATA.filter(r => isIn(r) && !r[25]).length; $('#s4').textContent = DATA.filter(r => r[14] === 'YES').length;
+  $('#tb').innerHTML = '<tr><th>PASS ID</th><th>NAME</th><th>BIRTHDATE</th><th>CONTACT</th><th>EMAIL</th><th>MUNICIPALITY</th><th>OFW?</th><th>STATUS</th><th>IN</th><th>OUT</th><th>BY</th><th>ACTIONS</th></tr>' +
+    rows.map(r => {
+      const st = !isIn(r) ? ['REGISTERED', ''] : r[25] ? ['CHECKED OUT', 'o'] : ['CHECKED IN', 'y'];
+      return `<tr><td data-l="PASS ID"><b>${esc(r[0])}</b></td><td data-l="NAME">${esc(r[2])}, ${esc(r[3])} ${esc(r[4])}</td><td data-l="BIRTHDATE">${esc(r[6])}</td><td data-l="CONTACT">${esc(r[8])}</td><td data-l="EMAIL">${esc(r[9])}</td><td data-l="MUNICIPALITY">${esc(r[11])}</td><td data-l="OFW?">${esc(r[14])}</td>` +
+        `<td data-l="STATUS"><span class="bg ${st[1]}">${st[0]}</span></td><td data-l="CHECKED IN AT">${esc(r[24] || '-')}</td><td data-l="CHECKED OUT AT">${esc(r[25] || '-')}</td><td data-l="SCANNED BY">${esc(r[26] || '-')}</td>` +
+        `<td class="act"><button onclick="edit('${esc(r[0])}')">EDIT</button><button class="grn" onclick="chk('${esc(r[0])}',${!isIn(r)})">${isIn(r) ? 'UNDO' : 'CHECK-IN'}</button><button class="red" onclick="del('${esc(r[0])}')">DEL</button></td></tr>`;
+    }).join('');
 }
 $('#q').oninput = render;
 async function chk(id, v) { const r = await api({ action: 'checkin', pw: PW, id, value: v }); r.ok ? load() : alert(r.error); }
@@ -481,9 +546,156 @@ function csv() {
   const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['\ufeff' + t], { type: 'text/csv' })); a.download = 'caravan-registrations.csv'; a.click();
 }
 
+
+// ---- admin: staff accounts + scan log
+async function loadUsers() {
+  $('#surl').textContent = location.origin + location.pathname + '#scan';
+  if (VER < 4) return alert('BACKEND IS OUTDATED. In Apps Script: Deploy > Manage deployments > pencil > Version: New version > Deploy.');
+  const r = await api({ action: 'users', pw: PW }); if (!r.ok) return alert(r.error);
+  UL = r.users; renderUsers(); loadLog();
+}
+function renderUsers() {
+  $('#ut').innerHTML = '<tr><th>USERNAME</th><th>FULL NAME</th><th>STATUS</th><th>LAST LOGIN</th><th>ACTIONS</th></tr>' + (UL.length ? UL.map(u =>
+    `<tr><td data-l="USERNAME"><b>${esc(u[0])}</b></td><td data-l="FULL NAME">${esc(u[1])}</td><td data-l="STATUS"><span class="bg ${u[2] === 'YES' ? 'y' : ''}">${u[2] === 'YES' ? 'ACTIVE' : 'DISABLED'}</span></td><td data-l="LAST LOGIN">${esc(u[4] || '-')}</td>` +
+    `<td class="act"><button onclick="editUser('${esc(u[0])}')">EDIT</button><button class="red" onclick="delUser('${esc(u[0])}')">DELETE</button></td></tr>`).join('') : '<tr><td data-l="">NO STAFF ACCOUNTS YET.</td></tr>');
+}
+async function addUser() {
+  const m = $('#umsg'); m.textContent = '';
+  const r = await api({ action: 'userAdd', pw: PW, username: $('#nu').value, name: $('#nn').value, password: $('#np').value });
+  if (!r.ok) { m.textContent = r.error || 'FAILED'; return; }
+  $('#nn').value = $('#nu').value = $('#np').value = ''; m.textContent = 'ACCOUNT ADDED.'; loadUsers();
+}
+function editUser(un) {
+  const u = UL.find(x => x[0] === un); if (!u) return;
+  $('#eu').value = u[0]; $('#en').value = u[1]; $('#ep').value = ''; $('#ea').value = u[2] === 'YES' ? 'YES' : 'NO'; $('#um').hidden = false;
+}
+async function saveUser() {
+  const r = await api({ action: 'userUpdate', pw: PW, username: $('#eu').value, name: $('#en').value, password: $('#ep').value, active: $('#ea').value });
+  if (r.ok) { $('#um').hidden = true; loadUsers(); } else alert(r.error);
+}
+async function delUser(un) {
+  if (!confirm('DELETE STAFF ACCOUNT "' + un + '"? THEY WILL NO LONGER BE ABLE TO SCAN.')) return;
+  const r = await api({ action: 'userDelete', pw: PW, username: un }); r.ok ? loadUsers() : alert(r.error);
+}
+async function loadLog() {
+  const r = await api({ action: 'scanlog', pw: PW }); if (!r.ok) return;
+  $('#lt').innerHTML = '<tr><th>TIME</th><th>PASS ID</th><th>NAME</th><th>ACTION</th><th>STAFF</th></tr>' + (r.log.length ? r.log.map(x =>
+    `<tr><td data-l="TIME">${esc(x[0])}</td><td data-l="PASS ID"><b>${esc(x[1])}</b></td><td data-l="NAME">${esc(x[2])}</td><td data-l="ACTION"><span class="bg ${x[3] === 'IN' ? 'y' : 'o'}">${x[3] === 'IN' ? 'CHECK IN' : 'CHECK OUT'}</span></td><td data-l="STAFF">${esc(x[4])}</td></tr>`).join('') : '<tr><td data-l="">NO SCANS YET.</td></tr>');
+}
+
+// ---- scanner (staff)
+let ST = { token: '', name: '', user: '' }, MODE = 'IN', STREAM = null, SCANNING = false, BUSY = false, LASTC = { c: '', t: 0 }, DET = null, RECENT = [], AC = null;
+const cvs = document.createElement('canvas'), cctx = cvs.getContext('2d', { willReadFrequently: true });
+const sget = k => { try { return sessionStorage.getItem(k) || ''; } catch (x) { return ''; } };
+const sset = (k, v) => { try { sessionStorage.setItem(k, v); } catch (x) {} };
+function beep(kind) {
+  try {
+    AC = AC || new (window.AudioContext || window.webkitAudioContext)(); if (AC.state === 'suspended') AC.resume();
+    const seq = kind === 'OK' ? [[880, .12]] : kind === 'WARN' ? [[520, .12], [520, .12]] : [[200, .35]]; let t = AC.currentTime;
+    seq.forEach(([f, d]) => { const o = AC.createOscillator(), g = AC.createGain(); o.frequency.value = f; o.connect(g); g.connect(AC.destination); g.gain.setValueAtTime(.2, t); o.start(t); o.stop(t + d); t += d + .08; });
+  } catch (x) {}
+  try { navigator.vibrate && navigator.vibrate(kind === 'OK' ? 80 : [120, 60, 120]); } catch (x) {}
+}
+async function staffLogin() {
+  $('#slerr').hidden = true; try { AC = AC || new (window.AudioContext || window.webkitAudioContext)(); AC.resume(); } catch (x) {}
+  try {
+    const r = await api({ action: 'slogin', user: $('#su').value, upw: $('#sp').value }); if (!r.ok) throw r.error;
+    ST = { token: r.token, name: r.name, user: r.user }; sset('osc_st', r.token); sset('osc_sn', r.name); sset('osc_su', r.user);
+    $('#sp').value = ''; openScanner(r.stats);
+  } catch (e) { $('#slerr').textContent = e || 'LOGIN FAILED'; $('#slerr').hidden = false; }
+}
+function openScanner(stats) {
+  show('scan'); $('#swho').textContent = 'SIGNED IN AS ' + ST.name + ' (' + ST.user + ')';
+  MODE = sget('osc_mode') === 'OUT' ? 'OUT' : 'IN';
+  document.querySelectorAll('input[name=sm]').forEach(i => { i.checked = i.value === MODE; i.onchange = () => { MODE = i.value; sset('osc_mode', MODE); }; });
+  setStats(stats); camStart();
+}
+async function staffRestore() {
+  ST = { token: sget('osc_st'), name: sget('osc_sn'), user: sget('osc_su') }; if (!ST.token) return;
+  $('#slogin').style.visibility = 'hidden';
+  try {
+    const r = await api({ action: 'sinfo', token: ST.token }); $('#slogin').style.visibility = 'visible';
+    if (!r.ok) return staffLogout(true); openScanner(r.stats);
+  } catch (e) { $('#slogin').style.visibility = 'visible'; }
+}
+function staffLogout(expired) {
+  camStop(); if (ST.token) api({ action: 'slogout', token: ST.token }).catch(() => {});
+  ['osc_st', 'osc_sn', 'osc_su'].forEach(k => { try { sessionStorage.removeItem(k); } catch (x) {} });
+  ST = { token: '', name: '', user: '' }; RECENT = []; $('#sres').innerHTML = ''; $('#slog').innerHTML = '';
+  $('#slogin').style.visibility = 'visible'; show('slogin');
+  if (expired === true) { $('#slerr').textContent = 'SESSION EXPIRED. PLEASE LOGIN AGAIN.'; $('#slerr').hidden = false; }
+}
+function setStats(s) { if (!s) return; $('#t1').textContent = s.registered; $('#t2').textContent = s.checkedIn; $('#t3').textContent = s.inside; }
+function camErr(m) { $('#cerr').textContent = m; $('#cerr').hidden = false; }
+const camToggle = () => STREAM ? camStop() : camStart();
+async function camStart() {
+  $('#cerr').hidden = true;
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return camErr('CAMERA IS NOT AVAILABLE ON THIS BROWSER. TYPE THE PASS ID BELOW INSTEAD.');
+  try {
+    STREAM = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 } }, audio: false });
+    const v = $('#vid'); v.srcObject = STREAM; await v.play();
+    $('#cam').hidden = false; $('#scb').textContent = 'STOP CAMERA'; SCANNING = true;
+    DET = null; if ('BarcodeDetector' in window) { try { DET = new BarcodeDetector({ formats: ['qr_code'] }); } catch (x) { DET = null; } }
+    if (!DET && !window.jsQR) camErr('QR READER FAILED TO LOAD. REFRESH THE PAGE, OR TYPE THE PASS ID BELOW.');
+    tick();
+  } catch (e) { camStop(); camErr(e && e.name === 'NotAllowedError' ? 'CAMERA PERMISSION WAS DENIED. ALLOW CAMERA ACCESS FOR THIS SITE, THEN TAP START CAMERA.' : 'COULD NOT START THE CAMERA. TAP START CAMERA TO TRY AGAIN, OR TYPE THE PASS ID BELOW.'); }
+}
+function camStop() {
+  SCANNING = false; if (STREAM) STREAM.getTracks().forEach(t => t.stop()); STREAM = null;
+  const v = $('#vid'); if (v) v.srcObject = null; $('#cam').hidden = true; $('#scb').textContent = 'START CAMERA';
+}
+async function tick() {
+  if (!SCANNING) return;
+  const v = $('#vid');
+  if (!BUSY && v.readyState >= 2 && v.videoWidth) {
+    let code = '';
+    try {
+      if (DET) { const r = await DET.detect(v); if (r.length) code = r[0].rawValue; }
+      else if (window.jsQR) {
+        const w = Math.min(640, v.videoWidth), hh = Math.round(w * v.videoHeight / v.videoWidth); cvs.width = w; cvs.height = hh; cctx.drawImage(v, 0, 0, w, hh);
+        const im = cctx.getImageData(0, 0, w, hh), r = jsQR(im.data, w, hh, { inversionAttempts: 'dontInvert' }); if (r) code = r.data;
+      }
+    } catch (x) {}
+    if (code) handleCode(code);
+  }
+  setTimeout(tick, 150);
+}
+function handleCode(raw, manual) {
+  const m = /OSC-\d{4,}-[A-Za-z0-9]{3}/i.exec(String(raw)), key = m ? m[0].toUpperCase() : String(raw).slice(0, 40);
+  if (!manual && key === LASTC.c && Date.now() - LASTC.t < 5000) return;
+  LASTC = { c: key, t: Date.now() };
+  if (!m) { showRes('ERR', 'INVALID QR CODE', null, 'THIS IS NOT AN OWWA SERBISYO CARAVAN ACCESS PASS.'); beep('ERR'); return; }
+  doScan(key);
+}
+function manualScan() { const v = $('#mid').value.trim(); if (!v) return; handleCode(v, true); $('#mid').value = ''; }
+async function doScan(id) {
+  if (BUSY) return; BUSY = true;
+  $('#sres').innerHTML = '<div class="c" style="padding:18px;font-weight:700;color:var(--mu)">CHECKING ' + esc(id) + '...</div>';
+  try {
+    const r = await api({ action: 'scan', token: ST.token, id, mode: MODE });
+    if (!r.ok) { if (r.expired) return staffLogout(true); showRes('ERR', 'ERROR', null, r.error); beep('ERR'); return; }
+    showRes(r.level, r.title, r.person, r.message); beep(r.level); setStats(r.stats);
+    RECENT.unshift({ t: new Date().toLocaleTimeString('en-PH', { timeZone: 'Asia/Manila', hour: '2-digit', minute: '2-digit' }), n: (r.person && r.person.name) || id, id, title: r.title, level: r.level });
+    RECENT = RECENT.slice(0, 10); renderRecent();
+  } catch (e) { showRes('ERR', 'NO CONNECTION', null, 'CHECK THE INTERNET CONNECTION AND SCAN AGAIN.'); beep('ERR'); }
+  finally { BUSY = false; }
+}
+function showRes(level, title, p, msg) {
+  const c = { OK: ['#dcfce7', '#166534', '#22c55e', '&#10004;'], WARN: ['#fef3c7', '#92400e', '#f59e0b', '&#9888;'], ERR: ['#fee2e2', '#991b1b', '#ef4444', '&#10006;'] }[level] || ['#fee2e2', '#991b1b', '#ef4444', '&#10006;'];
+  $('#sres').innerHTML = `<div style="background:${c[0]};border:2px solid ${c[2]};color:${c[1]};border-radius:14px;padding:16px;margin-top:14px;text-align:center"><div style="font-size:1.2rem;font-weight:800">${c[3]} ${esc(title)}</div>` +
+    (p ? `<div style="font-size:1.25rem;font-weight:800;margin-top:8px;color:var(--tx)">${esc(p.name || '')}</div><div style="font-family:Consolas,monospace;font-weight:700;color:var(--tx)">${esc(p.id || '')}</div>` + (p.place ? `<div style="font-size:.8rem;margin-top:4px">${esc(p.place)}</div>` : '') : '') +
+    (msg ? `<div style="font-size:.8rem;font-weight:700;margin-top:8px">${esc(msg)}</div>` : '') + '</div>';
+}
+function renderRecent() {
+  $('#slog').innerHTML = RECENT.map(x => `<div class="rec"><div><b>${esc(x.n)}</b><span style="color:var(--mu);font-size:.72rem">${esc(x.id)} &middot; ${esc(x.t)}</span></div><span class="bg ${x.level === 'OK' ? 'y' : x.level === 'WARN' ? 'o' : ''}">${esc(x.title)}</span></div>`).join('');
+}
+$('#sp').addEventListener('keydown', e => { if (e.key === 'Enter') staffLogin(); });
+$('#mid').addEventListener('keydown', e => { if (e.key === 'Enter') manualScan(); });
+window.addEventListener('hashchange', () => location.reload());
+
 // ---- init
 show('consent');
-fetch(API, { cache: 'no-store' }).then(r => r.json()).then(r => { CFG = { ...DEF, ...(r.config || {}) }; COUNT = +r.count || 0; VER = +r.ver || 0; hero(); if (isClosed() && location.hash !== '#admin') closed(); }).catch(() => {});
+fetch(API, { cache: 'no-store' }).then(r => r.json()).then(r => { CFG = { ...DEF, ...(r.config || {}) }; COUNT = +r.count || 0; VER = +r.ver || 0; hero(); if (isClosed() && !['#admin', '#scan'].includes(location.hash)) closed(); }).catch(() => {});
 // ---- admin session: stays signed in after refresh (this tab only, max 8 hours, cleared on logout / closing the tab)
 function logout() {
   try { ['osc_pw', 'osc_t'].forEach(k => sessionStorage.removeItem(k)); } catch (x) {}
@@ -503,6 +715,7 @@ async function restore() {
 }
 $('#pw').addEventListener('keydown', e => { if (e.key === 'Enter') adminLogin(); });
 if (location.hash === '#admin') { show('login'); restore(); }
+else if (location.hash === '#scan') { show('slogin'); staffRestore(); }
 </script>
 </body>
 </html>
