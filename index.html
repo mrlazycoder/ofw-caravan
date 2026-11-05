@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OWWA Serbisyo Caravan Registration</title>
+<style>
+:root{--b:#1e3a8a;--b2:#2563eb;--bg:#f1f5f9;--r:12px}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,Segoe UI,Arial,sans-serif;background:var(--bg);color:#0f172a}
+header{background:linear-gradient(135deg,var(--b),var(--b2));color:#fff;text-align:center;padding:18px 12px}
+header h1{margin:0;font-size:1.25rem}header p{margin:4px 0 0;font-size:.85rem;opacity:.9}
+main{max-width:760px;margin:16px auto;padding:0 12px}main.wide{max-width:1100px}
+section{background:#fff;border-radius:var(--r);padding:20px;box-shadow:0 2px 10px #0001}
+h2{margin:0 0 12px;font-size:1.1rem;color:var(--b)}h3{margin:20px 0 8px;font-size:.95rem;color:var(--b);border-bottom:2px solid #dbeafe;padding-bottom:4px}
+.g{display:grid;grid-template-columns:1fr 1fr;gap:12px}.g .f{grid-column:span 1}.g .full{grid-column:1/-1}
+@media(max-width:600px){.g{grid-template-columns:1fr}}
+label{display:block;font-size:.78rem;font-weight:600;margin-bottom:3px}label i{color:#dc2626;font-style:normal}
+input,select{width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:8px;font-size:16px;text-transform:uppercase;background:#fff}
+input:focus,select:focus{outline:2px solid var(--b2);border-color:var(--b2)}input:disabled,select:disabled{background:#f1f5f9}
+button{background:var(--b2);color:#fff;border:0;border-radius:8px;padding:12px 18px;font-size:15px;font-weight:600;cursor:pointer}
+button.alt{background:#e2e8f0;color:#0f172a}button.red{background:#dc2626}button.grn{background:#16a34a}button:disabled{opacity:.6}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.row>button{flex:1;min-width:130px}
+.note{background:#eff6ff;border-left:4px solid var(--b2);padding:12px;border-radius:6px;font-size:.88rem;line-height:1.5;max-height:46vh;overflow:auto}
+.err{background:#fee2e2;color:#991b1b;padding:10px;border-radius:8px;margin-top:12px;font-size:.9rem}
+.radio{display:flex;gap:18px}.radio label{display:flex;gap:6px;align-items:center;font-size:.95rem}.radio input{width:auto}
+#pass{width:340px;max-width:100%;margin:14px auto;background:#fff;border:2px solid var(--b);border-radius:16px;overflow:hidden;text-align:center}
+#pass .hd{background:linear-gradient(135deg,var(--b),var(--b2));color:#fff;padding:16px 10px;font-weight:700}
+#pass img.tp{width:100%;display:block}#pass .bd{padding:14px}
+#pass .nm{font-size:1.2rem;font-weight:800;margin:6px 0}#pass .id{font-family:monospace;font-size:1.3rem;font-weight:800;color:var(--b);letter-spacing:1px;margin:8px 0}
+#pass .qr{display:flex;justify-content:center;margin:8px 0}#pass small{color:#475569;display:block}
+table{width:100%;border-collapse:collapse;font-size:.82rem}th,td{padding:7px 6px;border-bottom:1px solid #e2e8f0;text-align:left;white-space:nowrap}th{background:#eff6ff;position:sticky;top:0}
+.tw{overflow:auto;max-height:60vh}.st{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}.st div{flex:1;min-width:110px;background:#eff6ff;border-radius:10px;padding:10px;text-align:center}.st b{display:block;font-size:1.4rem;color:var(--b)}
+td button{padding:5px 9px;font-size:12px;margin-right:3px}
+#modal{position:fixed;inset:0;background:#0008;display:flex;align-items:flex-start;justify-content:center;overflow:auto;padding:20px;z-index:9}#modal[hidden]{display:none}
+#modal>div{background:#fff;border-radius:var(--r);padding:18px;max-width:700px;width:100%}
+.c{text-align:center}
+</style>
+</head>
+<body>
+<header><h1>OWWA SERBISYO CARAVAN</h1><p>ONLINE REGISTRATION</p></header>
+<main id="main">
+
+<section id="consent">
+  <h2>DATA PRIVACY CONSENT NOTICE</h2>
+  <div class="note">
+    <p>In compliance with the <b>Data Privacy Act of 2012 (Republic Act No. 10173)</b>, the organizers of the OWWA Serbisyo Caravan collect your personal information solely for event registration, verification of identity and eligibility, queue management, and service delivery during the caravan.</p>
+    <p>Your information will be kept confidential, accessed only by authorized personnel, and will not be shared with third parties except as required by law. By proceeding, you confirm that the information you provide is true and correct, and you consent to its collection and processing for the stated purposes.</p>
+    <p>You may request correction or deletion of your data by contacting the event organizers.</p>
+  </div>
+  <div class="row"><button class="grn" onclick="show('form')">I ACCEPT &rarr; PROCEED</button><button class="red" onclick="show('declined')">I DO NOT ACCEPT &rarr; EXIT</button></div>
+</section>
+
+<section id="declined" hidden class="c">
+  <h2>REGISTRATION CANCELLED</h2>
+  <p>You chose not to accept the Data Privacy Consent Notice, so we cannot proceed with your registration. You may now close this page.</p>
+  <button class="alt" onclick="show('consent')">GO BACK</button>
+</section>
+
+<section id="form" hidden>
+  <form id="f" autocomplete="off" novalidate>
+    <h3>PERSONAL INFORMATION</h3>
+    <div class="g">
+      <div><label>LAST NAME <i>*</i></label><input id="last" required></div>
+      <div><label>FIRST NAME <i>*</i></label><input id="first" required></div>
+      <div><label>MIDDLE NAME</label><input id="middle"></div>
+      <div><label>SUFFIX</label><select id="suffix"><option>N/A</option><option>JR.</option><option>SR.</option><option>II</option><option>III</option><option>IV</option><option>V</option></select></div>
+      <div><label>BIRTHDATE <i>*</i></label><input id="birth" type="date" required></div>
+      <div><label>SEX <i>*</i></label><select id="sex" required><option value="">SELECT</option><option>MALE</option><option>FEMALE</option></select></div>
+      <div><label>CONTACT NUMBER <i>*</i></label><input id="phone" inputmode="numeric" placeholder="09##-###-####" maxlength="13" required pattern="09[0-9]{2}-[0-9]{3}-[0-9]{4}"></div>
+      <div><label>EMAIL ADDRESS <i>*</i></label><input id="email" type="email" inputmode="email" placeholder="NAME@EMAIL.COM" required></div>
+      <div><label>PROVINCE (REGION 3) <i>*</i></label><select id="prov" required></select></div>
+      <div><label>MUNICIPALITY / CITY <i>*</i></label><select id="muni" required disabled></select></div>
+      <div><label>BARANGAY <i>*</i></label><select id="brgy" required disabled></select></div>
+      <div><label>STREET / LOT / HOUSE NUMBER</label><input id="street"></div>
+    </div>
+
+    <h3>OFW INFORMATION</h3>
+    <label>ARE YOU THE OFW? <i>*</i></label>
+    <div class="radio"><label><input type="radio" name="isOfw" value="YES" checked> YES</label><label><input type="radio" name="isOfw" value="NO"> NO</label></div>
+    <div id="rel" hidden>
+      <div class="g" style="margin-top:12px">
+        <div><label>OFW'S LAST NAME <i>*</i></label><input id="oLast"></div>
+        <div><label>OFW'S FIRST NAME <i>*</i></label><input id="oFirst"></div>
+        <div><label>OFW'S MIDDLE NAME <i>*</i></label><input id="oMid" placeholder="TYPE N/A IF NONE"></div>
+        <div><label>OFW'S SUFFIX <i>*</i></label><select id="oSuf"><option>N/A</option><option>JR.</option><option>SR.</option><option>II</option><option>III</option><option>IV</option><option>V</option></select></div>
+        <div class="full"><label>RELATIONSHIP TO OFW <i>*</i></label><select id="relSel"><option value="">SELECT</option><option>SPOUSE</option><option>CHILD</option><option>PARENT</option><option>SIBLING</option><option>GRANDPARENT</option><option>OTHER RELATIVE</option><option>OTHER</option></select></div>
+      </div>
+    </div>
+    <div class="g" style="margin-top:12px">
+      <div><label>CATEGORY <i>*</i></label><select id="cat" required><option value="">SELECT</option><option>LAND-BASED</option><option>SEA-BASED</option></select></div>
+      <div><label>JOBSITE (COUNTRY) <i>*</i></label><select id="site" required></select></div>
+      <div class="full"><label>POSITION / OCCUPATION <i>*</i></label><input id="pos" required></div>
+    </div>
+    <div id="err" class="err" hidden></div>
+    <div class="row"><button type="submit" id="sub">SUBMIT</button></div>
+  </form>
+</section>
+
+<section id="done" hidden class="c">
+  <h2>THANK YOU FOR REGISTERING FOR THE OWWA SERBISYO CARAVAN!</h2>
+  <p>Here is your Access Pass. Please present it at the venue &mdash; it will serve as your pass for the event.</p>
+  <div id="pass"></div>
+  <div class="row"><button onclick="dl()">DOWNLOAD ACCESS PASS</button></div>
+  <p style="font-size:.8rem;color:#64748b">Tip: take a screenshot or save the image. A copy of your Pass ID was also sent to your email.</p>
+</section>
+
+<section id="login" hidden>
+  <h2>ADMIN LOGIN</h2>
+  <label>PASSWORD</label><input id="pw" type="password" style="text-transform:none">
+  <div id="lerr" class="err" hidden></div>
+  <div class="row"><button onclick="adminLogin()">LOGIN</button></div>
+</section>
+
+<section id="admin" hidden>
+  <h2>ADMIN DASHBOARD</h2>
+  <div class="st"><div><b id="s1">0</b>REGISTERED</div><div><b id="s2">0</b>CHECKED IN</div><div><b id="s3">0</b>OFW SELF-REG</div></div>
+  <div class="g"><div class="full"><input id="q" placeholder="SEARCH NAME, PASS ID, CONTACT, MUNICIPALITY..."></div></div>
+  <div class="row"><button class="alt" onclick="load()">REFRESH</button><button onclick="csv()">EXPORT CSV</button><button class="alt" onclick="$('#tpl').click()">UPLOAD MOCK ACCESS PASS</button><button class="alt" onclick="rmTpl()">REMOVE MOCK PASS</button></div>
+  <input type="file" id="tpl" accept="image/*" hidden>
+  <div class="tw" style="margin-top:12px"><table id="tb"></table></div>
+</section>
+</main>
+
+<div id="modal" hidden><div><h2>EDIT RECORD</h2><div class="g" id="mf"></div><div class="row"><button onclick="saveEdit()">SAVE</button><button class="alt" onclick="$('#modal').hidden=true">CANCEL</button></div></div></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+// ====== CONFIG: paste your Apps Script Web App URL ======
+const API = 'https://script.google.com/macros/s/AKfycbwxIKGNlCelLpJnQfG9W3gPsl2qv_jFwLz6TyfJPl2T6KxpPfTrWqI63M5Tq7dZ8b4M/exec';
+const EVENT_DATE = 'EVENT DATE: TO BE ANNOUNCED', VENUE = 'VENUE: TO BE ANNOUNCED';
+const PSGC = 'https://psgc.gitlab.io/api/';
+const COUNTRIES = 'Afghanistan,Albania,Algeria,Angola,Argentina,Australia,Austria,Bahrain,Bangladesh,Belgium,Brazil,Brunei,Bulgaria,Cambodia,Canada,Chile,China,Colombia,Croatia,Cyprus,Czech Republic,Denmark,Egypt,Ethiopia,Fiji,Finland,France,Germany,Ghana,Greece,Guam,Hong Kong,Hungary,India,Indonesia,Iran,Iraq,Ireland,Israel,Italy,Japan,Jordan,Kazakhstan,Kenya,Kuwait,Laos,Lebanon,Libya,Macau,Malaysia,Maldives,Malta,Mexico,Morocco,Myanmar,Nepal,Netherlands,New Zealand,Nigeria,Northern Mariana Islands,Norway,Oman,Pakistan,Palau,Panama,Papua New Guinea,Peru,Poland,Portugal,Qatar,Romania,Russia,Saipan,Saudi Arabia,Singapore,Slovakia,South Africa,South Korea,Spain,Sri Lanka,Sudan,Sweden,Switzerland,Syria,Taiwan,Thailand,Turkey,Ukraine,United Arab Emirates,United Kingdom,United States,Vietnam,Yemen,Other / Vessel (International Waters)'.split(',');
+
+const $ = s => document.querySelector(s), U = v => (v == null ? '' : String(v)).trim().toUpperCase();
+let TPL = '', PW = '', DATA = [], HEAD = [], EDIT = null;
+const show = id => { document.querySelectorAll('section').forEach(s => s.hidden = s.id !== id); $('#main').className = id === 'admin' ? 'wide' : ''; scrollTo(0, 0); };
+const api = o => fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(o) }).then(r => r.json());
+
+// ---- force CAPS on typing
+document.addEventListener('input', e => {
+  const t = e.target;
+  if (t.tagName === 'INPUT' && ['text', 'email', 'search', ''].includes(t.type) && t.id !== 'pw') {
+    const p = t.selectionStart; t.value = t.value.toUpperCase(); try { t.setSelectionRange(p, p) } catch (x) {}
+  }
+});
+// ---- phone mask 09##-###-####
+$('#phone').addEventListener('input', e => {
+  let d = e.target.value.replace(/\D/g, '').slice(0, 11);
+  e.target.value = d.length > 7 ? d.slice(0, 4) + '-' + d.slice(4, 7) + '-' + d.slice(7) : d.length > 4 ? d.slice(0, 4) + '-' + d.slice(4) : d;
+});
+$('#birth').max = new Date().toISOString().slice(0, 10);
+$('#site').innerHTML = '<option value="">SELECT COUNTRY</option>' + COUNTRIES.map(c => `<option>${U(c)}</option>`).join('');
+
+// ---- Region 3 cascading dropdowns (PSGC open data)
+async function fill(sel, url, ph) {
+  sel.innerHTML = '<option value="">LOADING...</option>'; sel.disabled = true;
+  try {
+    const r = await (await fetch(url)).json(); r.sort((a, b) => a.name.localeCompare(b.name));
+    sel.innerHTML = `<option value="">${ph}</option>` + r.map(x => `<option value="${U(x.name)}" data-c="${x.code}">${U(x.name)}</option>`).join('');
+    sel.disabled = false;
+  } catch (e) { sel.innerHTML = '<option value="">FAILED TO LOAD - REFRESH PAGE</option>'; }
+}
+const code = s => s.selectedOptions[0] && s.selectedOptions[0].dataset.c;
+fill($('#prov'), PSGC + 'regions/030000000/provinces/', 'SELECT PROVINCE');
+$('#prov').onchange = () => { $('#brgy').innerHTML = ''; $('#brgy').disabled = true; $('#muni').innerHTML = ''; code($('#prov')) ? fill($('#muni'), PSGC + 'provinces/' + code($('#prov')) + '/cities-municipalities/', 'SELECT MUNICIPALITY / CITY') : $('#muni').disabled = true; };
+$('#muni').onchange = () => { $('#brgy').innerHTML = ''; code($('#muni')) ? fill($('#brgy'), PSGC + 'cities-municipalities/' + code($('#muni')) + '/barangays/', 'SELECT BARANGAY') : $('#brgy').disabled = true; };
+
+// ---- OFW toggle
+document.querySelectorAll('[name=isOfw]').forEach(r => r.onchange = () => {
+  const no = document.querySelector('[name=isOfw]:checked').value === 'NO';
+  $('#rel').hidden = !no;
+  ['oLast', 'oFirst', 'oMid', 'oSuf', 'relSel'].forEach(i => $('#' + i).required = no);
+});
+
+// ---- submit
+const IDS = ['last', 'first', 'middle', 'suffix', 'birth', 'sex', 'phone', 'email', 'prov', 'muni', 'brgy', 'street', 'oLast', 'oFirst', 'oMid', 'oSuf', 'cat', 'site', 'pos'];
+$('#f').addEventListener('submit', async e => {
+  e.preventDefault(); const er = $('#err'); er.hidden = true;
+  if (!$('#f').reportValidity()) return;
+  if (API.startsWith('PASTE')) { er.textContent = 'API URL IS NOT SET. EDIT index.html.'; er.hidden = false; return; }
+  const d = {}; IDS.forEach(i => d[i] = U($('#' + i).value));
+  d.isOfw = document.querySelector('[name=isOfw]:checked').value; d.rel = U($('#relSel').value);
+  const b = $('#sub'); b.disabled = true; b.textContent = 'SUBMITTING...';
+  try {
+    const r = await api({ action: 'register', data: d });
+    if (r.ok) { pass(r.id, d.first + ' ' + (d.middle ? d.middle[0] + '. ' : '') + d.last + (d.suffix && d.suffix !== 'N/A' ? ' ' + d.suffix : ''), d.muni + ', ' + d.prov); }
+    else { er.textContent = r.error || 'SOMETHING WENT WRONG.'; er.hidden = false; }
+  } catch (x) { er.textContent = 'NETWORK ERROR. PLEASE TRY AGAIN.'; er.hidden = false; }
+  b.disabled = false; b.textContent = 'SUBMIT';
+});
+
+// ---- access pass
+function pass(id, name, loc) {
+  $('#pass').innerHTML = (TPL ? `<img class="tp" src="${TPL}">` : '<div class="hd">OWWA SERBISYO CARAVAN<br><small style="color:#dbeafe">ACCESS PASS</small></div>') +
+    `<div class="bd"><div class="nm">${name}</div><small>${loc}</small><div class="qr" id="qr"></div><small>ACCESS PASS ID</small><div class="id">${id}</div><small>${EVENT_DATE}</small><small>${VENUE}</small></div>`;
+  new QRCode($('#qr'), { text: id, width: 120, height: 120 });
+  show('done');
+}
+const dl = () => html2canvas($('#pass'), { scale: 2, backgroundColor: '#fff' }).then(c => { const a = document.createElement('a'); a.download = 'ACCESS-PASS-' + $('#pass .id').textContent + '.png'; a.href = c.toDataURL(); a.click(); });
+
+// ---- admin
+const EDITABLE = h => HEAD.indexOf(h) > 1 && HEAD.indexOf(h) < 23;
+async function adminLogin() {
+  PW = $('#pw').value; $('#lerr').hidden = true;
+  try { const r = await api({ action: 'login', pw: PW }); if (!r.ok) throw r.error; show('admin'); load(); }
+  catch (e) { $('#lerr').textContent = e || 'LOGIN FAILED'; $('#lerr').hidden = false; }
+}
+async function load() {
+  const r = await api({ action: 'list', pw: PW }); if (!r.ok) return alert(r.error);
+  HEAD = r.head; DATA = r.rows; render();
+}
+function render() {
+  const q = U($('#q').value), rows = DATA.filter(r => !q || r.join(' ').toUpperCase().includes(q));
+  $('#s1').textContent = DATA.length; $('#s2').textContent = DATA.filter(r => r[23] === 'YES').length; $('#s3').textContent = DATA.filter(r => r[14] === 'YES').length;
+  $('#tb').innerHTML = '<tr><th>PASS ID</th><th>NAME</th><th>BIRTHDATE</th><th>CONTACT</th><th>MUNICIPALITY</th><th>OFW?</th><th>CHECKED IN</th><th>ACTIONS</th></tr>' +
+    rows.map(r => `<tr><td>${r[0]}</td><td>${r[2]}, ${r[3]} ${r[4]}</td><td>${r[6]}</td><td>${r[8]}</td><td>${r[11]}</td><td>${r[14]}</td><td>${r[23] || '-'}</td>` +
+      `<td><button onclick="edit('${r[0]}')">EDIT</button><button class="grn" onclick="chk('${r[0]}',${r[23] !== 'YES'})">${r[23] === 'YES' ? 'UNDO' : 'CHECK-IN'}</button><button class="red" onclick="del('${r[0]}')">DEL</button></td></tr>`).join('');
+}
+$('#q').oninput = render;
+async function chk(id, v) { const r = await api({ action: 'checkin', pw: PW, id, value: v }); r.ok ? load() : alert(r.error); }
+async function del(id) { if (!confirm('DELETE ' + id + '? THIS CANNOT BE UNDONE.')) return; const r = await api({ action: 'delete', pw: PW, id }); r.ok ? load() : alert(r.error); }
+function edit(id) {
+  EDIT = DATA.find(r => r[0] === id);
+  $('#mf').innerHTML = `<div class="full"><b>${id}</b></div>` + HEAD.map((h, i) => EDITABLE(h) ? `<div><label>${h}</label><input data-h="${h}" value="${EDIT[i].replace(/"/g, '&quot;')}"></div>` : '').join('');
+  $('#modal').hidden = false;
+}
+async function saveEdit() {
+  const values = {}; document.querySelectorAll('#mf [data-h]').forEach(i => values[i.dataset.h] = i.value);
+  const r = await api({ action: 'update', pw: PW, id: EDIT[0], values }); if (r.ok) { $('#modal').hidden = true; load(); } else alert(r.error);
+}
+function csv() {
+  const e = v => '"' + String(v).replace(/"/g, '""') + '"';
+  const t = [HEAD, ...DATA].map(r => r.map(e).join(',')).join('\n');
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['\ufeff' + t], { type: 'text/csv' })); a.download = 'caravan-registrations.csv'; a.click();
+}
+// ---- mock access pass upload (resized to keep it small)
+$('#tpl').onchange = e => {
+  const f = e.target.files[0]; if (!f) return; const img = new Image();
+  img.onload = async () => {
+    const w = Math.min(900, img.width), c = document.createElement('canvas'); c.width = w; c.height = img.height * w / img.width;
+    c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+    const r = await api({ action: 'setTemplate', pw: PW, dataUrl: c.toDataURL('image/jpeg', .82) });
+    if (r.ok) { alert('MOCK ACCESS PASS UPLOADED.'); TPL = c.toDataURL('image/jpeg', .82); } else alert(r.error);
+  }; img.src = URL.createObjectURL(f);
+};
+async function rmTpl() { if (!confirm('REMOVE THE MOCK ACCESS PASS?')) return; const r = await api({ action: 'setTemplate', pw: PW, dataUrl: '' }); if (r.ok) { TPL = ''; alert('REMOVED.'); } }
+
+// ---- init
+if (!API.startsWith('PASTE')) fetch(API).then(r => r.json()).then(r => TPL = r.template || '').catch(() => {});
+if (location.hash === '#admin') show('login');
+</script>
+</body>
+</html>
