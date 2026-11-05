@@ -77,6 +77,11 @@ section:not([hidden]){animation:fu .5s ease both}
 body.noanim *,body.noanim *:before,body.noanim *:after{animation:none!important;transition:none!important}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
+/* ---- QR: same size on every pass ---- */
+.tk .qr img,.tk .qr canvas{width:130px!important;height:130px!important;max-width:none;padding:6px;background:#fff}
+/* ---- confirm-exit dialog ---- */
+#cx{position:fixed;inset:0;background:#0b1b4d99;display:flex;align-items:center;justify-content:center;padding:20px;z-index:9}#cx[hidden]{display:none}
+#cx>div{background:#fff;border-radius:18px;padding:24px 22px;max-width:420px;width:100%;text-align:center}#cx p{line-height:1.6;margin:0 0 4px}
 /* ---- admin: mobile layout ---- */
 @media(max-width:620px){
   main{padding:0 10px}main.wide section{padding:18px 12px}
@@ -174,7 +179,7 @@ body.noanim *,body.noanim *:before,body.noanim *:after{animation:none!important;
   <h2>THANK YOU FOR REGISTERING FOR THE OWWA SERBISYO CARAVAN!</h2>
   <p style="color:var(--mu)">Here is your Access Pass. Please present it at the venue &mdash; it will serve as your pass for the event.</p>
   <div id="pass"></div>
-  <div class="row"><button onclick="dl()">&#11015; DOWNLOAD ACCESS PASS</button><button class="alt" onclick="newReg()">&#43; REGISTER ANOTHER PERSON</button></div>
+  <div class="row"><button onclick="dl()">&#11015; DOWNLOAD ACCESS PASS</button><button class="alt" onclick="askExit()">&#43; REGISTER ANOTHER PERSON</button></div>
   <p style="font-size:.8rem;color:#64748b">Tip: save the image or take a screenshot. A copy of your Pass ID was also sent to your email.</p>
 </section>
 
@@ -250,6 +255,8 @@ body.noanim *,body.noanim *:before,body.noanim *:after{animation:none!important;
   <div id="sv" hidden><div class="row"><button class="grn" onclick="saveCfg()">SAVE CHANGES</button></div><div id="dmsg" class="ok c"></div></div>
 </section>
 </main>
+
+<div id="cx" hidden><div><div class="ic">&#9888;</div><h2>CONFIRM EXIT?</h2><p>Have you saved your Access Pass or taken a screenshot of it?</p><p style="font-size:.8rem;color:var(--mu)">You will need it at the venue, and it cannot be shown again after you leave this page.</p><div class="row"><button class="grn" onclick="newReg()">YES</button><button class="alt" onclick="$('#cx').hidden=true">NO</button></div></div></div>
 
 <div id="modal" hidden><div><h2>EDIT RECORD</h2><div class="g" id="mf"></div><div class="row"><button onclick="saveEdit()">SAVE</button><button class="alt" onclick="$('#modal').hidden=true">CANCEL</button></div></div></div>
 <input type="file" id="fi" accept="image/*" hidden>
@@ -360,7 +367,7 @@ function passHTML(id, name, loc) {
     `<small>ACCESS PASS ID</small><div class="id" style="color:${esc(c.color1)}">${esc(id)}</div></div>` +
     `<div class="ft">${esc(c.eventDate)}<br>${esc(c.venue)}<br><br>${esc(c.footer)}</div></div>`;
 }
-const mkQR = el => el.querySelectorAll('.qr').forEach(q => { q.innerHTML = ''; new QRCode(q, { text: q.dataset.t, width: 112, height: 112 }); });
+const mkQR = el => el.querySelectorAll('.qr').forEach(q => { q.innerHTML = ''; new QRCode(q, { text: q.dataset.t, width: 512, height: 512, correctLevel: QRCode.CorrectLevel.M }); });
 function pass(id, name, loc) { COUNT++; $('#pass').innerHTML = passHTML(id, name, loc); mkQR($('#pass')); show('done'); confetti(); }
 // shows the pass as a plain image (long-press / right-click to save) - used when a direct download is blocked
 function showImg(src) {
@@ -396,8 +403,10 @@ async function dl() {
   } catch (e) { console.error(e); showImg(c.toDataURL('image/png')); }
 }
 // register another person: back to a clean form (consent already accepted in this visit)
+function askExit() { $('#cx').hidden = false; }
+window.addEventListener('beforeunload', e => { if (!$('#done').hidden) { e.preventDefault(); e.returnValue = ''; } }); // closing / refreshing the tab on the pass screen
 function newReg() {
-  $('#f').reset();
+  $('#cx').hidden = true; $('#f').reset();
   ['muni', 'brgy'].forEach(i => { $('#' + i).innerHTML = ''; $('#' + i).disabled = true; });
   $('#rel').hidden = true; ['oLast', 'oFirst', 'oSuf', 'relSel'].forEach(i => $('#' + i).required = false);
   $('#err').hidden = true; $('#pass').innerHTML = '';
