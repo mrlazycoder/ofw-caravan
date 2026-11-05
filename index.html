@@ -114,31 +114,57 @@ body.noanim *,body.noanim *:before,body.noanim *:after{animation:none!important;
 #cam .frame{position:absolute;inset:16%;border:3px solid #fff;border-radius:16px;box-shadow:0 0 0 999px #0006;pointer-events:none}
 .rec{display:flex;justify-content:space-between;gap:10px;padding:9px 12px;border:1px solid var(--bd);border-radius:10px;margin-top:6px;font-size:.82rem;align-items:center}.rec b{display:block}
 #um{position:fixed;inset:0;background:#0b1b4d99;display:flex;align-items:flex-start;justify-content:center;overflow:auto;padding:20px;z-index:9}#um[hidden]{display:none}#um>div{background:#fff;border-radius:18px;padding:22px;max-width:520px;width:100%}
+
+/* ---- flat line icons ---- */
+.i{width:1.15em;height:1.15em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.22em;margin-right:.45em;flex:none}
+.ic .i{width:32px;height:32px;margin:0;vertical-align:0;color:var(--p)}
+.ic.rd{background:#fee2e2}.ic.rd .i{color:#dc2626}.ic.am{background:#fef3c7}.ic.am .i{color:#d97706}.ic.gn{background:#dcfce7}.ic.gn .i{color:#16a34a}
+.seg span .i{width:1.2em;height:1.2em}
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></symbol>
+<symbol id="i-ban" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+<symbol id="i-ok" viewBox="0 0 24 24"><path d="M22 11.1V12a10 10 0 1 1-5.9-9.1"/><path d="m9 11 3 3L22 4"/></symbol>
+<symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+<symbol id="i-user-plus" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></symbol>
+<symbol id="i-refresh" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></symbol>
+<symbol id="i-ext" viewBox="0 0 24 24"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></symbol>
+<symbol id="i-alert" viewBox="0 0 24 24"><path d="m21.7 18-8-14a2 2 0 0 0-3.4 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3z"/><path d="M12 9v4M12 17h.01"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+<symbol id="i-login" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="m10 17 5-5-5-5"/><path d="M15 12H3"/></symbol>
+<symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></symbol>
+<symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></symbol>
+<symbol id="i-camera" viewBox="0 0 24 24"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3z"/><circle cx="12" cy="13" r="3"/></symbol>
+<symbol id="i-save" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+</defs></svg>
 <div id="hero"><img id="logo" hidden alt="Logo"><div id="agency"></div><h1>OWWA SERBISYO CARAVAN</h1><p>ONLINE REGISTRATION</p>
   <div id="steps"><span>1 CONSENT</span><span>2 DETAILS</span><span>3 ACCESS PASS</span></div></div>
 <main id="main">
 
 <section id="consent" class="c">
-  <div class="ic">🛡️</div>
+  <div class="ic"><svg class="i"><use href="#i-shield"/></svg></div>
   <h2>DATA PRIVACY CONSENT NOTICE</h2>
   <div class="note" id="cnote">
     <p>In compliance with the <b>Data Privacy Act of 2012 (Republic Act No. 10173)</b>, the organizers of the OWWA Serbisyo Caravan collect your personal information solely for event registration, verification of identity and eligibility, queue management, and service delivery during the caravan.</p>
     <p>Your information will be kept confidential, accessed only by authorized personnel, and will not be shared with third parties except as required by law. By proceeding, you confirm that the information you provide is true and correct, and you consent to its collection and processing for the stated purposes.</p>
     <p>You may request correction or deletion of your data by contacting the event organizers.</p>
   </div>
-  <div class="row"><button class="grn" onclick="show('form')">I ACCEPT &rarr; PROCEED</button><button class="red" onclick="show('declined')">I DO NOT ACCEPT &rarr; EXIT</button></div>
+  <div class="row"><button class="grn" onclick="show('form')"><svg class="i"><use href="#i-check"/></svg>I ACCEPT &amp; PROCEED</button><button class="red" onclick="show('declined')"><svg class="i"><use href="#i-x"/></svg>I DO NOT ACCEPT</button></div>
 </section>
 
 <section id="declined" hidden class="c">
-  <div class="ic">🚫</div><h2>REGISTRATION CANCELLED</h2>
+  <div class="ic rd"><svg class="i"><use href="#i-ban"/></svg></div><h2>REGISTRATION CANCELLED</h2>
   <p>You chose not to accept the Data Privacy Consent Notice, so we cannot proceed with your registration. You may now close this page.</p>
   <button class="alt" onclick="show('consent')">GO BACK</button>
 </section>
 
-<section id="closed" hidden class="c"><div class="ic">⏳</div><h2>REGISTRATION CLOSED</h2><p id="cmsg" style="color:var(--mu)"></p></section>
+<section id="closed" hidden class="c"><div class="ic am"><svg class="i"><use href="#i-clock"/></svg></div><h2>REGISTRATION CLOSED</h2><p id="cmsg" style="color:var(--mu)"></p></section>
 
 <section id="form" hidden>
   <div class="c">
@@ -185,11 +211,11 @@ body.noanim *,body.noanim *:before,body.noanim *:after{animation:none!important;
 </section>
 
 <section id="done" hidden class="c">
-  <div class="ic">✅</div>
+  <div class="ic gn"><svg class="i"><use href="#i-ok"/></svg></div>
   <h2>THANK YOU FOR REGISTERING FOR THE OWWA SERBISYO CARAVAN!</h2>
   <p style="color:var(--mu)">Here is your Access Pass. Please present it at the venue &mdash; it will serve as your pass for the event.</p>
   <div id="pass"></div>
-  <div class="row"><button onclick="dl()">&#11015; DOWNLOAD ACCESS PASS</button><button class="alt" onclick="askExit()">&#43; REGISTER ANOTHER PERSON</button></div>
+  <div class="row"><button onclick="dl()"><svg class="i"><use href="#i-download"/></svg>DOWNLOAD ACCESS PASS</button><button class="alt" onclick="askExit()"><svg class="i"><use href="#i-plus"/></svg>REGISTER ANOTHER PERSON</button></div>
   <p style="font-size:.8rem;color:#64748b">Tip: save the image or take a screenshot. A copy of your Pass ID was also sent to your email.</p>
 </section>
 
@@ -209,12 +235,12 @@ body.noanim *,body.noanim *:before,body.noanim *:after{animation:none!important;
 </section>
 
 <section id="scan" hidden>
-  <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2 style="margin:0">QR SCANNER</h2><button class="alt" onclick="staffLogout()" style="padding:8px 14px;font-size:12px">LOGOUT</button></div>
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2 style="margin:0">QR SCANNER</h2><button class="alt" onclick="staffLogout()" style="padding:8px 14px;font-size:12px"><svg class="i"><use href="#i-logout"/></svg>LOGOUT</button></div>
   <div id="swho" style="font-size:.78rem;color:var(--mu);font-weight:700;margin:4px 0 12px"></div>
-  <div class="seg"><label><input type="radio" name="sm" value="IN" checked><span>&#9989; CHECK IN</span></label><label><input type="radio" name="sm" value="OUT"><span>&#128682; CHECK OUT</span></label></div>
+  <div class="seg"><label><input type="radio" name="sm" value="IN" checked><span><svg class="i"><use href="#i-login"/></svg>CHECK IN</span></label><label><input type="radio" name="sm" value="OUT"><span><svg class="i"><use href="#i-logout"/></svg>CHECK OUT</span></label></div>
   <div class="stats" style="margin-top:12px"><div><b id="t1">0</b>REGISTERED</div><div><b id="t2">0</b>CHECKED IN</div><div><b id="t3">0</b>INSIDE NOW</div></div>
   <div id="cam" hidden><video id="vid" playsinline muted></video><div class="frame"></div></div>
-  <div class="row" style="margin-top:12px"><button id="scb" onclick="camToggle()">START CAMERA</button></div>
+  <div class="row" style="margin-top:12px"><button id="scb" onclick="camToggle()"><svg class="i"><use href="#i-camera"/></svg>START CAMERA</button></div>
   <div id="cerr" class="err" hidden></div>
   <div id="sres"></div>
   <label style="margin-top:18px">CAMERA NOT WORKING? TYPE THE PASS ID</label>
@@ -223,13 +249,13 @@ body.noanim *,body.noanim *:before,body.noanim *:after{animation:none!important;
 </section>
 
 <section id="admin" hidden>
-  <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2 style="margin:0">ADMIN DASHBOARD</h2><button class="alt" onclick="logout()" style="padding:8px 14px;font-size:12px">LOGOUT</button></div>
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2 style="margin:0">ADMIN DASHBOARD</h2><button class="alt" onclick="logout()" style="padding:8px 14px;font-size:12px"><svg class="i"><use href="#i-logout"/></svg>LOGOUT</button></div>
   <div class="tabs"><button id="b1" class="on" onclick="tab('L')">REGISTRANTS</button><button id="b2" onclick="tab('D')">DESIGN</button><button id="b3" onclick="tab('S')">SETTINGS</button><button id="b4" onclick="tab('U')">USERS</button></div>
 
   <div id="tabL">
     <div class="stats s4"><div><b id="s1">0</b>REGISTERED</div><div><b id="s2">0</b>CHECKED IN</div><div><b id="s3">0</b>INSIDE NOW</div><div><b id="s4">0</b>OFW SELF-REGISTERED</div></div>
     <input id="q" placeholder="SEARCH NAME, PASS ID, CONTACT, MUNICIPALITY...">
-    <div class="row" style="margin-top:12px"><button class="alt" onclick="load()">&#8635; REFRESH</button><button onclick="csv()">EXPORT CSV</button></div>
+    <div class="row" style="margin-top:12px"><button class="alt" onclick="load()"><svg class="i"><use href="#i-refresh"/></svg>REFRESH</button><button onclick="csv()"><svg class="i"><use href="#i-download"/></svg>EXPORT CSV</button></div>
     <div class="tw" style="margin-top:14px"><table id="tb" class="rt"></table></div>
   </div>
 
@@ -291,7 +317,7 @@ body.noanim *,body.noanim *:before,body.noanim *:after{animation:none!important;
         <div class="full"><label>FULL NAME</label><input id="nn" autocomplete="off"></div>
         <div><label>USERNAME</label><input id="nu" style="text-transform:none" autocapitalize="none" autocomplete="off"></div>
         <div><label>PASSWORD (MIN. 6 CHARACTERS)</label><input id="np" style="text-transform:none" autocomplete="off"></div>
-        <div class="full"><div class="row" style="margin:0"><button onclick="addUser()">+ ADD ACCOUNT</button><button class="alt" onclick="window.open(location.pathname+'#scan','_blank')">OPEN SCANNER &#8599;</button></div><div id="umsg" class="ok"></div></div>
+        <div class="full"><div class="row" style="margin:0"><button onclick="addUser()"><svg class="i"><use href="#i-user-plus"/></svg>ADD ACCOUNT</button><button class="alt" onclick="window.open(location.pathname+'#scan','_blank')">OPEN SCANNER<svg class="i" style="margin:0 0 0 .45em"><use href="#i-ext"/></svg></button></div><div id="umsg" class="ok"></div></div>
       </div></div>
       <div class="card"><h3>SCANNER LINK FOR STAFF</h3>
         <div style="font-size:.85rem;line-height:1.7;color:var(--mu)">Give each scanning officer their own account and this link. They sign in, choose <b>CHECK IN</b> or <b>CHECK OUT</b>, then point the phone camera at the QR code on the Access Pass.<div id="surl" style="margin-top:8px;padding:10px;background:#f5f8ff;border-radius:10px;font-family:Consolas,monospace;font-size:.78rem;word-break:break-all;color:var(--tx)"></div></div>
@@ -300,15 +326,15 @@ body.noanim *,body.noanim *:before,body.noanim *:after{animation:none!important;
     <h3 style="color:var(--pd)">STAFF ACCOUNTS</h3>
     <div class="tw"><table id="ut" class="rt"></table></div>
     <h3 style="color:var(--pd);margin-top:20px">RECENT SCANS (LAST 300)</h3>
-    <div class="row" style="margin:0 0 10px"><button class="alt" onclick="loadLog()">&#8635; REFRESH LOG</button></div>
+    <div class="row" style="margin:0 0 10px"><button class="alt" onclick="loadLog()"><svg class="i"><use href="#i-refresh"/></svg>REFRESH LOG</button></div>
     <div class="tw"><table id="lt" class="rt"></table></div>
   </div>
 
-  <div id="sv" hidden><div class="row"><button class="grn" onclick="saveCfg()">SAVE CHANGES</button></div><div id="dmsg" class="ok c"></div></div>
+  <div id="sv" hidden><div class="row"><button class="grn" onclick="saveCfg()"><svg class="i"><use href="#i-save"/></svg>SAVE CHANGES</button></div><div id="dmsg" class="ok c"></div></div>
 </section>
 </main>
 
-<div id="cx" hidden><div><div class="ic">&#9888;</div><h2>CONFIRM EXIT?</h2><p>Have you saved your Access Pass or taken a screenshot of it?</p><p style="font-size:.8rem;color:var(--mu)">You will need it at the venue, and it cannot be shown again after you leave this page.</p><div class="row"><button class="grn" onclick="newReg()">YES</button><button class="alt" onclick="$('#cx').hidden=true">NO</button></div></div></div>
+<div id="cx" hidden><div><div class="ic am"><svg class="i"><use href="#i-alert"/></svg></div><h2>CONFIRM EXIT?</h2><p>Have you saved your Access Pass or taken a screenshot of it?</p><p style="font-size:.8rem;color:var(--mu)">You will need it at the venue, and it cannot be shown again after you leave this page.</p><div class="row"><button class="grn" onclick="newReg()">YES</button><button class="alt" onclick="$('#cx').hidden=true">NO</button></div></div></div>
 
 <div id="um" hidden><div><h2>EDIT STAFF ACCOUNT</h2><div class="g">
   <div class="full"><label>USERNAME</label><input id="eu" disabled style="text-transform:none"></div>
@@ -647,7 +673,7 @@ async function camStart() {
   try {
     STREAM = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 } }, audio: false });
     const v = $('#vid'); v.srcObject = STREAM; await v.play();
-    $('#cam').hidden = false; $('#scb').textContent = 'STOP CAMERA'; SCANNING = true;
+    $('#cam').hidden = false; $('#scb').innerHTML = ico('camera') + 'STOP CAMERA'; SCANNING = true;
     DET = null; if ('BarcodeDetector' in window) { try { DET = new BarcodeDetector({ formats: ['qr_code'] }); } catch (x) { DET = null; } }
     if (!DET && !window.jsQR) camErr('QR READER FAILED TO LOAD. REFRESH THE PAGE, OR TYPE THE PASS ID BELOW.');
     tick();
@@ -655,7 +681,7 @@ async function camStart() {
 }
 function camStop() {
   SCANNING = false; if (STREAM) STREAM.getTracks().forEach(t => t.stop()); STREAM = null;
-  const v = $('#vid'); if (v) v.srcObject = null; $('#cam').hidden = true; $('#scb').textContent = 'START CAMERA';
+  const v = $('#vid'); if (v) v.srcObject = null; $('#cam').hidden = true; $('#scb').innerHTML = ico('camera') + 'START CAMERA';
 }
 async function tick() {
   if (!SCANNING) return;
@@ -693,8 +719,9 @@ async function doScan(id) {
   } catch (e) { showRes('ERR', 'NO CONNECTION', null, 'CHECK THE INTERNET CONNECTION AND SCAN AGAIN.'); beep('ERR'); }
   finally { BUSY = false; }
 }
+const ico = n => '<svg class="i"><use href="#i-' + n + '"/></svg>';
 function showRes(level, title, p, msg) {
-  const c = { OK: ['#dcfce7', '#166534', '#22c55e', '&#10004;'], WARN: ['#fef3c7', '#92400e', '#f59e0b', '&#9888;'], ERR: ['#fee2e2', '#991b1b', '#ef4444', '&#10006;'] }[level] || ['#fee2e2', '#991b1b', '#ef4444', '&#10006;'];
+  const c = { OK: ['#dcfce7', '#166534', '#22c55e', ico('check')], WARN: ['#fef3c7', '#92400e', '#f59e0b', ico('alert')], ERR: ['#fee2e2', '#991b1b', '#ef4444', ico('x')] }[level] || ['#fee2e2', '#991b1b', '#ef4444', ico('x')];
   $('#sres').innerHTML = `<div style="background:${c[0]};border:2px solid ${c[2]};color:${c[1]};border-radius:14px;padding:16px;margin-top:14px;text-align:center"><div style="font-size:1.2rem;font-weight:800">${c[3]} ${esc(title)}</div>` +
     (p ? `<div style="font-size:1.25rem;font-weight:800;margin-top:8px;color:var(--tx)">${esc(p.name || '')}</div><div style="font-family:Consolas,monospace;font-weight:700;color:var(--tx)">${esc(p.id || '')}</div>` + (p.place ? `<div style="font-size:.8rem;margin-top:4px">${esc(p.place)}</div>` : '') : '') +
     (msg ? `<div style="font-size:.8rem;font-weight:700;margin-top:8px">${esc(msg)}</div>` : '') + '</div>';
