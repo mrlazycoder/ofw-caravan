@@ -5,42 +5,64 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>OWWA Serbisyo Caravan Registration</title>
 <style>
-:root{--b:#1e3a8a;--b2:#2563eb;--bg:#f1f5f9;--r:12px}
-*{box-sizing:border-box}body{margin:0;font-family:system-ui,Segoe UI,Arial,sans-serif;background:var(--bg);color:#0f172a}
-header{background:linear-gradient(135deg,var(--b),var(--b2));color:#fff;text-align:center;padding:18px 12px}
-header h1{margin:0;font-size:1.25rem}header p{margin:4px 0 0;font-size:.85rem;opacity:.9}
-main{max-width:760px;margin:16px auto;padding:0 12px}main.wide{max-width:1100px}
-section{background:#fff;border-radius:var(--r);padding:20px;box-shadow:0 2px 10px #0001}
-h2{margin:0 0 12px;font-size:1.1rem;color:var(--b)}h3{margin:20px 0 8px;font-size:.95rem;color:var(--b);border-bottom:2px solid #dbeafe;padding-bottom:4px}
-.g{display:grid;grid-template-columns:1fr 1fr;gap:12px}.g .f{grid-column:span 1}.g .full{grid-column:1/-1}
-@media(max-width:600px){.g{grid-template-columns:1fr}}
-label{display:block;font-size:.78rem;font-weight:600;margin-bottom:3px}label i{color:#dc2626;font-style:normal}
-input,select{width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:8px;font-size:16px;text-transform:uppercase;background:#fff}
-input:focus,select:focus{outline:2px solid var(--b2);border-color:var(--b2)}input:disabled,select:disabled{background:#f1f5f9}
-button{background:var(--b2);color:#fff;border:0;border-radius:8px;padding:12px 18px;font-size:15px;font-weight:600;cursor:pointer}
-button.alt{background:#e2e8f0;color:#0f172a}button.red{background:#dc2626}button.grn{background:#16a34a}button:disabled{opacity:.6}
-.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.row>button{flex:1;min-width:130px}
-.note{background:#eff6ff;border-left:4px solid var(--b2);padding:12px;border-radius:6px;font-size:.88rem;line-height:1.5;max-height:46vh;overflow:auto}
-.err{background:#fee2e2;color:#991b1b;padding:10px;border-radius:8px;margin-top:12px;font-size:.9rem}
-.radio{display:flex;gap:18px}.radio label{display:flex;gap:6px;align-items:center;font-size:.95rem}.radio input{width:auto}
-#pass{width:340px;max-width:100%;margin:14px auto;background:#fff;border:2px solid var(--b);border-radius:16px;overflow:hidden;text-align:center}
-#pass .hd{background:linear-gradient(135deg,var(--b),var(--b2));color:#fff;padding:16px 10px;font-weight:700}
-#pass img.tp{width:100%;display:block}#pass .bd{padding:14px}
-#pass .nm{font-size:1.2rem;font-weight:800;margin:6px 0}#pass .id{font-family:monospace;font-size:1.3rem;font-weight:800;color:var(--b);letter-spacing:1px;margin:8px 0}
-#pass .qr{display:flex;justify-content:center;margin:8px 0}#pass small{color:#475569;display:block}
-table{width:100%;border-collapse:collapse;font-size:.82rem}th,td{padding:7px 6px;border-bottom:1px solid #e2e8f0;text-align:left;white-space:nowrap}th{background:#eff6ff;position:sticky;top:0}
-.tw{overflow:auto;max-height:60vh}.st{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}.st div{flex:1;min-width:110px;background:#eff6ff;border-radius:10px;padding:10px;text-align:center}.st b{display:block;font-size:1.4rem;color:var(--b)}
-td button{padding:5px 9px;font-size:12px;margin-right:3px}
-#modal{position:fixed;inset:0;background:#0008;display:flex;align-items:flex-start;justify-content:center;overflow:auto;padding:20px;z-index:9}#modal[hidden]{display:none}
-#modal>div{background:#fff;border-radius:var(--r);padding:18px;max-width:700px;width:100%}
-.c{text-align:center}
+:root{--p:#1d4ed8;--pd:#0b2a6f;--ac:#f5b700;--bg:#f3f6fc;--tx:#0f1b3d;--mu:#64748b;--bd:#d9e0ee}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;background:var(--bg);color:var(--tx)}
+#hero{position:relative;background:linear-gradient(135deg,#0b2a6f,#1d4ed8 60%,#3b82f6) center/cover;color:#fff;text-align:center;padding:34px 16px 74px;min-height:200px;display:flex;flex-direction:column;justify-content:center;align-items:center}
+#hero:after{content:"";position:absolute;left:0;right:0;bottom:0;height:5px;background:var(--ac)}
+#hero h1{margin:0;font-size:clamp(1.3rem,4.5vw,2.1rem);font-weight:800;letter-spacing:.5px;text-shadow:0 2px 8px #0005}
+#hero p{margin:6px 0 0;opacity:.92;letter-spacing:3px;font-size:.8rem;font-weight:600}
+#hero.notext h1,#hero.notext p{display:none}
+#steps{display:flex;gap:8px;margin-top:16px;font-size:.72rem}
+#steps span{padding:5px 13px;border-radius:99px;background:#ffffff2e;color:#fff;backdrop-filter:blur(4px)}
+#steps span.on{background:var(--ac);color:#1a1a1a;font-weight:700}
+main{max-width:780px;margin:-48px auto 40px;padding:0 14px;position:relative}main.wide{max-width:1180px}
+section{background:#fff;border-radius:18px;padding:28px;box-shadow:0 12px 34px #0b2a6f1f}
+h2{margin:0 0 12px;font-size:1.2rem;color:var(--pd)}
+.c{text-align:center}.ic{width:64px;height:64px;border-radius:50%;background:#eaf0ff;display:grid;place-items:center;font-size:30px;margin:0 auto 10px}
+.stt{display:flex;align-items:center;gap:10px;font-weight:700;color:var(--pd);margin:26px 0 14px;padding-bottom:8px;border-bottom:2px solid #e6ecf8}
+.stt b{width:28px;height:28px;border-radius:50%;background:var(--p);color:#fff;display:grid;place-items:center;font-size:.8rem}
+.g{display:grid;grid-template-columns:1fr 1fr;gap:14px}.full{grid-column:1/-1}
+@media(max-width:620px){.g,.two{grid-template-columns:1fr!important}section{padding:20px 16px}}
+label{display:block;font-size:.74rem;font-weight:700;margin-bottom:5px;color:#334155;letter-spacing:.3px}label i{color:#dc2626;font-style:normal}
+input,select{width:100%;height:46px;padding:0 12px;border:1.5px solid var(--bd);border-radius:10px;font-size:16px;text-transform:uppercase;background:#fff;color:var(--tx);transition:.15s}
+input[type=email],#modal input[data-h="EMAIL ADDRESS"]{text-transform:lowercase}
+input[type=color]{padding:3px;text-transform:none}input[type=checkbox]{width:auto;height:auto}
+input:focus,select:focus{outline:0;border-color:var(--p);box-shadow:0 0 0 4px #1d4ed824}input:disabled,select:disabled{background:#f1f5f9;color:#94a3b8}
+input:invalid:not(:placeholder-shown):not([type=date]){border-color:#f87171}
+button{background:linear-gradient(135deg,var(--p),#3b82f6);color:#fff;border:0;border-radius:10px;padding:13px 20px;font-size:15px;font-weight:700;cursor:pointer;transition:.15s;box-shadow:0 4px 12px #1d4ed833}
+button:hover{transform:translateY(-1px);filter:brightness(1.07)}button:disabled{opacity:.6;transform:none}
+button.alt{background:#eef2fa;color:var(--pd);box-shadow:none}button.red{background:linear-gradient(135deg,#dc2626,#ef4444)}button.grn{background:linear-gradient(135deg,#15803d,#22c55e)}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}.row>button{flex:1;min-width:140px}
+.note{background:#f5f8ff;border:1px solid #dbe5fb;border-left:4px solid var(--p);padding:14px 16px;border-radius:10px;font-size:.9rem;line-height:1.6;max-height:44vh;overflow:auto;text-align:left}
+.err{background:#fef2f2;border:1px solid #fecaca;color:#991b1b;padding:12px;border-radius:10px;margin-top:14px;font-size:.9rem}
+.seg{display:flex;gap:10px}.seg label{flex:1;margin:0;cursor:pointer}.seg input{position:absolute;opacity:0;width:0;height:0}
+.seg span{display:block;text-align:center;padding:12px;border:1.5px solid var(--bd);border-radius:10px;font-weight:700;font-size:.9rem}
+.seg input:checked+span{background:var(--p);border-color:var(--p);color:#fff}
+.tk{width:340px;max-width:100%;margin:16px auto;background:#fff;border-radius:20px;overflow:hidden;text-align:center;box-shadow:0 14px 36px #0b2a6f33;border:1px solid #dbe5fb}
+.tk .th{padding:20px 12px;color:#fff;font-weight:800;font-size:1.05rem;letter-spacing:.5px}.tk img{width:100%;display:block}
+.tk .ps{background:#f5b700;color:#1a1a1a;font-weight:800;font-size:.8rem;letter-spacing:3px;padding:7px}
+.tk .bd{padding:16px 14px 6px}.tk .nm{font-size:1.2rem;font-weight:800;margin-bottom:2px}.tk small{color:#64748b;display:block;font-size:.75rem;margin:2px 0}
+.tk .qr{display:flex;justify-content:center;margin:12px 0 6px}.tk .id{font-family:Consolas,monospace;font-size:1.3rem;font-weight:800;letter-spacing:1px;margin:4px 0 12px}
+.tk .ft{border-top:2px dashed #cbd5e1;margin-top:8px;padding:10px 14px 14px;font-size:.72rem;color:#475569;font-weight:600}
+.tabs{display:flex;gap:6px;margin:14px 0}.tabs button{background:#eef2fa;color:var(--pd);box-shadow:none}.tabs button.on{background:var(--p);color:#fff}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:8px 0 14px}.stats div{background:linear-gradient(135deg,#eff4ff,#e0e9ff);border-radius:12px;padding:14px;text-align:center;font-size:.72rem;font-weight:700;color:var(--mu)}.stats b{display:block;font-size:1.7rem;color:var(--pd)}
+.tw{overflow:auto;max-height:62vh;border:1px solid var(--bd);border-radius:12px}
+table{width:100%;border-collapse:collapse;font-size:.82rem}th,td{padding:10px 9px;border-bottom:1px solid #edf1f9;text-align:left;white-space:nowrap}th{background:#f3f6fc;position:sticky;top:0;font-size:.7rem;letter-spacing:.5px;color:var(--mu)}tr:hover td{background:#f9fbff}
+td button{padding:6px 10px;font-size:11px;margin-right:3px;box-shadow:none}
+.bg{padding:3px 9px;border-radius:99px;font-size:.7rem;font-weight:700;background:#e2e8f0;color:#475569}.bg.y{background:#dcfce7;color:#166534}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}.card{border:1px solid var(--bd);border-radius:14px;padding:18px}.card h3{margin:0 0 12px;font-size:.95rem;color:var(--pd)}.card .g{gap:10px}
+#modal{position:fixed;inset:0;background:#0b1b4d99;display:flex;align-items:flex-start;justify-content:center;overflow:auto;padding:20px;z-index:9}#modal[hidden]{display:none}#modal>div{background:#fff;border-radius:18px;padding:22px;max-width:720px;width:100%}
+.ok{color:#166534;font-weight:700;margin-top:10px}
 </style>
 </head>
 <body>
-<header><h1>OWWA SERBISYO CARAVAN</h1><p>ONLINE REGISTRATION</p></header>
+<div id="hero"><h1>OWWA SERBISYO CARAVAN</h1><p>ONLINE REGISTRATION</p>
+  <div id="steps"><span>1 CONSENT</span><span>2 DETAILS</span><span>3 ACCESS PASS</span></div></div>
 <main id="main">
 
-<section id="consent">
+<section id="consent" class="c">
+  <div class="ic">🛡️</div>
   <h2>DATA PRIVACY CONSENT NOTICE</h2>
   <div class="note">
     <p>In compliance with the <b>Data Privacy Act of 2012 (Republic Act No. 10173)</b>, the organizers of the OWWA Serbisyo Caravan collect your personal information solely for event registration, verification of identity and eligibility, queue management, and service delivery during the caravan.</p>
@@ -51,19 +73,18 @@ td button{padding:5px 9px;font-size:12px;margin-right:3px}
 </section>
 
 <section id="declined" hidden class="c">
-  <h2>REGISTRATION CANCELLED</h2>
+  <div class="ic">🚫</div><h2>REGISTRATION CANCELLED</h2>
   <p>You chose not to accept the Data Privacy Consent Notice, so we cannot proceed with your registration. You may now close this page.</p>
   <button class="alt" onclick="show('consent')">GO BACK</button>
 </section>
 
 <section id="form" hidden>
-  <div class="c" style="margin-bottom:6px">
-    <h2 style="font-size:1.3rem;margin:0">OWWA SERBISYO CARAVAN</h2>
-    <div style="font-weight:700;letter-spacing:1px">REGISTRATION FORM</div>
-    <p style="font-size:.82rem;color:#475569;margin:6px 0 0">Fields marked with <i style="color:#dc2626;font-style:normal">*</i> are required. All entries are automatically converted to CAPITAL LETTERS.</p>
+  <div class="c">
+    <h2 style="font-size:1.4rem;margin:0">REGISTRATION FORM</h2>
+    <p style="font-size:.85rem;color:var(--mu);margin:6px 0 0">Fields marked with <i style="color:#dc2626;font-style:normal">*</i> are required. Entries are automatically converted to CAPITAL LETTERS (email stays lowercase).</p>
   </div>
   <form id="f" autocomplete="off" novalidate>
-    <h3>PERSONAL INFORMATION</h3>
+    <div class="stt"><b>1</b>PERSONAL INFORMATION</div>
     <div class="g">
       <div><label>LAST NAME <i>*</i></label><input id="last" required></div>
       <div><label>FIRST NAME <i>*</i></label><input id="first" required></div>
@@ -72,18 +93,18 @@ td button{padding:5px 9px;font-size:12px;margin-right:3px}
       <div><label>BIRTHDATE <i>*</i></label><input id="birth" type="date" required></div>
       <div><label>SEX <i>*</i></label><select id="sex" required><option value="">SELECT</option><option>MALE</option><option>FEMALE</option></select></div>
       <div><label>CONTACT NUMBER <i>*</i></label><input id="phone" inputmode="numeric" placeholder="09##-###-####" maxlength="13" required pattern="09[0-9]{2}-[0-9]{3}-[0-9]{4}"></div>
-      <div><label>EMAIL ADDRESS <i>*</i></label><input id="email" type="email" inputmode="email" placeholder="NAME@EMAIL.COM" required></div>
+      <div><label>EMAIL ADDRESS <i>*</i></label><input id="email" type="email" inputmode="email" placeholder="name@email.com" required></div>
       <div><label>PROVINCE (REGION 3) <i>*</i></label><select id="prov" required></select></div>
       <div><label>MUNICIPALITY / CITY <i>*</i></label><select id="muni" required disabled></select></div>
       <div><label>BARANGAY <i>*</i></label><select id="brgy" required disabled></select></div>
       <div><label>STREET / LOT / HOUSE NUMBER</label><input id="street"></div>
     </div>
 
-    <h3>OFW INFORMATION</h3>
+    <div class="stt"><b>2</b>OFW INFORMATION</div>
     <label>ARE YOU THE OFW? <i>*</i></label>
-    <div class="radio"><label><input type="radio" name="isOfw" value="YES" checked> YES</label><label><input type="radio" name="isOfw" value="NO"> NO</label></div>
+    <div class="seg"><label><input type="radio" name="isOfw" value="YES" checked><span>YES</span></label><label><input type="radio" name="isOfw" value="NO"><span>NO</span></label></div>
     <div id="rel" hidden>
-      <div class="g" style="margin-top:12px">
+      <div class="g" style="margin-top:14px">
         <div><label>OFW'S LAST NAME <i>*</i></label><input id="oLast"></div>
         <div><label>OFW'S FIRST NAME <i>*</i></label><input id="oFirst"></div>
         <div><label>OFW'S MIDDLE NAME</label><input id="oMid"></div>
@@ -91,22 +112,23 @@ td button{padding:5px 9px;font-size:12px;margin-right:3px}
         <div class="full"><label>RELATIONSHIP TO OFW <i>*</i></label><select id="relSel"><option value="">SELECT</option><option>SPOUSE</option><option>CHILD</option><option>PARENT</option><option>SIBLING</option><option>GRANDPARENT</option><option>OTHER RELATIVE</option><option>OTHER</option></select></div>
       </div>
     </div>
-    <div class="g" style="margin-top:12px">
+    <div class="g" style="margin-top:14px">
       <div><label>CATEGORY <i>*</i></label><select id="cat" required><option value="">SELECT</option><option>LAND-BASED</option><option>SEA-BASED</option></select></div>
       <div><label>JOBSITE (COUNTRY) <i>*</i></label><select id="site" required></select></div>
       <div class="full"><label>POSITION / OCCUPATION <i>*</i></label><input id="pos" required></div>
     </div>
     <div id="err" class="err" hidden></div>
-    <div class="row"><button type="submit" id="sub">SUBMIT</button></div>
+    <div class="row"><button type="submit" id="sub">SUBMIT REGISTRATION</button></div>
   </form>
 </section>
 
 <section id="done" hidden class="c">
+  <div class="ic">✅</div>
   <h2>THANK YOU FOR REGISTERING FOR THE OWWA SERBISYO CARAVAN!</h2>
-  <p>Here is your Access Pass. Please present it at the venue &mdash; it will serve as your pass for the event.</p>
+  <p style="color:var(--mu)">Here is your Access Pass. Please present it at the venue &mdash; it will serve as your pass for the event.</p>
   <div id="pass"></div>
-  <div class="row"><button onclick="dl()">DOWNLOAD ACCESS PASS</button></div>
-  <p style="font-size:.8rem;color:#64748b">Tip: take a screenshot or save the image. A copy of your Pass ID was also sent to your email.</p>
+  <div class="row"><button onclick="dl()">&#11015; DOWNLOAD ACCESS PASS</button></div>
+  <p style="font-size:.8rem;color:#64748b">Tip: save the image or take a screenshot. A copy of your Pass ID was also sent to your email.</p>
 </section>
 
 <section id="login" hidden>
@@ -118,38 +140,84 @@ td button{padding:5px 9px;font-size:12px;margin-right:3px}
 
 <section id="admin" hidden>
   <h2>ADMIN DASHBOARD</h2>
-  <div class="st"><div><b id="s1">0</b>REGISTERED</div><div><b id="s2">0</b>CHECKED IN</div><div><b id="s3">0</b>OFW SELF-REG</div></div>
-  <div class="g"><div class="full"><input id="q" placeholder="SEARCH NAME, PASS ID, CONTACT, MUNICIPALITY..."></div></div>
-  <div class="row"><button class="alt" onclick="load()">REFRESH</button><button onclick="csv()">EXPORT CSV</button><button class="alt" onclick="$('#tpl').click()">UPLOAD MOCK ACCESS PASS</button><button class="alt" onclick="rmTpl()">REMOVE MOCK PASS</button></div>
-  <input type="file" id="tpl" accept="image/*" hidden>
-  <div class="tw" style="margin-top:12px"><table id="tb"></table></div>
+  <div class="tabs"><button id="b1" class="on" onclick="tab('L')">REGISTRANTS</button><button id="b2" onclick="tab('D')">DESIGN</button></div>
+
+  <div id="tabL">
+    <div class="stats"><div><b id="s1">0</b>REGISTERED</div><div><b id="s2">0</b>CHECKED IN</div><div><b id="s3">0</b>OFW SELF-REGISTERED</div></div>
+    <input id="q" placeholder="SEARCH NAME, PASS ID, CONTACT, MUNICIPALITY...">
+    <div class="row" style="margin-top:12px"><button class="alt" onclick="load()">&#8635; REFRESH</button><button onclick="csv()">EXPORT CSV</button></div>
+    <div class="tw" style="margin-top:14px"><table id="tb"></table></div>
+  </div>
+
+  <div id="tabD" hidden>
+    <div class="two">
+      <div class="card"><h3>WEBSITE BANNER</h3>
+        <div class="g">
+          <div class="full"><label>BANNER IMAGE (RECOMMENDED 1400 &times; 400)</label><div class="row" style="margin:0"><button onclick="pick('siteBanner',1400)">UPLOAD IMAGE</button><button class="alt" onclick="clr('siteBanner')">REMOVE</button></div></div>
+          <div><label>TITLE</label><input data-k="siteTitle"></div>
+          <div><label>SUBTITLE</label><input data-k="siteSub"></div>
+          <div class="full"><label style="display:flex;gap:8px;align-items:center"><input type="checkbox" data-k="siteText"> SHOW TITLE TEXT ON TOP OF THE BANNER IMAGE</label></div>
+        </div>
+      </div>
+      <div class="card"><h3>ACCESS PASS DESIGN</h3>
+        <div class="g">
+          <div class="full"><label>PASS HEADER IMAGE (OPTIONAL)</label><div class="row" style="margin:0"><button onclick="pick('passBanner',900)">UPLOAD IMAGE</button><button class="alt" onclick="clr('passBanner')">REMOVE</button></div></div>
+          <div><label>PASS TITLE</label><input data-k="passTitle"></div>
+          <div><label>STRIP TEXT</label><input data-k="passSub"></div>
+          <div><label>COLOR 1</label><input type="color" data-k="color1"></div>
+          <div><label>COLOR 2</label><input type="color" data-k="color2"></div>
+          <div class="full"><label>EVENT DATE</label><input data-k="eventDate"></div>
+          <div class="full"><label>VENUE</label><input data-k="venue"></div>
+          <div class="full"><label>FOOTER NOTE</label><input data-k="footer"></div>
+          <div><label style="display:flex;gap:8px;align-items:center"><input type="checkbox" data-k="showQR"> SHOW QR CODE</label></div>
+          <div><label style="display:flex;gap:8px;align-items:center"><input type="checkbox" data-k="showLoc"> SHOW ADDRESS</label></div>
+        </div>
+      </div>
+    </div>
+    <h3 style="color:var(--pd)" class="c">LIVE PASS PREVIEW</h3><div id="pv"></div>
+    <div class="row"><button class="grn" onclick="saveCfg()">SAVE DESIGN</button></div><div id="dmsg" class="ok c"></div>
+  </div>
 </section>
 </main>
 
 <div id="modal" hidden><div><h2>EDIT RECORD</h2><div class="g" id="mf"></div><div class="row"><button onclick="saveEdit()">SAVE</button><button class="alt" onclick="$('#modal').hidden=true">CANCEL</button></div></div></div>
+<input type="file" id="fi" accept="image/*" hidden>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
-// ====== CONFIG: paste your Apps Script Web App URL ======
 const API = 'https://script.google.com/macros/s/AKfycbwxIKGNlCelLpJnQfG9W3gPsl2qv_jFwLz6TyfJPl2T6KxpPfTrWqI63M5Tq7dZ8b4M/exec';
-const EVENT_DATE = 'EVENT DATE: NOVEMBER 20, 2026', VENUE = 'VENUE: LIMAY BATAAN';
 const PSGC = 'https://psgc.gitlab.io/api/';
 const COUNTRIES = 'Afghanistan,Albania,Algeria,Angola,Argentina,Australia,Austria,Bahrain,Bangladesh,Belgium,Brazil,Brunei,Bulgaria,Cambodia,Canada,Chile,China,Colombia,Croatia,Cyprus,Czech Republic,Denmark,Egypt,Ethiopia,Fiji,Finland,France,Germany,Ghana,Greece,Guam,Hong Kong,Hungary,India,Indonesia,Iran,Iraq,Ireland,Israel,Italy,Japan,Jordan,Kazakhstan,Kenya,Kuwait,Laos,Lebanon,Libya,Macau,Malaysia,Maldives,Malta,Mexico,Morocco,Myanmar,Nepal,Netherlands,New Zealand,Nigeria,Northern Mariana Islands,Norway,Oman,Pakistan,Palau,Panama,Papua New Guinea,Peru,Poland,Portugal,Qatar,Romania,Russia,Saipan,Saudi Arabia,Singapore,Slovakia,South Africa,South Korea,Spain,Sri Lanka,Sudan,Sweden,Switzerland,Syria,Taiwan,Thailand,Turkey,Ukraine,United Arab Emirates,United Kingdom,United States,Vietnam,Yemen,Other / Vessel (International Waters)'.split(',');
+const DEF = { siteTitle: 'OWWA SERBISYO CARAVAN', siteSub: 'ONLINE REGISTRATION', siteText: true, siteBanner: '', passTitle: 'OWWA SERBISYO CARAVAN', passSub: 'ACCESS PASS', eventDate: 'EVENT DATE: TO BE ANNOUNCED', venue: 'VENUE: TO BE ANNOUNCED', footer: 'PRESENT THIS PASS AT THE VENUE', color1: '#1e3a8a', color2: '#2563eb', passBanner: '', showQR: true, showLoc: true };
 
 const $ = s => document.querySelector(s), U = v => (v == null ? '' : String(v)).trim().toUpperCase();
-let TPL = '', PW = '', DATA = [], HEAD = [], EDIT = null;
-const show = id => { document.querySelectorAll('section').forEach(s => s.hidden = s.id !== id); $('#main').className = id === 'admin' ? 'wide' : ''; scrollTo(0, 0); };
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+let CFG = { ...DEF }, PW = '', DATA = [], HEAD = [], EDIT = null, PK = '', PWID = 0;
+const STEP = { consent: 1, form: 2, done: 3 };
+function show(id) {
+  document.querySelectorAll('section').forEach(s => s.hidden = s.id !== id);
+  $('#main').className = id === 'admin' ? 'wide' : '';
+  const n = STEP[id]; $('#steps').hidden = !n; [...$('#steps').children].forEach((s, i) => s.classList.toggle('on', i + 1 === n)); scrollTo(0, 0);
+}
 const api = o => fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(o) }).then(r => r.json());
 
-// ---- force CAPS on typing
+// ---- website banner
+function hero() {
+  const h = $('#hero'), b = CFG.siteBanner;
+  h.style.backgroundImage = b ? (CFG.siteText ? `linear-gradient(180deg,#0b1b4d88,#0b1b4dcc),url(${b})` : `url(${b})`) : '';
+  h.querySelector('h1').textContent = CFG.siteTitle; h.querySelector('p').textContent = CFG.siteSub;
+  h.classList.toggle('notext', !CFG.siteText && !!b);
+}
+
+// ---- CAPS on typing (email stays lowercase)
 document.addEventListener('input', e => {
   const t = e.target;
-  if (t.tagName === 'INPUT' && ['text', 'email', 'search', ''].includes(t.type) && t.id !== 'pw') {
+  if (t.tagName === 'INPUT' && ['text', 'search', ''].includes(t.type) && t.id !== 'pw' && t.dataset.h !== 'EMAIL ADDRESS') {
     const p = t.selectionStart; t.value = t.value.toUpperCase(); try { t.setSelectionRange(p, p) } catch (x) {}
   }
 });
-// ---- phone mask 09##-###-####
+$('#email').addEventListener('input', e => e.target.value = e.target.value.toLowerCase());
 $('#phone').addEventListener('input', e => {
   let d = e.target.value.replace(/\D/g, '').slice(0, 11);
   e.target.value = d.length > 7 ? d.slice(0, 4) + '-' + d.slice(4, 7) + '-' + d.slice(7) : d.length > 4 ? d.slice(0, 4) + '-' + d.slice(4) : d;
@@ -157,7 +225,7 @@ $('#phone').addEventListener('input', e => {
 $('#birth').max = new Date().toISOString().slice(0, 10);
 $('#site').innerHTML = '<option value="">SELECT COUNTRY</option>' + COUNTRIES.map(c => `<option>${U(c)}</option>`).join('');
 
-// ---- Region 3 cascading dropdowns (PSGC open data)
+// ---- Region 3 cascading dropdowns
 async function fill(sel, url, ph) {
   sel.innerHTML = '<option value="">LOADING...</option>'; sel.disabled = true;
   try {
@@ -171,45 +239,72 @@ fill($('#prov'), PSGC + 'regions/030000000/provinces/', 'SELECT PROVINCE');
 $('#prov').onchange = () => { $('#brgy').innerHTML = ''; $('#brgy').disabled = true; $('#muni').innerHTML = ''; code($('#prov')) ? fill($('#muni'), PSGC + 'provinces/' + code($('#prov')) + '/cities-municipalities/', 'SELECT MUNICIPALITY / CITY') : $('#muni').disabled = true; };
 $('#muni').onchange = () => { $('#brgy').innerHTML = ''; code($('#muni')) ? fill($('#brgy'), PSGC + 'cities-municipalities/' + code($('#muni')) + '/barangays/', 'SELECT BARANGAY') : $('#brgy').disabled = true; };
 
-// ---- OFW toggle
 document.querySelectorAll('[name=isOfw]').forEach(r => r.onchange = () => {
   const no = document.querySelector('[name=isOfw]:checked').value === 'NO';
-  $('#rel').hidden = !no;
-  ['oLast', 'oFirst', 'oSuf', 'relSel'].forEach(i => $('#' + i).required = no);
+  $('#rel').hidden = !no; ['oLast', 'oFirst', 'oSuf', 'relSel'].forEach(i => $('#' + i).required = no);
 });
 
 // ---- submit
-const IDS = ['last', 'first', 'middle', 'suffix', 'birth', 'sex', 'phone', 'email', 'prov', 'muni', 'brgy', 'street', 'oLast', 'oFirst', 'oMid', 'oSuf', 'cat', 'site', 'pos'];
+const IDS = ['last', 'first', 'middle', 'suffix', 'birth', 'sex', 'phone', 'prov', 'muni', 'brgy', 'street', 'oLast', 'oFirst', 'oMid', 'oSuf', 'cat', 'site', 'pos'];
 $('#f').addEventListener('submit', async e => {
   e.preventDefault(); const er = $('#err'); er.hidden = true;
   if (!$('#f').reportValidity()) return;
-  if (API.startsWith('PASTE')) { er.textContent = 'API URL IS NOT SET. EDIT index.html.'; er.hidden = false; return; }
   const d = {}; IDS.forEach(i => d[i] = U($('#' + i).value));
+  d.email = $('#email').value.trim().toLowerCase();
   d.isOfw = document.querySelector('[name=isOfw]:checked').value; d.rel = U($('#relSel').value);
   const b = $('#sub'); b.disabled = true; b.textContent = 'SUBMITTING...';
   try {
     const r = await api({ action: 'register', data: d });
-    if (r.ok) { pass(r.id, d.first + ' ' + (d.middle ? d.middle[0] + '. ' : '') + d.last + (d.suffix && d.suffix !== 'N/A' ? ' ' + d.suffix : ''), d.muni + ', ' + d.prov); }
+    if (r.ok) pass(r.id, d.first + ' ' + (d.middle ? d.middle[0] + '. ' : '') + d.last + (d.suffix && d.suffix !== 'N/A' ? ' ' + d.suffix : ''), d.muni + ', ' + d.prov);
     else { er.textContent = r.error || 'SOMETHING WENT WRONG.'; er.hidden = false; }
   } catch (x) { er.textContent = 'NETWORK ERROR. PLEASE TRY AGAIN.'; er.hidden = false; }
-  b.disabled = false; b.textContent = 'SUBMIT';
+  b.disabled = false; b.textContent = 'SUBMIT REGISTRATION';
 });
 
-// ---- access pass
-function pass(id, name, loc) {
-  $('#pass').innerHTML = (TPL ? `<img class="tp" src="${TPL}">` : '<div class="hd">OWWA SERBISYO CARAVAN<br><small style="color:#dbeafe">ACCESS PASS</small></div>') +
-    `<div class="bd"><div class="nm">${name}</div><small>${loc}</small><div class="qr" id="qr"></div><small>ACCESS PASS ID</small><div class="id">${id}</div><small>${EVENT_DATE}</small><small>${VENUE}</small></div>`;
-  new QRCode($('#qr'), { text: id, width: 120, height: 120 });
-  show('done');
+// ---- access pass (design comes from CFG)
+function passHTML(id, name, loc) {
+  const c = CFG;
+  return `<div class="tk">` +
+    (c.passBanner ? `<img src="${c.passBanner}">` : `<div class="th" style="background:linear-gradient(135deg,${esc(c.color1)},${esc(c.color2)})">${esc(c.passTitle)}</div>`) +
+    `<div class="ps" style="background:${c.passBanner ? esc(c.color1) : '#f5b700'};color:${c.passBanner ? '#fff' : '#1a1a1a'}">${esc(c.passSub)}</div>` +
+    `<div class="bd"><div class="nm">${esc(name)}</div>${c.showLoc ? `<small>${esc(loc)}</small>` : ''}` +
+    (c.showQR ? `<div class="qr" data-t="${esc(id)}"></div>` : '<div style="height:10px"></div>') +
+    `<small>ACCESS PASS ID</small><div class="id" style="color:${esc(c.color1)}">${esc(id)}</div></div>` +
+    `<div class="ft">${esc(c.eventDate)}<br>${esc(c.venue)}<br><br>${esc(c.footer)}</div></div>`;
 }
-const dl = () => html2canvas($('#pass'), { scale: 2, backgroundColor: '#fff' }).then(c => { const a = document.createElement('a'); a.download = 'ACCESS-PASS-' + $('#pass .id').textContent + '.png'; a.href = c.toDataURL(); a.click(); });
+const mkQR = el => el.querySelectorAll('.qr').forEach(q => { q.innerHTML = ''; new QRCode(q, { text: q.dataset.t, width: 112, height: 112 }); });
+function pass(id, name, loc) { $('#pass').innerHTML = passHTML(id, name, loc); mkQR($('#pass')); show('done'); }
+const dl = () => html2canvas($('#pass .tk'), { scale: 2, backgroundColor: null }).then(c => { const a = document.createElement('a'); a.download = 'ACCESS-PASS-' + $('#pass .id').textContent + '.png'; a.href = c.toDataURL(); a.click(); });
 
 // ---- admin
-const EDITABLE = h => HEAD.indexOf(h) > 1 && HEAD.indexOf(h) < 23;
 async function adminLogin() {
   PW = $('#pw').value; $('#lerr').hidden = true;
   try { const r = await api({ action: 'login', pw: PW }); if (!r.ok) throw r.error; show('admin'); load(); }
   catch (e) { $('#lerr').textContent = e || 'LOGIN FAILED'; $('#lerr').hidden = false; }
+}
+function tab(t) {
+  $('#tabL').hidden = t !== 'L'; $('#tabD').hidden = t !== 'D'; $('#b1').className = t === 'L' ? 'on' : ''; $('#b2').className = t === 'D' ? 'on' : '';
+  if (t === 'D') { document.querySelectorAll('[data-k]').forEach(i => { const v = CFG[i.dataset.k]; i.type === 'checkbox' ? i.checked = !!v : i.value = v || '' }); prev(); }
+}
+const prev = () => { $('#pv').innerHTML = passHTML('OSC-0001-ABC', 'JUAN D. DELA CRUZ', 'CABANATUAN CITY, NUEVA ECIJA'); mkQR($('#pv')); };
+['input', 'change'].forEach(ev => document.addEventListener(ev, e => {
+  const k = e.target.dataset && e.target.dataset.k; if (!k) return;
+  CFG[k] = e.target.type === 'checkbox' ? e.target.checked : e.target.value; prev(); hero();
+}));
+function pick(k, w) { PK = k; PWID = w; $('#fi').value = ''; $('#fi').click(); }
+function clr(k) { CFG[k] = ''; prev(); hero(); }
+$('#fi').onchange = e => {
+  const f = e.target.files[0]; if (!f) return; const im = new Image();
+  im.onload = () => {
+    const w = Math.min(PWID, im.width), c = document.createElement('canvas'), x = c.getContext('2d'); c.width = w; c.height = im.height * w / im.width;
+    x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); x.drawImage(im, 0, 0, c.width, c.height);
+    CFG[PK] = c.toDataURL('image/jpeg', .82); prev(); hero(); $('#dmsg').textContent = 'IMAGE ADDED. CLICK "SAVE DESIGN" TO PUBLISH.';
+  }; im.src = URL.createObjectURL(f);
+};
+async function saveCfg() {
+  $('#dmsg').textContent = 'SAVING...';
+  try { const r = await api({ action: 'setConfig', pw: PW, config: CFG }); $('#dmsg').textContent = r.ok ? 'DESIGN SAVED. IT IS NOW LIVE FOR EVERYONE.' : (r.error || 'FAILED'); }
+  catch (e) { $('#dmsg').textContent = 'SAVE FAILED. TRY AGAIN.'; }
 }
 async function load() {
   const r = await api({ action: 'list', pw: PW }); if (!r.ok) return alert(r.error);
@@ -218,16 +313,17 @@ async function load() {
 function render() {
   const q = U($('#q').value), rows = DATA.filter(r => !q || r.join(' ').toUpperCase().includes(q));
   $('#s1').textContent = DATA.length; $('#s2').textContent = DATA.filter(r => r[23] === 'YES').length; $('#s3').textContent = DATA.filter(r => r[14] === 'YES').length;
-  $('#tb').innerHTML = '<tr><th>PASS ID</th><th>NAME</th><th>BIRTHDATE</th><th>CONTACT</th><th>MUNICIPALITY</th><th>OFW?</th><th>CHECKED IN</th><th>ACTIONS</th></tr>' +
-    rows.map(r => `<tr><td>${r[0]}</td><td>${r[2]}, ${r[3]} ${r[4]}</td><td>${r[6]}</td><td>${r[8]}</td><td>${r[11]}</td><td>${r[14]}</td><td>${r[23] || '-'}</td>` +
-      `<td><button onclick="edit('${r[0]}')">EDIT</button><button class="grn" onclick="chk('${r[0]}',${r[23] !== 'YES'})">${r[23] === 'YES' ? 'UNDO' : 'CHECK-IN'}</button><button class="red" onclick="del('${r[0]}')">DEL</button></td></tr>`).join('');
+  $('#tb').innerHTML = '<tr><th>PASS ID</th><th>NAME</th><th>BIRTHDATE</th><th>CONTACT</th><th>EMAIL</th><th>MUNICIPALITY</th><th>OFW?</th><th>STATUS</th><th>ACTIONS</th></tr>' +
+    rows.map(r => `<tr><td><b>${esc(r[0])}</b></td><td>${esc(r[2])}, ${esc(r[3])} ${esc(r[4])}</td><td>${esc(r[6])}</td><td>${esc(r[8])}</td><td>${esc(r[9])}</td><td>${esc(r[11])}</td><td>${esc(r[14])}</td>` +
+      `<td><span class="bg ${r[23] === 'YES' ? 'y' : ''}">${r[23] === 'YES' ? 'CHECKED IN' : 'REGISTERED'}</span></td>` +
+      `<td><button onclick="edit('${esc(r[0])}')">EDIT</button><button class="grn" onclick="chk('${esc(r[0])}',${r[23] !== 'YES'})">${r[23] === 'YES' ? 'UNDO' : 'CHECK-IN'}</button><button class="red" onclick="del('${esc(r[0])}')">DEL</button></td></tr>`).join('');
 }
 $('#q').oninput = render;
 async function chk(id, v) { const r = await api({ action: 'checkin', pw: PW, id, value: v }); r.ok ? load() : alert(r.error); }
 async function del(id) { if (!confirm('DELETE ' + id + '? THIS CANNOT BE UNDONE.')) return; const r = await api({ action: 'delete', pw: PW, id }); r.ok ? load() : alert(r.error); }
 function edit(id) {
   EDIT = DATA.find(r => r[0] === id);
-  $('#mf').innerHTML = `<div class="full"><b>${id}</b></div>` + HEAD.map((h, i) => EDITABLE(h) ? `<div><label>${h}</label><input data-h="${h}" value="${EDIT[i].replace(/"/g, '&quot;')}"></div>` : '').join('');
+  $('#mf').innerHTML = `<div class="full"><b>${esc(id)}</b></div>` + HEAD.map((h, i) => i > 1 && i < 23 ? `<div><label>${esc(h)}</label><input data-h="${esc(h)}" value="${esc(EDIT[i])}"></div>` : '').join('');
   $('#modal').hidden = false;
 }
 async function saveEdit() {
@@ -239,20 +335,10 @@ function csv() {
   const t = [HEAD, ...DATA].map(r => r.map(e).join(',')).join('\n');
   const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['\ufeff' + t], { type: 'text/csv' })); a.download = 'caravan-registrations.csv'; a.click();
 }
-// ---- mock access pass upload (resized to keep it small)
-$('#tpl').onchange = e => {
-  const f = e.target.files[0]; if (!f) return; const img = new Image();
-  img.onload = async () => {
-    const w = Math.min(900, img.width), c = document.createElement('canvas'); c.width = w; c.height = img.height * w / img.width;
-    c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
-    const r = await api({ action: 'setTemplate', pw: PW, dataUrl: c.toDataURL('image/jpeg', .82) });
-    if (r.ok) { alert('MOCK ACCESS PASS UPLOADED.'); TPL = c.toDataURL('image/jpeg', .82); } else alert(r.error);
-  }; img.src = URL.createObjectURL(f);
-};
-async function rmTpl() { if (!confirm('REMOVE THE MOCK ACCESS PASS?')) return; const r = await api({ action: 'setTemplate', pw: PW, dataUrl: '' }); if (r.ok) { TPL = ''; alert('REMOVED.'); } }
 
 // ---- init
-if (!API.startsWith('PASTE')) fetch(API).then(r => r.json()).then(r => TPL = r.template || '').catch(() => {});
+show('consent');
+fetch(API).then(r => r.json()).then(r => { CFG = { ...DEF, ...(r.config || {}) }; hero(); }).catch(() => {});
 if (location.hash === '#admin') show('login');
 </script>
 </body>
