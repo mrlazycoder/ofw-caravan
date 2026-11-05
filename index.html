@@ -76,6 +76,29 @@ section:not([hidden]){animation:fu .5s ease both}
 .cf{position:fixed;top:-16px;width:9px;height:15px;z-index:99;pointer-events:none;animation:fall linear forwards}
 body.noanim *,body.noanim *:before,body.noanim *:after{animation:none!important;transition:none!important}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ---- admin: mobile layout ---- */
+@media(max-width:620px){
+  main{padding:0 10px}main.wide section{padding:18px 12px}
+  #admin h2{font-size:1.05rem;margin:0}
+  .tabs{gap:6px;margin:12px 0}.tabs button{flex:1;min-width:0;padding:11px 2px;font-size:11px;letter-spacing:0;white-space:nowrap}
+  .stats{gap:6px}.stats div{padding:10px 3px;font-size:.58rem;line-height:1.25}.stats b{font-size:1.35rem}
+  .row>button{flex:1 1 calc(50% - 5px);min-width:0;padding:12px 8px;font-size:13px}
+  #login .row>button,#sv .row>button{flex-basis:100%}
+  .card{padding:14px}
+  input[type=date]{-webkit-appearance:none;appearance:none;display:block;min-height:46px;text-align:left}
+  #sv{position:sticky;bottom:0;z-index:5;background:#fffffff2;padding:10px 0 6px;margin-top:14px;backdrop-filter:blur(6px)}#sv .row{margin-top:0}
+  #modal{padding:10px}#modal>div{padding:16px}
+  /* registrants table -> one card per person */
+  .tw{max-height:none;border:0;overflow:visible}
+  #tb,#tb tbody,#tb tr,#tb td{display:block;width:100%}
+  #tb tr:first-child{display:none}
+  #tb tr{border:1px solid var(--bd);border-radius:12px;margin:0 0 10px;padding:8px 12px;background:#fff}
+  #tb td{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;border:0;padding:5px 0;white-space:normal;text-align:right;overflow-wrap:anywhere}
+  #tb td::before{content:attr(data-l);flex:none;font-size:.66rem;font-weight:700;color:var(--mu);letter-spacing:.4px;text-align:left}
+  #tb td.act{gap:6px;padding-top:10px;margin-top:4px;border-top:1px solid #edf1f9}#tb td.act::before{display:none}
+  #tb td.act button{flex:1;margin:0;padding:10px 4px;font-size:12px}
+}
 </style>
 </head>
 <body>
@@ -163,7 +186,7 @@ body.noanim *,body.noanim *:before,body.noanim *:after{animation:none!important;
 </section>
 
 <section id="admin" hidden>
-  <h2>ADMIN DASHBOARD</h2>
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2 style="margin:0">ADMIN DASHBOARD</h2><button class="alt" onclick="logout()" style="padding:8px 14px;font-size:12px">LOGOUT</button></div>
   <div class="tabs"><button id="b1" class="on" onclick="tab('L')">REGISTRANTS</button><button id="b2" onclick="tab('D')">DESIGN</button><button id="b3" onclick="tab('S')">SETTINGS</button></div>
 
   <div id="tabL">
@@ -384,7 +407,7 @@ function newReg() {
 // ---- admin
 async function adminLogin() {
   PW = $('#pw').value; $('#lerr').hidden = true;
-  try { const r = await api({ action: 'login', pw: PW }); if (!r.ok) throw r.error; show('admin'); load(); }
+  try { const r = await api({ action: 'login', pw: PW }); if (!r.ok) throw r.error; try { sessionStorage.setItem('osc_pw', PW); sessionStorage.setItem('osc_t', Date.now()); } catch (x) {} show('admin'); load(); }
   catch (e) { $('#lerr').textContent = e || 'LOGIN FAILED'; $('#lerr').hidden = false; }
 }
 function tab(t) {
@@ -420,16 +443,16 @@ async function saveCfg() {
   catch (e) { $('#dmsg').textContent = 'SAVE FAILED. TRY AGAIN.'; }
 }
 async function load() {
-  const r = await api({ action: 'list', pw: PW }); if (!r.ok) return alert(r.error);
+  const r = await api({ action: 'list', pw: PW }); if (!r.ok) { if (/PASSWORD/i.test(r.error || '')) logout(); return alert(r.error); }
   HEAD = r.head; DATA = r.rows; COUNT = DATA.length; render(); bstat();
 }
 function render() {
   const q = U($('#q').value), rows = DATA.filter(r => !q || r.join(' ').toUpperCase().includes(q));
   $('#s1').textContent = DATA.length; $('#s2').textContent = DATA.filter(r => r[23] === 'YES').length; $('#s3').textContent = DATA.filter(r => r[14] === 'YES').length;
   $('#tb').innerHTML = '<tr><th>PASS ID</th><th>NAME</th><th>BIRTHDATE</th><th>CONTACT</th><th>EMAIL</th><th>MUNICIPALITY</th><th>OFW?</th><th>STATUS</th><th>ACTIONS</th></tr>' +
-    rows.map(r => `<tr><td><b>${esc(r[0])}</b></td><td>${esc(r[2])}, ${esc(r[3])} ${esc(r[4])}</td><td>${esc(r[6])}</td><td>${esc(r[8])}</td><td>${esc(r[9])}</td><td>${esc(r[11])}</td><td>${esc(r[14])}</td>` +
-      `<td><span class="bg ${r[23] === 'YES' ? 'y' : ''}">${r[23] === 'YES' ? 'CHECKED IN' : 'REGISTERED'}</span></td>` +
-      `<td><button onclick="edit('${esc(r[0])}')">EDIT</button><button class="grn" onclick="chk('${esc(r[0])}',${r[23] !== 'YES'})">${r[23] === 'YES' ? 'UNDO' : 'CHECK-IN'}</button><button class="red" onclick="del('${esc(r[0])}')">DEL</button></td></tr>`).join('');
+    rows.map(r => `<tr><td data-l="PASS ID"><b>${esc(r[0])}</b></td><td data-l="NAME">${esc(r[2])}, ${esc(r[3])} ${esc(r[4])}</td><td data-l="BIRTHDATE">${esc(r[6])}</td><td data-l="CONTACT">${esc(r[8])}</td><td data-l="EMAIL">${esc(r[9])}</td><td data-l="MUNICIPALITY">${esc(r[11])}</td><td data-l="OFW?">${esc(r[14])}</td>` +
+      `<td data-l="STATUS"><span class="bg ${r[23] === 'YES' ? 'y' : ''}">${r[23] === 'YES' ? 'CHECKED IN' : 'REGISTERED'}</span></td>` +
+      `<td class="act"><button onclick="edit('${esc(r[0])}')">EDIT</button><button class="grn" onclick="chk('${esc(r[0])}',${r[23] !== 'YES'})">${r[23] === 'YES' ? 'UNDO' : 'CHECK-IN'}</button><button class="red" onclick="del('${esc(r[0])}')">DEL</button></td></tr>`).join('');
 }
 $('#q').oninput = render;
 async function chk(id, v) { const r = await api({ action: 'checkin', pw: PW, id, value: v }); r.ok ? load() : alert(r.error); }
@@ -452,7 +475,25 @@ function csv() {
 // ---- init
 show('consent');
 fetch(API, { cache: 'no-store' }).then(r => r.json()).then(r => { CFG = { ...DEF, ...(r.config || {}) }; COUNT = +r.count || 0; VER = +r.ver || 0; hero(); if (isClosed() && location.hash !== '#admin') closed(); }).catch(() => {});
-if (location.hash === '#admin') show('login');
+// ---- admin session: stays signed in after refresh (this tab only, max 8 hours, cleared on logout / closing the tab)
+function logout() {
+  try { ['osc_pw', 'osc_t'].forEach(k => sessionStorage.removeItem(k)); } catch (x) {}
+  PW = ''; $('#pw').value = ''; $('#login').style.visibility = 'visible'; show('login');
+}
+async function restore() {
+  let pw = '', t = 0;
+  try { pw = sessionStorage.getItem('osc_pw') || ''; t = +sessionStorage.getItem('osc_t') || 0; } catch (x) {}
+  if (!pw) return;
+  if (Date.now() - t > 8 * 36e5) return logout();
+  $('#login').style.visibility = 'hidden'; PW = pw;
+  try {
+    const r = await api({ action: 'login', pw: PW });
+    if (!r.ok) return logout();
+    $('#login').style.visibility = 'visible'; show('admin'); load();
+  } catch (e) { $('#login').style.visibility = 'visible'; } // no connection: show the login form, keep the session
+}
+$('#pw').addEventListener('keydown', e => { if (e.key === 'Enter') adminLogin(); });
+if (location.hash === '#admin') { show('login'); restore(); }
 </script>
 </body>
 </html>
