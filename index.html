@@ -138,6 +138,19 @@ button[hidden]{display:none!important}
 .ic .i{width:32px;height:32px;margin:0;vertical-align:0;color:var(--p)}
 .ic.rd{background:#fee2e2}.ic.rd .i{color:#dc2626}.ic.am{background:#fef3c7}.ic.am .i{color:#d97706}.ic.gn{background:#dcfce7}.ic.gn .i{color:#16a34a}
 .seg span .i{width:1.2em;height:1.2em}
+/* ---- scanner v2: square camera, bigger start button, progress overlay ---- */
+#scan #scb{flex:1 1 100%;min-height:66px;padding:16px 20px;font-size:1.15rem;letter-spacing:.5px;border-radius:14px}
+#scan #scb .i{width:1.4em;height:1.4em}
+#scan:not(.live) #scb{animation:pls2 2s infinite}
+@keyframes pls2{0%{box-shadow:0 0 0 0 #1d4ed899}100%{box-shadow:0 0 0 16px #1d4ed800}}
+#scan.live{justify-content:center}
+#scan.live #cam{flex:none;width:min(100%,54dvh);height:auto;aspect-ratio:1/1;margin:0 auto}
+#scan.live #scb{flex:1 1 55%;min-height:60px}#scan.live #torch{flex:1 1 35%;min-height:60px}
+.hint{display:none;text-align:center;font-size:.78rem;font-weight:700;color:var(--mu);letter-spacing:.4px}#scan.live .hint{display:block}
+#cam .frame:after{content:"";position:absolute;left:5%;right:5%;height:3px;border-radius:2px;background:var(--ac);box-shadow:0 0 12px var(--ac);animation:sw 2s ease-in-out infinite alternate}
+@keyframes sw{from{top:6%}to{top:92%}}
+#sk{position:fixed;inset:0;background:#0b1b4dd9;display:flex;align-items:center;justify-content:center;padding:20px;z-index:45}#sk[hidden]{display:none}
+#sk>div{background:#fff;border-radius:18px;padding:26px 22px;max-width:340px;width:100%;text-align:center}#sk h2{font-size:1.05rem;margin:0 0 8px}#sk p{margin:0;color:var(--mu);font-size:.9rem;line-height:1.7}#sk b{color:var(--tx);font-family:Consolas,monospace}
 </style>
 </head>
 <body>
@@ -260,6 +273,7 @@ button[hidden]{display:none!important}
   <div class="seg"><label><input type="radio" name="sm" value="IN" checked><span><svg class="i"><use href="#i-login"/></svg>CHECK IN</span></label><label><input type="radio" name="sm" value="OUT"><span><svg class="i"><use href="#i-logout"/></svg>CHECK OUT</span></label></div>
   <div class="stats" style="margin-top:12px"><div><b id="t1">0</b>REGISTERED</div><div><b id="t2">0</b>CHECKED IN</div><div><b id="t3">0</b>INSIDE NOW</div></div>
   <div id="cam" hidden><video id="vid" playsinline muted></video><div class="frame"></div></div>
+  <div class="hint">ALIGN THE QR CODE INSIDE THE FRAME</div>
   <div class="row" style="margin-top:12px"><button id="scb" onclick="camToggle()"><svg class="i"><use href="#i-camera"/></svg>START SCAN</button><button id="torch" class="alt" onclick="torchToggle()" hidden></button></div>
   <div id="cerr" class="err" hidden></div>
   <div id="sres" class="idle"></div>
@@ -356,6 +370,7 @@ button[hidden]{display:none!important}
 </section>
 </main>
 
+<div id="sk" hidden><div><div class="spin"></div><h2>QR CODE DETECTED</h2><p>Verifying pass <b id="skid"></b><br><span id="skm"></span><br>Please wait...</p></div></div>
 <div id="ld" hidden><div><div class="spin"></div><h2>SUBMITTING YOUR REGISTRATION</h2><p>Please wait and do not close or refresh this page.</p></div></div>
 
 <div id="dq" hidden><div><div class="ic"><svg class="i"><use href="#i-download"/></svg></div><h2>DOWNLOAD YOUR ACCESS PASS?</h2><p>Would you like to download your Access Pass now?</p><p style="font-size:.8rem;color:var(--mu)">You will need it at the venue. You can also download it later using the button on this page.</p><div class="row"><button class="grn" onclick="dlYes()">YES</button><button class="alt" onclick="$('#dq').hidden=true">NO</button></div></div></div>
@@ -399,7 +414,7 @@ const api = async (o, retry = true) => {
   let t = '', tm = 0;
   try {
     const init = { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(o) };
-    if (o.action === 'register') { const ctl = new AbortController(); init.signal = ctl.signal; tm = setTimeout(() => ctl.abort(), 60000); } // 60-second limit for registration
+    if (o.action === 'register' || o.action === 'scan') { const ctl = new AbortController(); init.signal = ctl.signal; tm = setTimeout(() => ctl.abort(), o.action === 'register' ? 60000 : 25000); } // time limits: registration 60s, scan 25s
     t = await (await fetch(API, init)).text();
     return JSON.parse(t);
   } catch (e) {
@@ -779,15 +794,17 @@ function handleCode(raw, manual) {
 function manualScan() { const v = $('#mid').value.trim(); if (!v) return; handleCode(v, true); $('#mid').value = ''; }
 async function doScan(id) {
   if (BUSY) return; BUSY = true;
+  $('#skid').textContent = id; $('#skm').textContent = MODE === 'OUT' ? 'CHECKING OUT...' : 'CHECKING IN...'; $('#sk').hidden = false;
+  try { navigator.vibrate && navigator.vibrate(60); } catch (x) {}
   $('#sres').innerHTML = '<div class="c" style="padding:18px;font-weight:700;color:var(--mu)">CHECKING ' + esc(id) + '...</div>';
   try {
-    const r = await api({ action: 'scan', token: ST.token, id, mode: MODE });
+    const r = await api({ action: 'scan', token: ST.token, id, mode: MODE }); $('#sk').hidden = true;
     if (!r.ok) { if (r.expired) return staffLogout(true); showRes('ERR', 'ERROR', null, r.error); beep('ERR'); return; }
     showRes(r.level, r.title, r.person, r.message); beep(r.level); setStats(r.stats);
     RECENT.unshift({ t: new Date().toLocaleTimeString('en-PH', { timeZone: 'Asia/Manila', hour: '2-digit', minute: '2-digit' }), n: (r.person && r.person.name) || id, id, title: r.title, level: r.level });
     RECENT = RECENT.slice(0, 10); renderRecent();
   } catch (e) { showRes('ERR', 'NO CONNECTION', null, 'CHECK THE INTERNET CONNECTION AND SCAN AGAIN.'); beep('ERR'); }
-  finally { BUSY = false; }
+  finally { BUSY = false; $('#sk').hidden = true; }
 }
 const ico = n => '<svg class="i"><use href="#i-' + n + '"/></svg>';
 function showRes(level, title, p, msg) {
