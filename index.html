@@ -223,9 +223,9 @@ body.live #iab{display:none}
 @keyframes zin{from{transform:scale(calc(var(--k,1)*.8));opacity:0}to{transform:scale(var(--k,1));opacity:1}}
 @keyframes zfade{to{opacity:0;visibility:hidden}}
 /* ---- icon action buttons ---- */
-td.act button.ib{width:34px;height:34px;padding:0;margin-right:4px;display:inline-flex;align-items:center;justify-content:center;border-radius:9px}
-.ib .i{width:17px;height:17px;margin:0}.ib span{display:none}
-@media(max-width:620px){.rt td.act button.ib{width:auto;height:42px;margin:0}.ib .i{width:20px;height:20px}}
+td.act button.ib{width:auto;height:auto;padding:7px 10px;margin-right:4px;display:inline-flex;align-items:center;justify-content:center;gap:5px;border-radius:9px;font-size:11px;white-space:nowrap}
+.ib .i{width:15px;height:15px;margin:0}.ib span{display:inline}
+@media(max-width:620px){.rt td.act button.ib{height:42px;margin:0;gap:6px;padding:0 4px}.ib .i{width:17px;height:17px}}
 </style>
 </head>
 <body>
@@ -850,7 +850,7 @@ function render() {
       const st = !isIn(r) ? ['REGISTERED', ''] : r[25] ? ['CHECKED OUT', 'o'] : ['CHECKED IN', 'y'];
       return `<tr><td data-l="PASS ID"><b>${esc(r[0])}</b></td><td data-l="NAME">${esc(r[2])}, ${esc(r[3])} ${esc(r[4])}${r[5] && String(r[5]).toUpperCase() !== 'N/A' ? ' ' + esc(r[5]) : ''}</td><td data-l="BIRTHDATE">${esc(r[6])}</td><td data-l="CONTACT">${esc(r[8])}</td><td data-l="EMAIL">${esc(r[9])}</td><td data-l="MUNICIPALITY">${esc(r[11])}</td><td data-l="OFW?">${esc(r[14])}</td>` +
         `<td data-l="STATUS"><span class="bg ${st[1]}">${st[0]}</span></td><td data-l="CHECKED IN AT">${esc(r[24] || '-')}</td><td data-l="CHECKED OUT AT">${esc(r[25] || '-')}</td><td data-l="SCANNED BY">${esc(r[26] || '-')}</td>` +
-        `<td class="act">${ib('alt', `vpass('${esc(r[0])}')`, 'eye', 'VIEW PASS')}${ib('', `edit('${esc(r[0])}')`, 'edit', 'EDIT')}${ib('grn', `chk('${esc(r[0])}',${!isIn(r)})`, isIn(r) ? 'undo' : 'check', isIn(r) ? 'UNDO CHECK-IN' : 'CHECK IN')}${ib('red', `del('${esc(r[0])}')`, 'trash', 'DELETE')}</td></tr>`;
+        `<td class="act">${ib('alt', `vpass('${esc(r[0])}')`, 'eye', 'VIEW PASS')}${ib('', `edit('${esc(r[0])}')`, 'edit', 'EDIT')}${ib('grn', `chk('${esc(r[0])}',${!isIn(r)})`, isIn(r) ? 'undo' : 'check', isIn(r) ? 'UNDO' : 'CHECK-IN')}${ib('red', `del('${esc(r[0])}')`, 'trash', 'DELETE')}</td></tr>`;
     }).join('');
 }
 $('#q').oninput = fl;
@@ -1090,4 +1090,3 @@ else if (location.hash === '#scan') { show('slogin'); staffRestore(); }
 </script>
 </body>
 </html>
-
