@@ -195,10 +195,30 @@ linear-gradient(#fff,#fff) 100% 100%/36px 5px no-repeat,linear-gradient(#fff,#ff
 #iab{position:sticky;top:0;z-index:70;background:#fff7e6;border-bottom:2px solid var(--ac);padding:10px 12px;font-size:.8rem;color:#7a4b00;text-align:center;line-height:1.5}
 #iab[hidden]{display:none}#iab .r{display:flex;gap:8px;justify-content:center;margin-top:8px;flex-wrap:wrap}#iab button{padding:8px 14px;font-size:.78rem;box-shadow:none}
 body.live #iab{display:none}
+/* ---- admin v2: neat tabs, dashboard, filters ---- */
+.tabs{display:flex;flex-wrap:nowrap;gap:4px;margin:14px 0;overflow-x:auto;background:#eef2fa;padding:5px;border-radius:14px;position:sticky;top:6px;z-index:30;box-shadow:0 4px 14px #0b2a6f14;scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}
+.tabs button{flex:1 0 auto;min-width:0;background:transparent;color:var(--mu);box-shadow:none;padding:11px 16px;font-size:.76rem;letter-spacing:.5px;display:flex;align-items:center;justify-content:center;gap:7px;border-radius:10px;white-space:nowrap}
+.tabs button.on{background:#fff;color:var(--p);box-shadow:0 2px 8px #0b2a6f22}.tabs button:hover{transform:none;filter:none;background:#ffffff99}.tabs button.on:hover{background:#fff}
+.dh{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}.dh small{display:block;color:var(--mu);font-size:.68rem;font-weight:700;letter-spacing:.5px}.ar{display:flex;gap:6px;align-items:center;margin:0;font-size:.7rem}
+.kp{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.kpi{border-radius:14px;padding:16px 14px;background:#fff;border:1px solid var(--bd);border-left:5px solid var(--p);box-shadow:0 4px 14px #0b2a6f12}
+.kpi b{display:block;font-size:1.9rem;line-height:1.1;color:var(--pd)}.kpi span{font-size:.64rem;font-weight:700;letter-spacing:.6px;color:var(--mu)}
+.kpi.g{border-left-color:#16a34a}.kpi.o{border-left-color:#f59e0b}.kpi.p{border-left-color:#8b5cf6}
+.pg{height:14px;background:#e6ecf8;border-radius:8px;overflow:hidden}.pg i{display:block;height:100%;border-radius:8px;background:linear-gradient(90deg,#22c55e,#16a34a);transition:width .8s}
+.cg{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.hb{display:flex;align-items:center;gap:8px;margin:8px 0;font-size:.76rem}.hb span{flex:0 0 40%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
+.hb .tr{flex:1;background:#eef2fa;border-radius:6px;height:12px}.hb .tr i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,var(--p),var(--p2));transition:width .8s}.hb b{width:30px;text-align:right}
+.em{color:var(--mu);font-size:.8rem;text-align:center;padding:14px 0}
+.vb{display:flex;align-items:flex-end;gap:3px;height:160px}.vb>div{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;min-width:0}
+.vb em{font-style:normal;font-size:.56rem;color:var(--mu);font-weight:700;height:14px}.vb i{display:block;width:100%;border-radius:4px 4px 0 0;background:linear-gradient(180deg,var(--p2),var(--p))}.vb u{text-decoration:none;font-size:.54rem;color:var(--mu);height:14px;margin-top:3px;white-space:nowrap}
+.fb{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:10px}.cn{font-size:.72rem;font-weight:700;color:var(--mu);margin:10px 2px 0}
+.pgr{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:12px;font-size:.76rem;font-weight:700;color:var(--mu)}.pgr button{padding:9px 16px;font-size:12px;box-shadow:none}
+.ntc{background:#fff7e6;border:1.5px solid var(--ac);color:#7a4b00;border-radius:12px;padding:11px 14px;margin-bottom:12px;font-weight:600;font-size:.88rem;text-align:center;white-space:pre-line}
+@media(max-width:700px){.cg{grid-template-columns:1fr}.fb{grid-template-columns:1fr 1fr}.fb #q{grid-column:1/-1}.tabs button{padding:10px 12px}}
 </style>
 </head>
 <body>
-<div id="iab" hidden><b>YOU ARE USING A BUILT-IN BROWSER (MESSENGER / FACEBOOK).</b><br>Saving your access pass may not work here. Please open this page in your phone's browser.
+<div id="iab" hidden><b>YOU ARE USING A BUILT-IN BROWSER (MESSENGER / FACEBOOK).</b><br>Saving your access pass and using the camera may not work here. Please open this page in your phone's browser.
   <div class="r"><button id="iabo" onclick="openExt()">OPEN IN CHROME</button><button class="alt" onclick="copyLink()" id="iabc">COPY LINK</button><button class="alt" onclick="$('#iab').hidden=true">&times;</button></div>
   <div id="iabh" style="margin-top:6px;font-size:.74rem"></div></div>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -221,10 +241,15 @@ body.live #iab{display:none}
 <symbol id="i-save" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></symbol>
 <symbol id="i-flash" viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9z"/></symbol>
 <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+<symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M8 16v-5M13 16V7M18 16v-8"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></symbol>
+<symbol id="i-brush" viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r="1.5"/><circle cx="17.5" cy="10.5" r="1.5"/><circle cx="8.5" cy="7.5" r="1.5"/><circle cx="6.5" cy="12.5" r="1.5"/><path d="M12 22a10 10 0 1 1 10-10c0 2.5-2 3-4 3h-2a2 2 0 0 0-1 3.7c.6.5.6 1.3 0 1.8A5 5 0 0 1 12 22Z"/></symbol>
+<symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h2M10 12h10M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="8" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></symbol>
+<symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2 21c0-4 3-6.5 7-6.5s7 2.5 7 6.5"/><path d="M17 4.5a3.5 3.5 0 0 1 0 7M22 21c0-3-1.5-5-4-6"/></symbol>
 </defs></svg>
 <div id="hero"><img id="logo" hidden alt="Logo"><div id="agency"></div><h1>OWWA SERBISYO CARAVAN</h1><p>ONLINE REGISTRATION</p>
   <div id="steps"><span>1 CONSENT</span><span>2 DETAILS</span><span>3 ACCESS PASS</span></div></div>
-<main id="main">
+<main id="main"><div id="ntc" class="ntc" hidden></div>
 
 <section id="consent" class="c">
   <div class="ic"><svg class="i"><use href="#i-shield"/></svg></div>
@@ -343,13 +368,21 @@ body.live #iab{display:none}
 
 <section id="admin" hidden>
   <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2 style="margin:0">ADMIN DASHBOARD</h2><button class="alt" onclick="logout()" style="padding:8px 14px;font-size:12px"><svg class="i"><use href="#i-logout"/></svg>LOGOUT</button></div>
-  <div class="tabs"><button id="b1" class="on" onclick="tab('L')">REGISTRANTS</button><button id="b2" onclick="tab('D')">DESIGN</button><button id="b3" onclick="tab('S')">SETTINGS</button><button id="b4" onclick="tab('U')">USERS</button></div>
+  <div class="tabs" id="tabs"><button id="b1" class="on" onclick="tab('H')"><svg class="i"><use href="#i-chart"/></svg><span>DASHBOARD</span></button><button id="b2" onclick="tab('L')"><svg class="i"><use href="#i-list"/></svg><span>REGISTRANTS</span></button><button id="b3" onclick="tab('D')"><svg class="i"><use href="#i-brush"/></svg><span>DESIGN</span></button><button id="b4" onclick="tab('S')"><svg class="i"><use href="#i-sliders"/></svg><span>SETTINGS</span></button><button id="b5" onclick="tab('U')"><svg class="i"><use href="#i-users"/></svg><span>STAFF</span></button></div>
+
+  <div id="tabH">
+    <div class="dh"><div><b style="color:var(--pd)">EVENT OVERVIEW</b><small id="dupd"></small></div><div class="row" style="margin:0"><label class="ar"><input type="checkbox" id="dauto" onchange="dauto()"> AUTO-REFRESH (1 MIN)</label><button class="alt" onclick="load()"><svg class="i"><use href="#i-refresh"/></svg>REFRESH</button></div></div>
+    <div id="dk" class="kp"></div>
+    <div id="dcap" class="card" style="margin:14px 0"></div>
+    <div id="dc" class="cg"></div>
+  </div>
 
   <div id="tabL">
-    <div class="stats s4"><div><b id="s1">0</b>REGISTERED</div><div><b id="s2">0</b>CHECKED IN</div><div><b id="s3">0</b>INSIDE NOW</div><div><b id="s4">0</b>OFW SELF-REGISTERED</div></div>
-    <input id="q" placeholder="SEARCH NAME, PASS ID, CONTACT, MUNICIPALITY...">
-    <div class="row" style="margin-top:12px"><button class="alt" onclick="load()"><svg class="i"><use href="#i-refresh"/></svg>REFRESH</button><button onclick="csv()"><svg class="i"><use href="#i-download"/></svg>EXPORT CSV</button></div>
-    <div class="tw" style="margin-top:14px"><table id="tb" class="rt"></table></div>
+    <div class="fb"><input id="q" placeholder="SEARCH NAME, PASS ID, CONTACT, MUNICIPALITY..."><select id="fst" onchange="fl()"><option value="">ALL STATUS</option><option value="R">REGISTERED ONLY</option><option value="I">CHECKED IN</option><option value="O">CHECKED OUT</option></select><select id="fpr" onchange="fl()"><option value="">ALL PROVINCES</option></select><select id="fct" onchange="fl()"><option value="">ALL CATEGORIES</option><option>LAND-BASED</option><option>SEA-BASED</option></select></div>
+    <div class="row" style="margin-top:12px"><button class="alt" onclick="load()"><svg class="i"><use href="#i-refresh"/></svg>REFRESH</button><button onclick="csv()"><svg class="i"><use href="#i-download"/></svg>EXPORT CSV (AS FILTERED)</button></div>
+    <div id="cnt" class="cn"></div>
+    <div class="tw" style="margin-top:8px"><table id="tb" class="rt"></table></div>
+    <div class="pgr"><button class="alt" onclick="pgo(-1)">&larr; PREV</button><span id="pgi"></span><button class="alt" onclick="pgo(1)">NEXT &rarr;</button></div>
   </div>
 
   <div id="tabD" hidden>
@@ -402,6 +435,14 @@ body.live #iab{display:none}
         <div class="full"><label style="display:flex;gap:8px;align-items:center"><input type="checkbox" data-k="anim"> ENABLE ANIMATIONS</label></div>
         <div class="full"><label>CUSTOM DATA PRIVACY NOTICE (BLANK = DEFAULT TEXT)</label><textarea data-k="consentText" rows="6"></textarea></div>
       </div></div>
+      <div class="card"><h3>ANNOUNCEMENT BANNER</h3><div class="g"><div class="full"><label>MESSAGE SHOWN AT THE TOP OF THE REGISTRATION PAGES (BLANK = HIDDEN)</label><textarea data-k="notice" placeholder="E.G. PLEASE BRING A VALID ID AND YOUR ACCESS PASS ON EVENT DAY."></textarea></div></div></div>
+      <div class="card"><h3>ADMIN SECURITY</h3><div class="g">
+        <div class="full"><label>AUTO-LOGOUT AFTER INACTIVITY</label><select data-k="idleMin"><option value="15">15 MINUTES</option><option value="30">30 MINUTES</option><option value="60">1 HOUR</option><option value="0">NEVER</option></select></div>
+        <div><label>NEW PASSWORD (MIN. 8)</label><input id="npw" type="password" data-keep style="text-transform:none" autocomplete="new-password"></div>
+        <div><label>CONFIRM NEW PASSWORD</label><input id="npw2" type="password" data-keep style="text-transform:none" autocomplete="new-password"></div>
+        <div class="full"><button onclick="chPw()">CHANGE ADMIN PASSWORD</button><div id="pwmsg" style="font-weight:700;font-size:.82rem;margin-top:8px"></div></div>
+      </div></div>
+      <div class="card"><h3>DATA &amp; BACKUP</h3><div class="row" style="margin:0"><button onclick="csv(1)"><svg class="i"><use href="#i-download"/></svg>DOWNLOAD ALL (CSV)</button><button class="alt" onclick="bak()">BACKUP (JSON)</button></div><p style="font-size:.8rem;color:var(--mu);margin-bottom:0">Keep a copy of every registration before and after the event.</p></div>
     </div>
   </div>
 
@@ -430,7 +471,7 @@ body.live #iab{display:none}
 </main>
 
 <div id="sk" hidden><div><div class="spin"></div><h2>QR CODE DETECTED</h2><p>Verifying pass <b id="skid"></b><br><span id="skm"></span><br>Please wait...</p></div></div>
-<div id="ld" hidden><div><div class="spin"></div><h2>SUBMITTING YOUR REGISTRATION</h2><p>Please wait and do not close or refresh this page.</p></div></div>
+<div id="ld" hidden><div><div class="spin"></div><h2 id="ldt">SUBMITTING YOUR REGISTRATION</h2><p id="ldm">Please wait and do not close or refresh this page.</p></div></div>
 
 <div id="dq" hidden><div><div class="ic"><svg class="i"><use href="#i-download"/></svg></div><h2>DOWNLOAD YOUR ACCESS PASS?</h2><p>Would you like to download your Access Pass now?</p><p style="font-size:.8rem;color:var(--mu)">You will need it at the venue. You can also download it later using the button on this page.</p><div class="row"><button class="grn" onclick="dlYes()">YES</button><button class="alt" onclick="$('#dq').hidden=true">NO</button></div></div></div>
 
@@ -455,12 +496,12 @@ body.live #iab{display:none}
 const API = 'https://script.google.com/macros/s/AKfycbwxIKGNlCelLpJnQfG9W3gPsl2qv_jFwLz6TyfJPl2T6KxpPfTrWqI63M5Tq7dZ8b4M/exec';
 const PSGC = 'https://psgc.gitlab.io/api/';
 const COUNTRIES = 'Afghanistan,Albania,Algeria,Angola,Argentina,Australia,Austria,Bahrain,Bangladesh,Belgium,Brazil,Brunei,Bulgaria,Cambodia,Canada,Chile,China,Colombia,Croatia,Cyprus,Czech Republic,Denmark,Egypt,Ethiopia,Fiji,Finland,France,Germany,Ghana,Greece,Guam,Hong Kong,Hungary,India,Indonesia,Iran,Iraq,Ireland,Israel,Italy,Japan,Jordan,Kazakhstan,Kenya,Kuwait,Laos,Lebanon,Libya,Macau,Malaysia,Maldives,Malta,Mexico,Morocco,Myanmar,Nepal,Netherlands,New Zealand,Nigeria,Northern Mariana Islands,Norway,Oman,Pakistan,Palau,Panama,Papua New Guinea,Peru,Poland,Portugal,Qatar,Romania,Russia,Saipan,Saudi Arabia,Singapore,Slovakia,South Africa,South Korea,Spain,Sri Lanka,Sudan,Sweden,Switzerland,Syria,Taiwan,Thailand,Turkey,Ukraine,United Arab Emirates,United Kingdom,United States,Vietnam,Yemen,Other / Vessel (International Waters)'.split(',');
-const DEF = { siteTitle: 'OWWA SERBISYO CARAVAN', siteSub: 'ONLINE REGISTRATION', siteText: true, siteBanner: '', passTitle: 'OWWA SERBISYO CARAVAN', passSub: 'ACCESS PASS', eventDate: 'EVENT DATE: TO BE ANNOUNCED', venue: 'VENUE: TO BE ANNOUNCED', footer: 'PRESENT THIS PASS AT THE VENUE', color1: '#1e3a8a', color2: '#2563eb', passBanner: '', showQR: true, showLoc: true, showAgency: true, logo: '', agencyName: 'OVERSEAS WORKERS WELFARE ADMINISTRATION', colP: '#1d4ed8', colA: '#f5b700', regOpen: true, emailPass: true, passDl: 'ask', deadline: '', maxReg: '', closedMsg: 'REGISTRATION IS NOW CLOSED. THANK YOU FOR YOUR INTEREST.', consentText: '', anim: true };
+const DEF = { notice: '', idleMin: '30', siteTitle: 'OWWA SERBISYO CARAVAN', siteSub: 'ONLINE REGISTRATION', siteText: true, siteBanner: '', passTitle: 'OWWA SERBISYO CARAVAN', passSub: 'ACCESS PASS', eventDate: 'EVENT DATE: TO BE ANNOUNCED', venue: 'VENUE: TO BE ANNOUNCED', footer: 'PRESENT THIS PASS AT THE VENUE', color1: '#1e3a8a', color2: '#2563eb', passBanner: '', showQR: true, showLoc: true, showAgency: true, logo: '', agencyName: 'OVERSEAS WORKERS WELFARE ADMINISTRATION', colP: '#1d4ed8', colA: '#f5b700', regOpen: true, emailPass: true, passDl: 'ask', deadline: '', maxReg: '', closedMsg: 'REGISTRATION IS NOW CLOSED. THANK YOU FOR YOUR INTEREST.', consentText: '', anim: true };
 
 const $ = s => document.querySelector(s), U = v => (v == null ? '' : String(v)).trim().toUpperCase();
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const IAB = /FBAN|FBAV|FB_IAB|Messenger|Instagram|Line\/|MicroMessenger|; wv\)/i.test(navigator.userAgent), ANDROID = /Android/i.test(navigator.userAgent);
-let UL = [], VER = 0, COUNT = 0, CFG = { ...DEF }, PW = '', DATA = [], HEAD = [], EDIT = null, PK = '', PWID = 0;
+let UL = [], FR = [], PG = 0, PER = 25, CUR = '', DAU = 0, IDLE = 0, VER = 0, COUNT = 0, CFG = { ...DEF }, PW = '', DATA = [], HEAD = [], EDIT = null, PK = '', PWID = 0;
 const STEP = { consent: 1, form: 2, done: 3 };
 // ---- built-in browsers (Messenger / Facebook): offer a way out + get a pass back later
 function openExt() {
@@ -485,6 +526,7 @@ async function findPass() {
   b.disabled = false; b.textContent = 'FIND MY ACCESS PASS';
 }
 function show(id) {
+  CUR = id; $('#ntc').hidden = !(CFG.notice && STEP[id]);
   document.querySelectorAll('section').forEach(s => s.hidden = s.id !== id);
   $('#main').className = id === 'admin' ? 'wide' : '';
   const n = STEP[id]; $('#steps').hidden = !n; [...$('#steps').children].forEach((s, i) => s.classList.toggle('on', i + 1 === n)); scrollTo(0, 0);
@@ -517,6 +559,7 @@ function hero() {
   h.classList.toggle('notext', !CFG.siteText && !!b);
   $('#logo').hidden = !CFG.logo; if (CFG.logo) $('#logo').src = CFG.logo;
   $('#agency').textContent = CFG.agencyName || '';
+  $('#ntc').textContent = CFG.notice || ''; $('#ntc').hidden = !(CFG.notice && STEP[CUR]);
   r.setProperty('--p', CFG.colP); r.setProperty('--ac', CFG.colA);
   document.body.classList.toggle('noanim', !CFG.anim);
   $('#cnote').innerHTML = CFG.consentText && CFG.consentText.trim() ? esc(CFG.consentText).replace(/\n/g, '<br>') : DEFNOTE;
@@ -660,15 +703,61 @@ function newReg() {
 
 // ---- admin
 async function adminLogin() {
-  PW = $('#pw').value; $('#lerr').hidden = true;
-  try { const r = await api({ action: 'login', pw: PW }); if (!r.ok) throw r.error; try { sessionStorage.setItem('osc_pw', PW); sessionStorage.setItem('osc_t', Date.now()); } catch (x) {} show('admin'); load(); }
+  PW = $('#pw').value; $('#lerr').hidden = true; busy(true, 'SIGNING IN', 'Verifying your password. Please wait...');
+  try { const r = await api({ action: 'login', pw: PW }); if (!r.ok) throw r.error; try { sessionStorage.setItem('osc_pw', PW); sessionStorage.setItem('osc_t', Date.now()); } catch (x) {} show('admin'); tab('H'); load(); }
   catch (e) { $('#lerr').textContent = e || 'LOGIN FAILED'; $('#lerr').hidden = false; }
+  finally { busy(false); }
+}
+function busy(on, t, m) { $('#ldt').textContent = on ? t : 'SUBMITTING YOUR REGISTRATION'; $('#ldm').textContent = on ? m : 'Please wait and do not close or refresh this page.'; $('#ld').hidden = !on; }
+const TABS = ['H', 'L', 'D', 'S', 'U'];
+function idleReset() { clearTimeout(IDLE); const m = +CFG.idleMin; if (!m || $('#admin').hidden) return; IDLE = setTimeout(() => { logout(); $('#lerr').textContent = 'YOU WERE LOGGED OUT BECAUSE OF INACTIVITY.'; $('#lerr').hidden = false; }, m * 6e4); }
+['click', 'keydown', 'touchstart', 'scroll'].forEach(ev => document.addEventListener(ev, idleReset, { passive: true }));
+function dauto() { clearInterval(DAU); const on = $('#dauto').checked; try { localStorage.setItem('osc_da', on ? '1' : '0'); } catch (x) {} if (on && !$('#tabH').hidden) DAU = setInterval(load, 60000); }
+const pdt = s => { const m = String(s || '').match(/(\d{1,2})\/(\d{1,2})\/(\d{4}),?\s*(\d{1,2}):(\d{2})(?::\d{2})?\s*([AaPp])/); if (!m) return null; let h = +m[4] % 12; if (/p/i.test(m[6])) h += 12; return { y: +m[3], m: +m[1], d: +m[2], h }; };
+const ymd = o => o ? o.y + '-' + String(o.m).padStart(2, '0') + '-' + String(o.d).padStart(2, '0') : '';
+const tally = (rows, f) => { const m = {}; rows.forEach(r => { const k = f(r); if (k) m[k] = (m[k] || 0) + 1; }); return Object.entries(m).sort((a, b) => b[1] - a[1]); };
+const hbar = (t, e, n) => { e = e.slice(0, n || 8); const mx = Math.max(1, ...e.map(x => x[1])); return `<div class="card"><h3>${t}</h3>` + (e.length ? e.map(([k, v]) => `<div class="hb"><span title="${esc(k)}">${esc(k)}</span><div class="tr"><i style="width:${Math.max(3, v / mx * 100)}%"></i></div><b>${v}</b></div>`).join('') : '<div class="em">NO DATA YET</div>') + '</div>'; };
+const vbar = (t, lab, val, ev) => { const mx = Math.max(1, ...val); return `<div class="card"><h3>${t}</h3><div class="vb">` + val.map((v, i) => `<div title="${esc(lab[i])}: ${v}"><em>${v || ''}</em><i style="height:calc((100% - 32px) * ${v / mx} + ${v ? 3 : 1}px)"></i><u>${i % ev === 0 ? esc(lab[i]) : ''}</u></div>`).join('') + '</div></div>'; };
+function dash() {
+  const R = DATA, n = R.length, isIn = r => r[23] === 'YES', inn = R.filter(isIn).length, ins = R.filter(r => isIn(r) && !r[25]).length;
+  const day = ms => new Date(ms).toLocaleDateString('en-CA', { timeZone: 'Asia/Manila' }), today = day(Date.now());
+  const k = (v, l, c) => `<div class="kpi ${c}"><b>${v}</b><span>${l}</span></div>`;
+  $('#dk').innerHTML = k(n, 'TOTAL REGISTERED', 'b') + k(R.filter(r => ymd(pdt(r[1])) === today).length, 'REGISTERED TODAY', 'p') + k(inn, 'CHECKED IN', 'g') + k(ins, 'INSIDE NOW', 'o') + k(n ? Math.round(inn / n * 100) + '%' : '0%', 'CHECK-IN RATE', 'b') + k(R.filter(r => r[14] === 'YES').length, 'OFW SELF-REGISTERED', 'p');
+  const m = +CFG.maxReg, pc = m > 0 ? Math.min(100, Math.round(n / m * 100)) : (n ? Math.round(inn / n * 100) : 0);
+  $('#dcap').innerHTML = `<h3 style="margin-bottom:10px">${m > 0 ? 'REGISTRATION CAPACITY: ' + n + ' / ' + m : 'CHECK-IN PROGRESS: ' + inn + ' / ' + n} (${pc}%)</h3><div class="pg"><i style="width:${pc}%"></i></div>`;
+  const ds = Array.from({ length: 14 }, (_, i) => day(Date.now() - (13 - i) * 864e5)), dv = ds.map(y => R.filter(r => ymd(pdt(r[1])) === y).length);
+  const hv = Array(24).fill(0); R.forEach(r => { const o = pdt(r[24]); if (o) hv[o.h]++; });
+  const age = r => { const b = new Date(r[6]); return isNaN(b) ? -1 : Math.floor((Date.now() - b) / 31557600000); };
+  const ag = [['UNDER 18', 0, 17], ['18-29', 18, 29], ['30-44', 30, 44], ['45-59', 45, 59], ['60 AND UP', 60, 200]].map(([l, a, z]) => [l, R.filter(r => { const x = age(r); return x >= a && x <= z; }).length]).filter(x => x[1] > 0);
+  $('#dc').innerHTML = vbar('REGISTRATIONS - LAST 14 DAYS', ds.map(y => y.slice(5).replace('-', '/')), dv, 2) + vbar('CHECK-INS BY HOUR OF DAY', Array.from({ length: 24 }, (_, i) => String(i)), hv, 3) +
+    hbar('BY PROVINCE', tally(R, r => r[10])) + hbar('TOP MUNICIPALITIES / CITIES', tally(R, r => r[11] ? r[11] + ' (' + r[10] + ')' : '')) +
+    hbar('TOP JOBSITES (COUNTRY)', tally(R, r => r[21])) + hbar('CATEGORY', tally(R, r => r[20])) +
+    hbar('WHO REGISTERED', tally(R, r => r[14] === 'YES' ? 'THE OFW THEMSELVES' : r[14] === 'NO' ? 'A RELATIVE / REPRESENTATIVE' : '')) + hbar('SEX', tally(R, r => r[7])) +
+    hbar('AGE GROUPS', ag) + hbar('RELATIONSHIP TO OFW', tally(R, r => r[19])) + hbar('TOP OCCUPATIONS', tally(R, r => r[22]));
+  $('#dupd').textContent = 'LAST UPDATED ' + new Date().toLocaleTimeString('en-PH', { timeZone: 'Asia/Manila', hour: 'numeric', minute: '2-digit' }).toUpperCase();
+}
+function fl() { PG = 0; render(); }
+function pgo(d) { PG = Math.max(0, PG + d); render(); $('#tb').scrollIntoView({ block: 'nearest' }); }
+function bak() { const o = DATA.map(r => Object.fromEntries(HEAD.map((h, i) => [h, r[i]]))), a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(o, null, 1)], { type: 'application/json' })); a.download = 'caravan-backup-' + new Date().toISOString().slice(0, 10) + '.json'; a.click(); }
+async function chPw() {
+  const a = $('#npw').value, b = $('#npw2').value, m = $('#pwmsg'); m.style.color = '#b91c1c';
+  if (a.length < 8) return m.textContent = 'NEW PASSWORD MUST BE AT LEAST 8 CHARACTERS.';
+  if (a !== b) return m.textContent = 'PASSWORDS DO NOT MATCH.';
+  busy(true, 'UPDATING PASSWORD', 'Please wait...');
+  try {
+    const r = await api({ action: 'changePw', pw: PW, newPw: a });
+    if (r.ok) { PW = a; try { sessionStorage.setItem('osc_pw', a); } catch (x) {} $('#npw').value = $('#npw2').value = ''; m.style.color = '#166534'; m.textContent = 'PASSWORD CHANGED. USE IT NEXT TIME YOU SIGN IN.'; }
+    else m.textContent = r.error === 'UNKNOWN ACTION' ? 'UPDATE YOUR APPS SCRIPT CODE AND DEPLOY A NEW VERSION FIRST.' : (r.error || 'FAILED.');
+  } catch (e) { m.textContent = 'NETWORK ERROR. PLEASE TRY AGAIN.'; }
+  busy(false);
 }
 function tab(t) {
-  ['L', 'D', 'S', 'U'].forEach((k, i) => { $('#tab' + k).hidden = t !== k; $('#b' + (i + 1)).className = t === k ? 'on' : ''; });
-  $('#sv').hidden = t === 'L' || t === 'U'; $('#dmsg').textContent = '';
+  TABS.forEach((k, i) => { $('#tab' + k).hidden = t !== k; $('#b' + (i + 1)).className = t === k ? 'on' : ''; });
+  $('#sv').hidden = !(t === 'D' || t === 'S'); $('#dmsg').textContent = '';
+  clearInterval(DAU); if (t === 'H') { try { $('#dauto').checked = localStorage.getItem('osc_da') === '1'; } catch (x) {} dauto(); }
   if (t === 'U') loadUsers();
   if (t === 'D' || t === 'S') { document.querySelectorAll('[data-k]').forEach(i => { const v = CFG[i.dataset.k]; i.type === 'checkbox' ? i.checked = !!v : i.value = v == null ? '' : v }); if (t === 'D') prev(); if (t === 'S') bstat(); }
+  idleReset(); try { $('#b' + (TABS.indexOf(t) + 1)).scrollIntoView({ block: 'nearest', inline: 'center' }); } catch (x) {}
 }
 function bstat() {
   const el = $('#bst'); if (!el) return; const m = +CFG.maxReg;
@@ -699,12 +788,17 @@ async function saveCfg() {
 }
 async function load() {
   const r = await api({ action: 'list', pw: PW }); if (!r.ok) { if (/PASSWORD/i.test(r.error || '')) logout(); return alert(r.error); }
-  HEAD = r.head; DATA = r.rows; COUNT = DATA.length; render(); bstat();
+  HEAD = r.head; DATA = r.rows; COUNT = DATA.length; render(); bstat(); dash();
 }
 function render() {
-  const q = U($('#q').value), rows = DATA.filter(r => !q || r.join(' ').toUpperCase().includes(q));
-  const isIn = r => r[23] === 'YES';
-  $('#s1').textContent = DATA.length; $('#s2').textContent = DATA.filter(isIn).length; $('#s3').textContent = DATA.filter(r => isIn(r) && !r[25]).length; $('#s4').textContent = DATA.filter(r => r[14] === 'YES').length;
+  const q = U($('#q').value), fs = $('#fst').value, fp = $('#fpr').value, fc = $('#fct').value;
+  const isIn = r => r[23] === 'YES', stOf = r => !isIn(r) ? 'R' : r[25] ? 'O' : 'I';
+  const ps = [...new Set(DATA.map(r => r[10]).filter(Boolean))].sort(), sel = $('#fpr');
+  if (sel.options.length !== ps.length + 1) sel.innerHTML = '<option value="">ALL PROVINCES</option>' + ps.map(p => `<option${p === fp ? ' selected' : ''}>${esc(p)}</option>`).join('');
+  FR = DATA.filter(r => (!q || r.join(' ').toUpperCase().includes(q)) && (!fs || stOf(r) === fs) && (!fp || r[10] === fp) && (!fc || r[20] === fc));
+  const pages = Math.max(1, Math.ceil(FR.length / PER)); PG = Math.min(PG, pages - 1);
+  const rows = FR.slice(PG * PER, PG * PER + PER);
+  $('#cnt').textContent = 'SHOWING ' + FR.length + ' OF ' + DATA.length + ' REGISTRATIONS'; $('#pgi').textContent = 'PAGE ' + (PG + 1) + ' OF ' + pages;
   $('#tb').innerHTML = '<tr><th>PASS ID</th><th>NAME</th><th>BIRTHDATE</th><th>CONTACT</th><th>EMAIL</th><th>MUNICIPALITY</th><th>OFW?</th><th>STATUS</th><th>IN</th><th>OUT</th><th>BY</th><th>ACTIONS</th></tr>' +
     rows.map(r => {
       const st = !isIn(r) ? ['REGISTERED', ''] : r[25] ? ['CHECKED OUT', 'o'] : ['CHECKED IN', 'y'];
@@ -713,7 +807,7 @@ function render() {
         `<td class="act"><button onclick="edit('${esc(r[0])}')">EDIT</button><button class="grn" onclick="chk('${esc(r[0])}',${!isIn(r)})">${isIn(r) ? 'UNDO' : 'CHECK-IN'}</button><button class="red" onclick="del('${esc(r[0])}')">DEL</button></td></tr>`;
     }).join('');
 }
-$('#q').oninput = render;
+$('#q').oninput = fl;
 async function chk(id, v) { const r = await api({ action: 'checkin', pw: PW, id, value: v }); r.ok ? load() : alert(r.error); }
 async function del(id) { if (!confirm('DELETE ' + id + '? THIS CANNOT BE UNDONE.')) return; const r = await api({ action: 'delete', pw: PW, id }); r.ok ? load() : alert(r.error); }
 function edit(id) {
@@ -725,9 +819,9 @@ async function saveEdit() {
   const values = {}; document.querySelectorAll('#mf [data-h]').forEach(i => values[i.dataset.h] = i.value);
   const r = await api({ action: 'update', pw: PW, id: EDIT[0], values }); if (r.ok) { $('#modal').hidden = true; load(); } else alert(r.error);
 }
-function csv() {
+function csv(all) {
   const e = v => '"' + String(v).replace(/"/g, '""') + '"';
-  const t = [HEAD, ...DATA].map(r => r.map(e).join(',')).join('\n');
+  const t = [HEAD, ...(all ? DATA : FR)].map(r => r.map(e).join(',')).join('\n');
   const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['\ufeff' + t], { type: 'text/csv' })); a.download = 'caravan-registrations.csv'; a.click();
 }
 
@@ -782,12 +876,13 @@ function beep(kind) {
   try { navigator.vibrate && navigator.vibrate(kind === 'OK' ? 80 : [120, 60, 120]); } catch (x) {}
 }
 async function staffLogin() {
-  $('#slerr').hidden = true; try { AC = AC || new (window.AudioContext || window.webkitAudioContext)(); AC.resume(); } catch (x) {}
+  $('#slerr').hidden = true; busy(true, 'SIGNING IN', 'Checking your account. Please wait...'); try { AC = AC || new (window.AudioContext || window.webkitAudioContext)(); AC.resume(); } catch (x) {}
   try {
     const r = await api({ action: 'slogin', user: $('#su').value, upw: $('#sp').value }); if (!r.ok) throw r.error;
     ST = { token: r.token, name: r.name, user: r.user }; sset('osc_st', r.token); sset('osc_sn', r.name); sset('osc_su', r.user);
     $('#sp').value = ''; openScanner(r.stats);
   } catch (e) { $('#slerr').textContent = e || 'LOGIN FAILED'; $('#slerr').hidden = false; }
+  busy(false);
 }
 function openScanner(stats) {
   show('scan'); $('#swho').textContent = 'SIGNED IN AS ' + ST.name + ' (' + ST.user + ')';
@@ -938,7 +1033,7 @@ async function restore() {
   try {
     const r = await api({ action: 'login', pw: PW });
     if (!r.ok) return logout();
-    $('#login').style.visibility = 'visible'; show('admin'); load();
+    $('#login').style.visibility = 'visible'; show('admin'); tab('H'); load();
   } catch (e) { $('#login').style.visibility = 'visible'; } // no connection: show the login form, keep the session
 }
 $('#pw').addEventListener('keydown', e => { if (e.key === 'Enter') adminLogin(); });
