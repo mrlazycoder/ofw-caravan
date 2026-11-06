@@ -175,6 +175,8 @@ linear-gradient(#fff,#fff) 100% 100%/36px 5px no-repeat,linear-gradient(#fff,#ff
 .lk small{display:block;font-size:.62rem;font-weight:700;letter-spacing:1px;opacity:.8}.lk b{display:block;font-size:1.05rem}.lk span{font-size:.76rem;font-weight:700}
 #scan.live .row{margin:0!important}
 #scan.live .stats div{box-shadow:0 3px 10px #0b2a6f14}
+/* ---- scanner: content centered under the header ---- */
+#scan.live .row{margin:0 0 auto!important}
 </style>
 </head>
 <body>
@@ -292,7 +294,7 @@ linear-gradient(#fff,#fff) 100% 100%/36px 5px no-repeat,linear-gradient(#fff,#ff
 </section>
 
 <section id="scan" hidden>
-  <div class="lvh"><img id="lvl" hidden alt=""><div id="lvt">OWWA SERBISYO CARAVAN</div><div id="lvs">QR SCANNER</div><div id="lvm">CHECK-IN MODE</div><div id="lvc"></div></div>
+  <div class="lvh"><div id="lvt">OWWA SERBISYO CARAVAN</div><div id="lvs">QR SCANNER</div><div id="lvc"></div></div>
   <div class="idle" style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2 style="margin:0">QR SCANNER</h2><button class="alt" onclick="staffLogout()" style="padding:8px 14px;font-size:12px"><svg class="i"><use href="#i-logout"/></svg>LOGOUT</button></div>
   <div id="swho" class="idle" style="font-size:.78rem;color:var(--mu);font-weight:700;margin:4px 0 12px"></div>
   <div class="seg"><label><input type="radio" name="sm" value="IN" checked><span><svg class="i"><use href="#i-login"/></svg>CHECK IN</span></label><label><input type="radio" name="sm" value="OUT"><span><svg class="i"><use href="#i-logout"/></svg>CHECK OUT</span></label></div>
@@ -301,7 +303,6 @@ linear-gradient(#fff,#fff) 100% 100%/36px 5px no-repeat,linear-gradient(#fff,#ff
   <div class="hint">ALIGN THE QR CODE INSIDE THE FRAME</div>
   <div class="row" style="margin-top:12px"><button id="scb" onclick="camToggle()"><svg class="i"><use href="#i-camera"/></svg>START SCAN</button><button id="torch" class="alt" onclick="torchToggle()" hidden></button></div>
   <div id="cerr" class="err" hidden></div>
-  <div id="lastscan" class="lastc"></div>
   <div id="sres" class="idle"></div>
   <label class="idle" style="margin-top:18px">CAMERA NOT WORKING? TYPE THE PASS ID</label>
   <div class="idle" style="display:flex;gap:8px"><input id="mid" placeholder="OSC-0001-ABC" autocomplete="off"><button onclick="manualScan()" style="white-space:nowrap">SUBMIT</button></div>
@@ -736,7 +737,7 @@ async function staffLogin() {
 function openScanner(stats) {
   show('scan'); $('#swho').textContent = 'SIGNED IN AS ' + ST.name + ' (' + ST.user + ')';
   MODE = sget('osc_mode') === 'OUT' ? 'OUT' : 'IN';
-  document.querySelectorAll('input[name=sm]').forEach(i => { i.checked = i.value === MODE; i.onchange = () => { MODE = i.value; sset('osc_mode', MODE); lvMode(); }; });
+  document.querySelectorAll('input[name=sm]').forEach(i => { i.checked = i.value === MODE; i.onchange = () => { MODE = i.value; sset('osc_mode', MODE); }; });
   setStats(stats); setLive(false);
 }
 async function staffRestore() {
@@ -770,12 +771,7 @@ function exitFull() { try { if (document.fullscreenElement || document.webkitFul
 async function wake(on) { try { if (on && navigator.wakeLock) WL = await navigator.wakeLock.request('screen'); else if (WL) { await WL.release(); WL = null; } } catch (x) {} }
 let CLK = 0;
 const tickClock = () => $('#lvc').textContent = new Date().toLocaleString('en-PH', { timeZone: 'Asia/Manila', weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }).toUpperCase();
-function renderLast() {
-  const r = RECENT[0], c = r ? ({ OK: ['#dcfce7', '#166534'], WARN: ['#fef3c7', '#92400e'] }[r.level] || ['#fee2e2', '#991b1b']) : ['#fff', '#64748b'];
-  $('#lastscan').innerHTML = r ? `<div class="lk" style="background:${c[0]};color:${c[1]};border-color:${c[1]}44"><small>LAST SCAN &middot; ${esc(r.t)}</small><b>${esc(r.n)}</b><span>${esc(r.title)}</span></div>` : '<div class="lk"><small>LAST SCAN</small><span>NO SCANS YET. READY WHEN YOU ARE.</span></div>';
-}
-const lvMode = () => $('#lvm').textContent = (MODE === 'OUT' ? 'CHECK-OUT' : 'CHECK-IN') + ' MODE';
-function setLive(on) { document.body.classList.toggle('live', on); $('#scan').classList.toggle('live', on); clearInterval(CLK); if (on) { $('#lvt').textContent = CFG.siteTitle || 'OWWA SERBISYO CARAVAN'; $('#lvl').hidden = !CFG.logo; if (CFG.logo) $('#lvl').src = CFG.logo; lvMode(); renderLast(); tickClock(); CLK = setInterval(tickClock, 20000); } wake(on); }
+function setLive(on) { document.body.classList.toggle('live', on); $('#scan').classList.toggle('live', on); clearInterval(CLK); if (on) { $('#lvt').textContent = CFG.siteTitle || 'OWWA SERBISYO CARAVAN'; tickClock(); CLK = setInterval(tickClock, 20000); } wake(on); }
 async function startScan() {
   goFull();                       // must run straight from the tap, before waiting for the camera permission
   await camStart();
@@ -835,7 +831,7 @@ async function doScan(id) {
     if (!r.ok) { if (r.expired) return staffLogout(true); showRes('ERR', 'ERROR', null, r.error); beep('ERR'); return; }
     showRes(r.level, r.title, r.person, r.message); beep(r.level); setStats(r.stats);
     RECENT.unshift({ t: new Date().toLocaleTimeString('en-PH', { timeZone: 'Asia/Manila', hour: '2-digit', minute: '2-digit' }), n: (r.person && r.person.name) || id, id, title: r.title, level: r.level });
-    RECENT = RECENT.slice(0, 10); renderRecent(); renderLast();
+    RECENT = RECENT.slice(0, 10); renderRecent();
   } catch (e) { showRes('ERR', 'NO CONNECTION', null, 'CHECK THE INTERNET CONNECTION AND SCAN AGAIN.'); beep('ERR'); }
   finally { BUSY = false; $('#sk').hidden = true; }
 }
