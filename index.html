@@ -115,8 +115,20 @@ body.noanim *,body.noanim *:before,body.noanim *:after{animation:none!important;
 .rec{display:flex;justify-content:space-between;gap:10px;padding:9px 12px;border:1px solid var(--bd);border-radius:10px;margin-top:6px;font-size:.82rem;align-items:center}.rec b{display:block}
 #um{position:fixed;inset:0;background:#0b1b4d99;display:flex;align-items:flex-start;justify-content:center;overflow:auto;padding:20px;z-index:9}#um[hidden]{display:none}#um>div{background:#fff;border-radius:18px;padding:22px;max-width:520px;width:100%}
 
+#ld{position:fixed;inset:0;background:#0b1b4dcc;display:flex;align-items:center;justify-content:center;padding:20px;z-index:60}#ld[hidden]{display:none}
+#ld>div{background:#fff;border-radius:18px;padding:28px 22px;max-width:380px;width:100%;text-align:center}#ld h2{font-size:1.05rem;margin:0 0 6px}#ld p{margin:0;color:var(--mu);font-size:.85rem;line-height:1.6}
+.spin{width:54px;height:54px;border-radius:50%;border:6px solid #dbe5ff;border-top-color:var(--p);margin:0 auto 16px;animation:sp .8s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}
+body.noanim .spin{animation:sp .8s linear infinite!important}
 #dq{position:fixed;inset:0;background:#0b1b4d99;display:flex;align-items:center;justify-content:center;padding:20px;z-index:9}#dq[hidden]{display:none}
 #dq>div{background:#fff;border-radius:18px;padding:24px 22px;max-width:420px;width:100%;text-align:center}#dq p{line-height:1.6;margin:0 0 4px}
+/* ---- scanner: full-screen live mode (logo, header and steps hidden) ---- */
+body.live{overflow:hidden}body.live #hero{display:none}
+#scan.live{position:fixed;inset:0;z-index:20;height:100dvh;max-width:none;margin:0;border-radius:0;padding:max(10px,env(safe-area-inset-top)) 10px max(10px,env(safe-area-inset-bottom));box-shadow:none;background:var(--bg);display:flex;flex-direction:column;gap:8px;overflow:hidden;animation:none}
+#scan.live .idle{display:none!important}
+#scan.live .seg{margin:0}
+#scan.live .stats{margin:0!important;gap:6px}#scan.live .stats div{padding:6px 4px;font-size:.55rem}#scan.live .stats b{font-size:1.1rem}
+#scan.live #cam{flex:1;min-height:0;width:100%;max-width:none;max-height:none;aspect-ratio:auto;margin:0}
+#scan.live .row{margin:0!important}#scan.live #cerr{margin:0}
 /* ---- scan result pop-up ---- */
 #rm{position:fixed;inset:0;background:#0b1b4dcc;display:flex;align-items:center;justify-content:center;padding:20px;z-index:50}#rm[hidden]{display:none}
 #rmc{background:#fff;border-radius:22px;padding:26px 22px;max-width:420px;width:100%;text-align:center;border-top:8px solid #16a34a;box-shadow:0 20px 60px #0b1b4d66}
@@ -243,17 +255,17 @@ button[hidden]{display:none!important}
 </section>
 
 <section id="scan" hidden>
-  <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2 style="margin:0">QR SCANNER</h2><button class="alt" onclick="staffLogout()" style="padding:8px 14px;font-size:12px"><svg class="i"><use href="#i-logout"/></svg>LOGOUT</button></div>
-  <div id="swho" style="font-size:.78rem;color:var(--mu);font-weight:700;margin:4px 0 12px"></div>
+  <div class="idle" style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2 style="margin:0">QR SCANNER</h2><button class="alt" onclick="staffLogout()" style="padding:8px 14px;font-size:12px"><svg class="i"><use href="#i-logout"/></svg>LOGOUT</button></div>
+  <div id="swho" class="idle" style="font-size:.78rem;color:var(--mu);font-weight:700;margin:4px 0 12px"></div>
   <div class="seg"><label><input type="radio" name="sm" value="IN" checked><span><svg class="i"><use href="#i-login"/></svg>CHECK IN</span></label><label><input type="radio" name="sm" value="OUT"><span><svg class="i"><use href="#i-logout"/></svg>CHECK OUT</span></label></div>
   <div class="stats" style="margin-top:12px"><div><b id="t1">0</b>REGISTERED</div><div><b id="t2">0</b>CHECKED IN</div><div><b id="t3">0</b>INSIDE NOW</div></div>
   <div id="cam" hidden><video id="vid" playsinline muted></video><div class="frame"></div></div>
-  <div class="row" style="margin-top:12px"><button id="scb" onclick="camToggle()"><svg class="i"><use href="#i-camera"/></svg>START CAMERA</button><button id="torch" class="alt" onclick="torchToggle()" hidden></button></div>
+  <div class="row" style="margin-top:12px"><button id="scb" onclick="camToggle()"><svg class="i"><use href="#i-camera"/></svg>START SCAN</button><button id="torch" class="alt" onclick="torchToggle()" hidden></button></div>
   <div id="cerr" class="err" hidden></div>
-  <div id="sres"></div>
-  <label style="margin-top:18px">CAMERA NOT WORKING? TYPE THE PASS ID</label>
-  <div style="display:flex;gap:8px"><input id="mid" placeholder="OSC-0001-ABC" autocomplete="off"><button onclick="manualScan()" style="white-space:nowrap">SUBMIT</button></div>
-  <h3 style="color:var(--pd);margin:20px 0 0;font-size:.95rem">RECENT SCANS (THIS DEVICE)</h3><div id="slog"></div>
+  <div id="sres" class="idle"></div>
+  <label class="idle" style="margin-top:18px">CAMERA NOT WORKING? TYPE THE PASS ID</label>
+  <div class="idle" style="display:flex;gap:8px"><input id="mid" placeholder="OSC-0001-ABC" autocomplete="off"><button onclick="manualScan()" style="white-space:nowrap">SUBMIT</button></div>
+  <h3 class="idle" style="color:var(--pd);margin:20px 0 0;font-size:.95rem">RECENT SCANS (THIS DEVICE)</h3><div id="slog" class="idle"></div>
 </section>
 
 <section id="admin" hidden>
@@ -344,6 +356,8 @@ button[hidden]{display:none!important}
 </section>
 </main>
 
+<div id="ld" hidden><div><div class="spin"></div><h2>SUBMITTING YOUR REGISTRATION</h2><p>Please wait and do not close or refresh this page.</p></div></div>
+
 <div id="dq" hidden><div><div class="ic"><svg class="i"><use href="#i-download"/></svg></div><h2>DOWNLOAD YOUR ACCESS PASS?</h2><p>Would you like to download your Access Pass now?</p><p style="font-size:.8rem;color:var(--mu)">You will need it at the venue. You can also download it later using the button on this page.</p><div class="row"><button class="grn" onclick="dlYes()">YES</button><button class="alt" onclick="$('#dq').hidden=true">NO</button></div></div></div>
 
 <div id="rm" hidden onclick="if(event.target===this)closeModal()"><div id="rmc"></div></div>
@@ -382,15 +396,18 @@ function show(id) {
 // Read-only actions retry once automatically; otherwise the real message is shown so the problem can be identified.
 const READONLY = ['login', 'list', 'slogin', 'sinfo', 'users', 'scanlog', 'emailPass'];
 const api = async (o, retry = true) => {
-  let t = '';
+  let t = '', tm = 0;
   try {
-    t = await (await fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(o) })).text();
+    const init = { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(o) };
+    if (o.action === 'register') { const ctl = new AbortController(); init.signal = ctl.signal; tm = setTimeout(() => ctl.abort(), 60000); } // 60-second limit for registration
+    t = await (await fetch(API, init)).text();
     return JSON.parse(t);
   } catch (e) {
+    if (e && e.name === 'AbortError') throw new Error('TIMEOUT');
     if (retry && READONLY.includes(o.action)) { await new Promise(r => setTimeout(r, 1200)); return api(o, false); }
     if (t) throw new Error('SERVER SENT A WEB PAGE INSTEAD OF DATA: ' + t.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 220));
     throw e;
-  }
+  } finally { clearTimeout(tm); }
 };
 
 // ---- website banner
@@ -460,13 +477,13 @@ $('#f').addEventListener('submit', async e => {
   const d = {}; IDS.forEach(i => d[i] = U($('#' + i).value));
   d.email = $('#email').value.trim().toLowerCase();
   d.isOfw = document.querySelector('[name=isOfw]:checked').value; d.rel = U($('#relSel').value);
-  const b = $('#sub'); b.disabled = true; b.textContent = 'SUBMITTING...';
+  const b = $('#sub'); b.disabled = true; b.textContent = 'SUBMITTING...'; $('#ld').hidden = false;
   try {
     const r = await api({ action: 'register', data: d });
     if (r.ok) pass(r.id, d.first + ' ' + (d.middle ? d.middle[0] + '. ' : '') + d.last + (d.suffix && d.suffix !== 'N/A' ? ' ' + d.suffix : ''), d.muni + ', ' + d.prov, r.mail);
     else if (r.closed) closed(r.error); else { er.textContent = r.error || 'SOMETHING WENT WRONG.'; er.hidden = false; }
-  } catch (x) { er.textContent = 'NETWORK ERROR. PLEASE TRY AGAIN.'; er.hidden = false; }
-  b.disabled = false; b.textContent = 'SUBMIT REGISTRATION';
+  } catch (x) { er.textContent = x && x.message === 'TIMEOUT' ? 'THE CONNECTION TOOK TOO LONG. YOUR REGISTRATION MAY HAVE GONE THROUGH, SO CHECK YOUR EMAIL FOR YOUR PASS ID BEFORE SUBMITTING AGAIN. IF YOU DID NOT GET AN EMAIL, TRY AGAIN.' : 'NETWORK ERROR. PLEASE TRY AGAIN.'; er.hidden = false; }
+  $('#ld').hidden = true; b.disabled = false; b.textContent = 'SUBMIT REGISTRATION';
 });
 
 // ---- access pass (design comes from CFG)
@@ -679,7 +696,7 @@ function openScanner(stats) {
   show('scan'); $('#swho').textContent = 'SIGNED IN AS ' + ST.name + ' (' + ST.user + ')';
   MODE = sget('osc_mode') === 'OUT' ? 'OUT' : 'IN';
   document.querySelectorAll('input[name=sm]').forEach(i => { i.checked = i.value === MODE; i.onchange = () => { MODE = i.value; sset('osc_mode', MODE); }; });
-  setStats(stats); camStart();
+  setStats(stats); setLive(false);
 }
 async function staffRestore() {
   ST = { token: sget('osc_st'), name: sget('osc_sn'), user: sget('osc_su') }; if (!ST.token) return;
@@ -690,7 +707,7 @@ async function staffRestore() {
   } catch (e) { $('#slogin').style.visibility = 'visible'; }
 }
 function staffLogout(expired) {
-  camStop(); if (ST.token) api({ action: 'slogout', token: ST.token }).catch(() => {});
+  stopScan(); if (ST.token) api({ action: 'slogout', token: ST.token }).catch(() => {});
   ['osc_st', 'osc_sn', 'osc_su'].forEach(k => { try { sessionStorage.removeItem(k); } catch (x) {} });
   ST = { token: '', name: '', user: '' }; RECENT = []; $('#sres').innerHTML = ''; $('#slog').innerHTML = '';
   $('#slogin').style.visibility = 'visible'; show('slogin');
@@ -705,7 +722,19 @@ async function torchToggle() {
   catch (e) { camErr('THE FLASHLIGHT IS NOT SUPPORTED ON THIS DEVICE OR BROWSER.'); }
   torchUI();
 }
-const camToggle = () => STREAM ? camStop() : camStart();
+const camToggle = () => STREAM ? stopScan() : startScan();
+let WL = null;
+function goFull() { try { const d = document.documentElement, f = d.requestFullscreen || d.webkitRequestFullscreen; if (f) { const p = f.call(d); p && p.catch && p.catch(() => {}); } } catch (x) {} }
+function exitFull() { try { if (document.fullscreenElement || document.webkitFullscreenElement) { const f = document.exitFullscreen || document.webkitExitFullscreen, p = f.call(document); p && p.catch && p.catch(() => {}); } } catch (x) {} }
+async function wake(on) { try { if (on && navigator.wakeLock) WL = await navigator.wakeLock.request('screen'); else if (WL) { await WL.release(); WL = null; } } catch (x) {} }
+function setLive(on) { document.body.classList.toggle('live', on); $('#scan').classList.toggle('live', on); wake(on); }
+async function startScan() {
+  goFull();                       // must run straight from the tap, before waiting for the camera permission
+  await camStart();
+  if (!STREAM) { exitFull(); return; }
+  setLive(true);
+}
+function stopScan() { camStop(); setLive(false); exitFull(); }
 async function camStart() {
   $('#cerr').hidden = true;
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return camErr('CAMERA IS NOT AVAILABLE ON THIS BROWSER. TYPE THE PASS ID BELOW INSTEAD.');
@@ -714,7 +743,7 @@ async function camStart() {
     const v = $('#vid'); v.srcObject = STREAM; await v.play();
     TRACK = STREAM.getVideoTracks()[0]; let caps = {}; try { caps = TRACK.getCapabilities ? TRACK.getCapabilities() : {}; } catch (x) {}
     TORCH = false; $('#torch').hidden = !caps.torch; torchUI();
-    $('#cam').hidden = false; $('#scb').innerHTML = ico('camera') + 'STOP CAMERA'; SCANNING = true;
+    $('#cam').hidden = false; $('#scb').innerHTML = ico('x') + 'STOP SCAN'; SCANNING = true;
     DET = null; if ('BarcodeDetector' in window) { try { DET = new BarcodeDetector({ formats: ['qr_code'] }); } catch (x) { DET = null; } }
     if (!DET && !window.jsQR) camErr('QR READER FAILED TO LOAD. REFRESH THE PAGE, OR TYPE THE PASS ID BELOW.');
     tick();
@@ -722,7 +751,7 @@ async function camStart() {
 }
 function camStop() {
   SCANNING = false; if (STREAM) STREAM.getTracks().forEach(t => t.stop()); STREAM = null; TRACK = null; TORCH = false; $('#torch').hidden = true;
-  const v = $('#vid'); if (v) v.srcObject = null; $('#cam').hidden = true; $('#scb').innerHTML = ico('camera') + 'START CAMERA';
+  const v = $('#vid'); if (v) v.srcObject = null; $('#cam').hidden = true; $('#scb').innerHTML = ico('camera') + 'START SCAN';
 }
 async function tick() {
   if (!SCANNING) return;
