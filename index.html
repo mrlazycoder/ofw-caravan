@@ -177,6 +177,13 @@ linear-gradient(#fff,#fff) 100% 100%/36px 5px no-repeat,linear-gradient(#fff,#ff
 #scan.live .stats div{box-shadow:0 3px 10px #0b2a6f14}
 /* ---- scanner: content centered under the header ---- */
 #scan.live .row{margin:0 0 auto!important}
+/* ---- scanner: flat header, elements moved up, manual ID entry ---- */
+#scan.live .lvh{border-radius:0;margin-bottom:0}
+#scan.live{gap:10px}
+#scan.live .seg{margin:0!important}
+#scan.live .row{margin:0!important}
+.lman{display:none}#scan.live .lman{display:block;flex:none}
+.lman label{margin-bottom:6px;text-align:center}.lman .mr{display:flex;gap:8px}.lman input{height:54px;font-size:17px}.lman button{padding:0 22px;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -294,7 +301,7 @@ linear-gradient(#fff,#fff) 100% 100%/36px 5px no-repeat,linear-gradient(#fff,#ff
 </section>
 
 <section id="scan" hidden>
-  <div class="lvh"><div id="lvt">OWWA SERBISYO CARAVAN</div><div id="lvs">QR SCANNER</div><div id="lvc"></div></div>
+  <div class="lvh"><div id="lvt">OWWA SERBISYO CARAVAN</div><div id="lvc"></div></div>
   <div class="idle" style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2 style="margin:0">QR SCANNER</h2><button class="alt" onclick="staffLogout()" style="padding:8px 14px;font-size:12px"><svg class="i"><use href="#i-logout"/></svg>LOGOUT</button></div>
   <div id="swho" class="idle" style="font-size:.78rem;color:var(--mu);font-weight:700;margin:4px 0 12px"></div>
   <div class="seg"><label><input type="radio" name="sm" value="IN" checked><span><svg class="i"><use href="#i-login"/></svg>CHECK IN</span></label><label><input type="radio" name="sm" value="OUT"><span><svg class="i"><use href="#i-logout"/></svg>CHECK OUT</span></label></div>
@@ -303,6 +310,7 @@ linear-gradient(#fff,#fff) 100% 100%/36px 5px no-repeat,linear-gradient(#fff,#ff
   <div class="hint">ALIGN THE QR CODE INSIDE THE FRAME</div>
   <div class="row" style="margin-top:12px"><button id="scb" onclick="camToggle()"><svg class="i"><use href="#i-camera"/></svg>START SCAN</button><button id="torch" class="alt" onclick="torchToggle()" hidden></button></div>
   <div id="cerr" class="err" hidden></div>
+  <div class="lman"><label>CAN'T SCAN? TYPE THE PASS ID</label><div class="mr"><input id="mid2" placeholder="OSC-0001-ABC" autocomplete="off" onkeydown="if(event.key==='Enter')manualScan2()"><button onclick="manualScan2()">SUBMIT</button></div></div>
   <div id="sres" class="idle"></div>
   <label class="idle" style="margin-top:18px">CAMERA NOT WORKING? TYPE THE PASS ID</label>
   <div class="idle" style="display:flex;gap:8px"><input id="mid" placeholder="OSC-0001-ABC" autocomplete="off"><button onclick="manualScan()" style="white-space:nowrap">SUBMIT</button></div>
@@ -820,6 +828,7 @@ function handleCode(raw, manual) {
   if (!m) { showRes('ERR', 'INVALID QR CODE', null, 'THIS IS NOT AN OWWA SERBISYO CARAVAN ACCESS PASS.'); beep('ERR'); return; }
   doScan(key);
 }
+function manualScan2() { const i = $('#mid2'), v = i.value.trim(); if (!v) return; i.blur(); handleCode(v, true); i.value = ''; }
 function manualScan() { const v = $('#mid').value.trim(); if (!v) return; handleCode(v, true); $('#mid').value = ''; }
 async function doScan(id) {
   if (BUSY) return; BUSY = true;
