@@ -151,6 +151,15 @@ button[hidden]{display:none!important}
 @keyframes sw{from{top:6%}to{top:92%}}
 #sk{position:fixed;inset:0;background:#0b1b4dd9;display:flex;align-items:center;justify-content:center;padding:20px;z-index:45}#sk[hidden]{display:none}
 #sk>div{background:#fff;border-radius:18px;padding:26px 22px;max-width:340px;width:100%;text-align:center}#sk h2{font-size:1.05rem;margin:0 0 8px}#sk p{margin:0;color:var(--mu);font-size:.9rem;line-height:1.7}#sk b{color:var(--tx);font-family:Consolas,monospace}
+/* ---- full-screen scanner: blue title header + balanced spacing ---- */
+.lvh{display:none}
+#scan.live .lvh{display:block;flex:none;margin:calc(-1*max(10px,env(safe-area-inset-top))) -10px 6px;padding:calc(max(10px,env(safe-area-inset-top)) + 10px) 16px 14px;background:linear-gradient(135deg,var(--pd),var(--p));color:#fff;text-align:center;border-bottom:4px solid var(--ac);border-radius:0 0 20px 20px;box-shadow:0 8px 20px #0b2a6f33}
+#lvt{font-weight:800;font-size:1.1rem;letter-spacing:.6px}#lvs{font-size:.7rem;letter-spacing:3px;opacity:.9;margin-top:3px}
+#lvm{display:inline-block;margin-top:9px;padding:4px 14px;border-radius:99px;background:var(--ac);color:#1a1a1a;font-weight:800;font-size:.68rem;letter-spacing:1px}
+#scan.live{justify-content:flex-start}
+#scan.live .seg{margin:auto 0 0!important}#scan.live .seg span{padding:14px 8px}
+#scan.live .row{margin:0 0 auto!important}
+#scan.live .stats div{padding:10px 6px;font-size:.62rem}#scan.live .stats b{font-size:1.5rem}
 </style>
 </head>
 <body>
@@ -268,6 +277,7 @@ button[hidden]{display:none!important}
 </section>
 
 <section id="scan" hidden>
+  <div class="lvh"><div id="lvt">OWWA SERBISYO CARAVAN</div><div id="lvs">QR SCANNER</div><div id="lvm">CHECK-IN MODE</div></div>
   <div class="idle" style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2 style="margin:0">QR SCANNER</h2><button class="alt" onclick="staffLogout()" style="padding:8px 14px;font-size:12px"><svg class="i"><use href="#i-logout"/></svg>LOGOUT</button></div>
   <div id="swho" class="idle" style="font-size:.78rem;color:var(--mu);font-weight:700;margin:4px 0 12px"></div>
   <div class="seg"><label><input type="radio" name="sm" value="IN" checked><span><svg class="i"><use href="#i-login"/></svg>CHECK IN</span></label><label><input type="radio" name="sm" value="OUT"><span><svg class="i"><use href="#i-logout"/></svg>CHECK OUT</span></label></div>
@@ -626,7 +636,7 @@ function render() {
   $('#tb').innerHTML = '<tr><th>PASS ID</th><th>NAME</th><th>BIRTHDATE</th><th>CONTACT</th><th>EMAIL</th><th>MUNICIPALITY</th><th>OFW?</th><th>STATUS</th><th>IN</th><th>OUT</th><th>BY</th><th>ACTIONS</th></tr>' +
     rows.map(r => {
       const st = !isIn(r) ? ['REGISTERED', ''] : r[25] ? ['CHECKED OUT', 'o'] : ['CHECKED IN', 'y'];
-      return `<tr><td data-l="PASS ID"><b>${esc(r[0])}</b></td><td data-l="NAME">${esc(r[2])}, ${esc(r[3])} ${esc(r[4])}</td><td data-l="BIRTHDATE">${esc(r[6])}</td><td data-l="CONTACT">${esc(r[8])}</td><td data-l="EMAIL">${esc(r[9])}</td><td data-l="MUNICIPALITY">${esc(r[11])}</td><td data-l="OFW?">${esc(r[14])}</td>` +
+      return `<tr><td data-l="PASS ID"><b>${esc(r[0])}</b></td><td data-l="NAME">${esc(r[2])}, ${esc(r[3])} ${esc(r[4])}${r[5] && String(r[5]).toUpperCase() !== 'N/A' ? ' ' + esc(r[5]) : ''}</td><td data-l="BIRTHDATE">${esc(r[6])}</td><td data-l="CONTACT">${esc(r[8])}</td><td data-l="EMAIL">${esc(r[9])}</td><td data-l="MUNICIPALITY">${esc(r[11])}</td><td data-l="OFW?">${esc(r[14])}</td>` +
         `<td data-l="STATUS"><span class="bg ${st[1]}">${st[0]}</span></td><td data-l="CHECKED IN AT">${esc(r[24] || '-')}</td><td data-l="CHECKED OUT AT">${esc(r[25] || '-')}</td><td data-l="SCANNED BY">${esc(r[26] || '-')}</td>` +
         `<td class="act"><button onclick="edit('${esc(r[0])}')">EDIT</button><button class="grn" onclick="chk('${esc(r[0])}',${!isIn(r)})">${isIn(r) ? 'UNDO' : 'CHECK-IN'}</button><button class="red" onclick="del('${esc(r[0])}')">DEL</button></td></tr>`;
     }).join('');
@@ -710,7 +720,7 @@ async function staffLogin() {
 function openScanner(stats) {
   show('scan'); $('#swho').textContent = 'SIGNED IN AS ' + ST.name + ' (' + ST.user + ')';
   MODE = sget('osc_mode') === 'OUT' ? 'OUT' : 'IN';
-  document.querySelectorAll('input[name=sm]').forEach(i => { i.checked = i.value === MODE; i.onchange = () => { MODE = i.value; sset('osc_mode', MODE); }; });
+  document.querySelectorAll('input[name=sm]').forEach(i => { i.checked = i.value === MODE; i.onchange = () => { MODE = i.value; sset('osc_mode', MODE); lvMode(); }; });
   setStats(stats); setLive(false);
 }
 async function staffRestore() {
@@ -742,7 +752,8 @@ let WL = null;
 function goFull() { try { const d = document.documentElement, f = d.requestFullscreen || d.webkitRequestFullscreen; if (f) { const p = f.call(d); p && p.catch && p.catch(() => {}); } } catch (x) {} }
 function exitFull() { try { if (document.fullscreenElement || document.webkitFullscreenElement) { const f = document.exitFullscreen || document.webkitExitFullscreen, p = f.call(document); p && p.catch && p.catch(() => {}); } } catch (x) {} }
 async function wake(on) { try { if (on && navigator.wakeLock) WL = await navigator.wakeLock.request('screen'); else if (WL) { await WL.release(); WL = null; } } catch (x) {} }
-function setLive(on) { document.body.classList.toggle('live', on); $('#scan').classList.toggle('live', on); wake(on); }
+const lvMode = () => $('#lvm').textContent = (MODE === 'OUT' ? 'CHECK-OUT' : 'CHECK-IN') + ' MODE';
+function setLive(on) { document.body.classList.toggle('live', on); $('#scan').classList.toggle('live', on); if (on) { $('#lvt').textContent = CFG.siteTitle || 'OWWA SERBISYO CARAVAN'; lvMode(); } wake(on); }
 async function startScan() {
   goFull();                       // must run straight from the tap, before waiting for the camera permission
   await camStart();
