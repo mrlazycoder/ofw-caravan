@@ -501,7 +501,7 @@ const DEF = { notice: '', idleMin: '30', siteTitle: 'OWWA SERBISYO CARAVAN', sit
 const $ = s => document.querySelector(s), U = v => (v == null ? '' : String(v)).trim().toUpperCase();
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const IAB = /FBAN|FBAV|FB_IAB|Messenger|Instagram|Line\/|MicroMessenger|; wv\)/i.test(navigator.userAgent), ANDROID = /Android/i.test(navigator.userAgent);
-let UL = [], FR = [], PG = 0, PER = 25, CUR = '', DAU = 0, IDLE = 0, VER = 0, COUNT = 0, CFG = { ...DEF }, PW = '', DATA = [], HEAD = [], EDIT = null, PK = '', PWID = 0;
+let BZ = 0, BT = 0, UL = [], FR = [], PG = 0, PER = 25, CUR = '', DAU = 0, IDLE = 0, VER = 0, COUNT = 0, CFG = { ...DEF }, PW = '', DATA = [], HEAD = [], EDIT = null, PK = '', PWID = 0;
 const STEP = { consent: 1, form: 2, done: 3 };
 // ---- built-in browsers (Messenger / Facebook): offer a way out + get a pass back later
 function openExt() {
@@ -534,8 +534,22 @@ function show(id) {
 // Apps Script sometimes answers with an HTML error page instead of JSON (busy / redeploying / wrong URL).
 // Read-only actions retry once automatically; otherwise the real message is shown so the problem can be identified.
 const READONLY = ['login', 'list', 'slogin', 'sinfo', 'users', 'scanlog', 'emailPass'];
-const api = async (o, retry = true) => {
+const LBL = {
+  setConfig: ['SAVING CHANGES', 'Publishing your settings. Please wait...'],
+  list: ['LOADING DATA', 'Fetching the registrations...'],
+  update: ['SAVING CHANGES', 'Updating the registration...'],
+  delete: ['DELETING RECORD', 'Please wait...'],
+  checkin: ['UPDATING STATUS', 'Please wait...'],
+  users: ['LOADING STAFF ACCOUNTS', 'Please wait...'],
+  userAdd: ['CREATING ACCOUNT', 'Please wait...'],
+  userUpdate: ['SAVING ACCOUNT', 'Please wait...'],
+  userDelete: ['DELETING ACCOUNT', 'Please wait...'],
+  scanlog: ['LOADING SCAN LOG', 'Please wait...'],
+  getPass: ['FINDING YOUR ACCESS PASS', 'Searching the registration list...']
+};
+const api = async (o, retry = true, quiet = false) => {
   let t = '', tm = 0;
+  const L = retry && !quiet && LBL[o.action]; if (L) busy(true, L[0], L[1]);
   try {
     const init = { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(o) };
     if (o.action === 'register' || o.action === 'scan') { const ctl = new AbortController(); init.signal = ctl.signal; tm = setTimeout(() => ctl.abort(), o.action === 'register' ? 60000 : 25000); } // time limits: registration 60s, scan 25s
@@ -546,7 +560,7 @@ const api = async (o, retry = true) => {
     if (retry && READONLY.includes(o.action)) { await new Promise(r => setTimeout(r, 1200)); return api(o, false); }
     if (t) throw new Error('SERVER SENT A WEB PAGE INSTEAD OF DATA: ' + t.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 220));
     throw e;
-  } finally { clearTimeout(tm); }
+  } finally { clearTimeout(tm); if (L) busy(false); }
 };
 
 // ---- website banner
@@ -708,11 +722,16 @@ async function adminLogin() {
   catch (e) { $('#lerr').textContent = e || 'LOGIN FAILED'; $('#lerr').hidden = false; }
   finally { busy(false); }
 }
-function busy(on, t, m) { $('#ldt').textContent = on ? t : 'SUBMITTING YOUR REGISTRATION'; $('#ldm').textContent = on ? m : 'Please wait and do not close or refresh this page.'; $('#ld').hidden = !on; }
+const DEFT = 'SUBMITTING YOUR REGISTRATION', DEFM = 'Please wait and do not close or refresh this page.';
+function busy(on, t, m) {
+  clearTimeout(BT);
+  if (on) { BZ++; $('#ldt').textContent = t; $('#ldm').textContent = m; $('#ld').hidden = false; }
+  else { BZ = Math.max(0, BZ - 1); if (!BZ) BT = setTimeout(() => { if (!BZ) { $('#ld').hidden = true; $('#ldt').textContent = DEFT; $('#ldm').textContent = DEFM; } }, 150); }
+}
 const TABS = ['H', 'L', 'D', 'S', 'U'];
 function idleReset() { clearTimeout(IDLE); const m = +CFG.idleMin; if (!m || $('#admin').hidden) return; IDLE = setTimeout(() => { logout(); $('#lerr').textContent = 'YOU WERE LOGGED OUT BECAUSE OF INACTIVITY.'; $('#lerr').hidden = false; }, m * 6e4); }
 ['click', 'keydown', 'touchstart', 'scroll'].forEach(ev => document.addEventListener(ev, idleReset, { passive: true }));
-function dauto() { clearInterval(DAU); const on = $('#dauto').checked; try { localStorage.setItem('osc_da', on ? '1' : '0'); } catch (x) {} if (on && !$('#tabH').hidden) DAU = setInterval(load, 60000); }
+function dauto() { clearInterval(DAU); const on = $('#dauto').checked; try { localStorage.setItem('osc_da', on ? '1' : '0'); } catch (x) {} if (on && !$('#tabH').hidden) DAU = setInterval(() => load(true), 60000); }
 const pdt = s => { const m = String(s || '').match(/(\d{1,2})\/(\d{1,2})\/(\d{4}),?\s*(\d{1,2}):(\d{2})(?::\d{2})?\s*([AaPp])/); if (!m) return null; let h = +m[4] % 12; if (/p/i.test(m[6])) h += 12; return { y: +m[3], m: +m[1], d: +m[2], h }; };
 const ymd = o => o ? o.y + '-' + String(o.m).padStart(2, '0') + '-' + String(o.d).padStart(2, '0') : '';
 const tally = (rows, f) => { const m = {}; rows.forEach(r => { const k = f(r); if (k) m[k] = (m[k] || 0) + 1; }); return Object.entries(m).sort((a, b) => b[1] - a[1]); };
@@ -786,8 +805,8 @@ async function saveCfg() {
   try { const r = await api({ action: 'setConfig', pw: PW, config: CFG }); if (r.ok && r.config) { CFG = { ...CFG, ...r.config }; hero(); prev(); bstat(); } $('#dmsg').textContent = r.ok ? 'SAVED. IT IS NOW LIVE FOR EVERYONE.' : (r.error || 'FAILED'); }
   catch (e) { $('#dmsg').textContent = 'SAVE FAILED. TRY AGAIN.'; }
 }
-async function load() {
-  const r = await api({ action: 'list', pw: PW }); if (!r.ok) { if (/PASSWORD/i.test(r.error || '')) logout(); return alert(r.error); }
+async function load(quiet) {
+  const r = await api({ action: 'list', pw: PW }, true, quiet); if (!r.ok) { if (/PASSWORD/i.test(r.error || '')) logout(); return alert(r.error); }
   HEAD = r.head; DATA = r.rows; COUNT = DATA.length; render(); bstat(); dash();
 }
 function render() {
@@ -924,7 +943,8 @@ const tickClock = () => $('#lvc').textContent = new Date().toLocaleString('en-PH
 function setLive(on) { document.body.classList.toggle('live', on); $('#scan').classList.toggle('live', on); clearInterval(CLK); if (on) { $('#lvt').textContent = CFG.siteTitle || 'OWWA SERBISYO CARAVAN'; tickClock(); CLK = setInterval(tickClock, 20000); } wake(on); }
 async function startScan() {
   goFull();                       // must run straight from the tap, before waiting for the camera permission
-  await camStart();
+  busy(true, 'STARTING CAMERA', 'Please allow camera access if your phone asks. This can take a few seconds...');
+  try { await camStart(); } finally { busy(false); }
   if (!STREAM) { exitFull(); return; }
   setLive(true);
 }
