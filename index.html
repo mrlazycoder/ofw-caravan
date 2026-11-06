@@ -115,6 +115,10 @@ body.noanim *,body.noanim *:before,body.noanim *:after{animation:none!important;
 .rec{display:flex;justify-content:space-between;gap:10px;padding:9px 12px;border:1px solid var(--bd);border-radius:10px;margin-top:6px;font-size:.82rem;align-items:center}.rec b{display:block}
 #um{position:fixed;inset:0;background:#0b1b4d99;display:flex;align-items:flex-start;justify-content:center;overflow:auto;padding:20px;z-index:9}#um[hidden]{display:none}#um>div{background:#fff;border-radius:18px;padding:22px;max-width:520px;width:100%}
 
+/* ---- scan result pop-up ---- */
+#rm{position:fixed;inset:0;background:#0b1b4dcc;display:flex;align-items:center;justify-content:center;padding:20px;z-index:50}#rm[hidden]{display:none}
+#rmc{background:#fff;border-radius:22px;padding:26px 22px;max-width:420px;width:100%;text-align:center;border-top:8px solid #16a34a;box-shadow:0 20px 60px #0b1b4d66}
+button[hidden]{display:none!important}
 /* ---- flat line icons ---- */
 .i{width:1.15em;height:1.15em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.22em;margin-right:.45em;flex:none}
 .ic .i{width:32px;height:32px;margin:0;vertical-align:0;color:var(--p)}
@@ -141,6 +145,7 @@ body.noanim *,body.noanim *:before,body.noanim *:after{animation:none!important;
 <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></symbol>
 <symbol id="i-camera" viewBox="0 0 24 24"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3z"/><circle cx="12" cy="13" r="3"/></symbol>
 <symbol id="i-save" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></symbol>
+<symbol id="i-flash" viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9z"/></symbol>
 <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
 </defs></svg>
 <div id="hero"><img id="logo" hidden alt="Logo"><div id="agency"></div><h1>OWWA SERBISYO CARAVAN</h1><p>ONLINE REGISTRATION</p>
@@ -215,6 +220,7 @@ body.noanim *,body.noanim *:before,body.noanim *:after{animation:none!important;
   <h2>THANK YOU FOR REGISTERING FOR THE OWWA SERBISYO CARAVAN!</h2>
   <p style="color:var(--mu)">Here is your Access Pass. Please present it at the venue &mdash; it will serve as your pass for the event.</p>
   <div id="pass"></div>
+  <p id="mailmsg" hidden style="font-size:.85rem;font-weight:700;color:var(--mu);margin:12px 0 0"></p>
   <div class="row"><button onclick="dl()"><svg class="i"><use href="#i-download"/></svg>DOWNLOAD ACCESS PASS</button><button class="alt" onclick="askExit()"><svg class="i"><use href="#i-plus"/></svg>REGISTER ANOTHER PERSON</button></div>
   <p style="font-size:.8rem;color:#64748b">Tip: save the image or take a screenshot. A copy of your Pass ID was also sent to your email.</p>
 </section>
@@ -228,7 +234,7 @@ body.noanim *,body.noanim *:before,body.noanim *:after{animation:none!important;
 
 <section id="slogin" hidden>
   <h2>SCANNER STAFF LOGIN</h2>
-  <label>USERNAME</label><input id="su" style="text-transform:none" autocapitalize="none" autocomplete="username">
+  <label>USERNAME</label><input id="su" data-keep style="text-transform:none" autocapitalize="none" autocomplete="username">
   <label style="margin-top:12px">PASSWORD</label><input id="sp" type="password" style="text-transform:none" autocomplete="current-password">
   <div id="slerr" class="err" hidden></div>
   <div class="row"><button onclick="staffLogin()">LOGIN</button></div>
@@ -240,7 +246,7 @@ body.noanim *,body.noanim *:before,body.noanim *:after{animation:none!important;
   <div class="seg"><label><input type="radio" name="sm" value="IN" checked><span><svg class="i"><use href="#i-login"/></svg>CHECK IN</span></label><label><input type="radio" name="sm" value="OUT"><span><svg class="i"><use href="#i-logout"/></svg>CHECK OUT</span></label></div>
   <div class="stats" style="margin-top:12px"><div><b id="t1">0</b>REGISTERED</div><div><b id="t2">0</b>CHECKED IN</div><div><b id="t3">0</b>INSIDE NOW</div></div>
   <div id="cam" hidden><video id="vid" playsinline muted></video><div class="frame"></div></div>
-  <div class="row" style="margin-top:12px"><button id="scb" onclick="camToggle()"><svg class="i"><use href="#i-camera"/></svg>START CAMERA</button></div>
+  <div class="row" style="margin-top:12px"><button id="scb" onclick="camToggle()"><svg class="i"><use href="#i-camera"/></svg>START CAMERA</button><button id="torch" class="alt" onclick="torchToggle()" hidden></button></div>
   <div id="cerr" class="err" hidden></div>
   <div id="sres"></div>
   <label style="margin-top:18px">CAMERA NOT WORKING? TYPE THE PASS ID</label>
@@ -296,6 +302,7 @@ body.noanim *,body.noanim *:before,body.noanim *:after{animation:none!important;
     <div class="two">
       <div class="card"><h3>REGISTRATION CONTROL</h3><div class="g">
         <div class="full"><label style="display:flex;gap:8px;align-items:center"><input type="checkbox" data-k="regOpen"> REGISTRATION IS OPEN</label></div>
+        <div class="full"><label style="display:flex;gap:8px;align-items:center"><input type="checkbox" data-k="emailPass"> AUTOMATICALLY EMAIL THE ACCESS PASS (IMAGE ATTACHED) AFTER REGISTRATION</label></div>
         <div><label>CLOSING DATE (OPTIONAL)</label><input type="date" data-k="deadline"></div>
         <div><label>MAX REGISTRANTS (OPTIONAL)</label><input type="number" min="0" data-k="maxReg" placeholder="UNLIMITED"></div>
         <div class="full" id="bst" style="font-size:.8rem;font-weight:700"></div>
@@ -315,8 +322,8 @@ body.noanim *,body.noanim *:before,body.noanim *:after{animation:none!important;
     <div class="two">
       <div class="card"><h3>ADD SCANNER STAFF ACCOUNT</h3><div class="g">
         <div class="full"><label>FULL NAME</label><input id="nn" autocomplete="off"></div>
-        <div><label>USERNAME</label><input id="nu" style="text-transform:none" autocapitalize="none" autocomplete="off"></div>
-        <div><label>PASSWORD (MIN. 6 CHARACTERS)</label><input id="np" style="text-transform:none" autocomplete="off"></div>
+        <div><label>USERNAME</label><input id="nu" data-keep style="text-transform:none" autocapitalize="none" autocomplete="off"></div>
+        <div><label>PASSWORD (MIN. 6 CHARACTERS)</label><input id="np" data-keep style="text-transform:none" autocomplete="off"></div>
         <div class="full"><div class="row" style="margin:0"><button onclick="addUser()"><svg class="i"><use href="#i-user-plus"/></svg>ADD ACCOUNT</button><button class="alt" onclick="window.open(location.pathname+'#scan','_blank')">OPEN SCANNER<svg class="i" style="margin:0 0 0 .45em"><use href="#i-ext"/></svg></button></div><div id="umsg" class="ok"></div></div>
       </div></div>
       <div class="card"><h3>SCANNER LINK FOR STAFF</h3>
@@ -334,12 +341,14 @@ body.noanim *,body.noanim *:before,body.noanim *:after{animation:none!important;
 </section>
 </main>
 
+<div id="rm" hidden onclick="if(event.target===this)closeModal()"><div id="rmc"></div></div>
+
 <div id="cx" hidden><div><div class="ic am"><svg class="i"><use href="#i-alert"/></svg></div><h2>CONFIRM EXIT?</h2><p>Have you saved your Access Pass or taken a screenshot of it?</p><p style="font-size:.8rem;color:var(--mu)">You will need it at the venue, and it cannot be shown again after you leave this page.</p><div class="row"><button class="grn" onclick="newReg()">YES</button><button class="alt" onclick="$('#cx').hidden=true">NO</button></div></div></div>
 
 <div id="um" hidden><div><h2>EDIT STAFF ACCOUNT</h2><div class="g">
-  <div class="full"><label>USERNAME</label><input id="eu" disabled style="text-transform:none"></div>
+  <div class="full"><label>USERNAME</label><input id="eu" data-keep disabled style="text-transform:none"></div>
   <div class="full"><label>FULL NAME</label><input id="en"></div>
-  <div><label>NEW PASSWORD (BLANK = KEEP)</label><input id="ep" style="text-transform:none" autocomplete="off"></div>
+  <div><label>NEW PASSWORD (BLANK = KEEP)</label><input id="ep" data-keep style="text-transform:none" autocomplete="off"></div>
   <div><label>STATUS</label><select id="ea"><option value="YES">ACTIVE</option><option value="NO">DISABLED</option></select></div>
 </div><div class="row"><button onclick="saveUser()">SAVE</button><button class="alt" onclick="$('#um').hidden=true">CANCEL</button></div></div></div>
 
@@ -353,7 +362,7 @@ body.noanim *,body.noanim *:before,body.noanim *:after{animation:none!important;
 const API = 'https://script.google.com/macros/s/AKfycbwxIKGNlCelLpJnQfG9W3gPsl2qv_jFwLz6TyfJPl2T6KxpPfTrWqI63M5Tq7dZ8b4M/exec';
 const PSGC = 'https://psgc.gitlab.io/api/';
 const COUNTRIES = 'Afghanistan,Albania,Algeria,Angola,Argentina,Australia,Austria,Bahrain,Bangladesh,Belgium,Brazil,Brunei,Bulgaria,Cambodia,Canada,Chile,China,Colombia,Croatia,Cyprus,Czech Republic,Denmark,Egypt,Ethiopia,Fiji,Finland,France,Germany,Ghana,Greece,Guam,Hong Kong,Hungary,India,Indonesia,Iran,Iraq,Ireland,Israel,Italy,Japan,Jordan,Kazakhstan,Kenya,Kuwait,Laos,Lebanon,Libya,Macau,Malaysia,Maldives,Malta,Mexico,Morocco,Myanmar,Nepal,Netherlands,New Zealand,Nigeria,Northern Mariana Islands,Norway,Oman,Pakistan,Palau,Panama,Papua New Guinea,Peru,Poland,Portugal,Qatar,Romania,Russia,Saipan,Saudi Arabia,Singapore,Slovakia,South Africa,South Korea,Spain,Sri Lanka,Sudan,Sweden,Switzerland,Syria,Taiwan,Thailand,Turkey,Ukraine,United Arab Emirates,United Kingdom,United States,Vietnam,Yemen,Other / Vessel (International Waters)'.split(',');
-const DEF = { siteTitle: 'OWWA SERBISYO CARAVAN', siteSub: 'ONLINE REGISTRATION', siteText: true, siteBanner: '', passTitle: 'OWWA SERBISYO CARAVAN', passSub: 'ACCESS PASS', eventDate: 'EVENT DATE: TO BE ANNOUNCED', venue: 'VENUE: TO BE ANNOUNCED', footer: 'PRESENT THIS PASS AT THE VENUE', color1: '#1e3a8a', color2: '#2563eb', passBanner: '', showQR: true, showLoc: true, showAgency: true, logo: '', agencyName: 'OVERSEAS WORKERS WELFARE ADMINISTRATION', colP: '#1d4ed8', colA: '#f5b700', regOpen: true, deadline: '', maxReg: '', closedMsg: 'REGISTRATION IS NOW CLOSED. THANK YOU FOR YOUR INTEREST.', consentText: '', anim: true };
+const DEF = { siteTitle: 'OWWA SERBISYO CARAVAN', siteSub: 'ONLINE REGISTRATION', siteText: true, siteBanner: '', passTitle: 'OWWA SERBISYO CARAVAN', passSub: 'ACCESS PASS', eventDate: 'EVENT DATE: TO BE ANNOUNCED', venue: 'VENUE: TO BE ANNOUNCED', footer: 'PRESENT THIS PASS AT THE VENUE', color1: '#1e3a8a', color2: '#2563eb', passBanner: '', showQR: true, showLoc: true, showAgency: true, logo: '', agencyName: 'OVERSEAS WORKERS WELFARE ADMINISTRATION', colP: '#1d4ed8', colA: '#f5b700', regOpen: true, emailPass: true, deadline: '', maxReg: '', closedMsg: 'REGISTRATION IS NOW CLOSED. THANK YOU FOR YOUR INTEREST.', consentText: '', anim: true };
 
 const $ = s => document.querySelector(s), U = v => (v == null ? '' : String(v)).trim().toUpperCase();
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -366,7 +375,7 @@ function show(id) {
 }
 // Apps Script sometimes answers with an HTML error page instead of JSON (busy / redeploying / wrong URL).
 // Read-only actions retry once automatically; otherwise the real message is shown so the problem can be identified.
-const READONLY = ['login', 'list', 'slogin', 'sinfo', 'users', 'scanlog'];
+const READONLY = ['login', 'list', 'slogin', 'sinfo', 'users', 'scanlog', 'emailPass'];
 const api = async (o, retry = true) => {
   let t = '';
   try {
@@ -407,7 +416,7 @@ function confetti() {
 // ---- CAPS on typing (email stays lowercase)
 document.addEventListener('input', e => {
   const t = e.target;
-  if (t.tagName === 'INPUT' && ['text', 'search', ''].includes(t.type) && t.id !== 'pw' && t.dataset.h !== 'EMAIL ADDRESS') {
+  if (t.tagName === 'INPUT' && ['text', 'search', ''].includes(t.type) && t.id !== 'pw' && !t.hasAttribute('data-keep') && t.dataset.h !== 'EMAIL ADDRESS') {
     const p = t.selectionStart; t.value = t.value.toUpperCase(); try { t.setSelectionRange(p, p) } catch (x) {}
   }
 });
@@ -449,7 +458,7 @@ $('#f').addEventListener('submit', async e => {
   const b = $('#sub'); b.disabled = true; b.textContent = 'SUBMITTING...';
   try {
     const r = await api({ action: 'register', data: d });
-    if (r.ok) pass(r.id, d.first + ' ' + (d.middle ? d.middle[0] + '. ' : '') + d.last + (d.suffix && d.suffix !== 'N/A' ? ' ' + d.suffix : ''), d.muni + ', ' + d.prov);
+    if (r.ok) pass(r.id, d.first + ' ' + (d.middle ? d.middle[0] + '. ' : '') + d.last + (d.suffix && d.suffix !== 'N/A' ? ' ' + d.suffix : ''), d.muni + ', ' + d.prov, r.mail);
     else if (r.closed) closed(r.error); else { er.textContent = r.error || 'SOMETHING WENT WRONG.'; er.hidden = false; }
   } catch (x) { er.textContent = 'NETWORK ERROR. PLEASE TRY AGAIN.'; er.hidden = false; }
   b.disabled = false; b.textContent = 'SUBMIT REGISTRATION';
@@ -467,7 +476,7 @@ function passHTML(id, name, loc) {
     `<div class="ft">${esc(c.eventDate)}<br>${esc(c.venue)}<br><br>${esc(c.footer)}</div></div>`;
 }
 const mkQR = el => el.querySelectorAll('.qr').forEach(q => { q.innerHTML = ''; new QRCode(q, { text: q.dataset.t, width: 512, height: 512, correctLevel: QRCode.CorrectLevel.M }); });
-function pass(id, name, loc) { COUNT++; $('#pass').innerHTML = passHTML(id, name, loc); mkQR($('#pass')); show('done'); confetti(); }
+function pass(id, name, loc, mail) { COUNT++; $('#pass').innerHTML = passHTML(id, name, loc); mkQR($('#pass')); $('#mailmsg').hidden = true; show('done'); confetti(); if (mail) setTimeout(() => mailPass(id), 900); }
 // shows the pass as a plain image (long-press / right-click to save) - used when a direct download is blocked
 function showImg(src) {
   const o = document.createElement('div');
@@ -475,18 +484,30 @@ function showImg(src) {
   o.innerHTML = '<div style="color:#fff;font-weight:700;text-align:center;font-size:.9rem">PRESS AND HOLD THE IMAGE, THEN CHOOSE "SAVE IMAGE" / "DOWNLOAD IMAGE"</div><img src="' + src + '" style="max-width:340px;width:100%;border-radius:12px;background:#fff"><button class="alt" style="max-width:340px;width:100%">CLOSE</button>';
   o.querySelector('button').onclick = () => o.remove(); document.body.appendChild(o);
 }
-async function dl() {
-  const el = $('#pass .tk'); if (!el) return;
-  const fname = 'ACCESS-PASS-' + $('#pass .id').textContent + '.png';
+// makes the pass image (used for download and for the email attachment)
+async function passCanvas() {
+  const el = $('#pass .tk'); if (!el) throw new Error('no pass');
   const cap = ext => html2canvas(el, { scale: 2, backgroundColor: '#ffffff', useCORS: true, logging: false,
     ignoreElements: ext ? n => n.tagName === 'IMG' && /^https?:/.test(n.getAttribute('src') || '') : () => false,
     onclone: d => d.querySelectorAll('*').forEach(n => { n.style.animation = 'none'; }) }); // don't capture mid-animation
+  try { const c = await cap(false); c.toDataURL(); return c; }   // toDataURL throws if a remote image blocked the export
+  catch (e) { return await cap(true); }                           // retry without remote (Drive) images
+}
+async function mailPass(id) {
+  const m = $('#mailmsg'); m.hidden = false; m.style.color = ''; m.textContent = 'SENDING A COPY OF YOUR ACCESS PASS TO YOUR EMAIL...';
+  const done = (ok, t) => { m.style.color = ok ? '#166534' : '#b45309'; m.textContent = t; };
+  try {
+    let img = ''; try { img = (await passCanvas()).toDataURL('image/png'); } catch (e) { console.error(e); }
+    const r = await api({ action: 'emailPass', id, img });
+    if (r.ok || /ALREADY SENT/.test(r.error || '')) done(true, 'A COPY OF YOUR ACCESS PASS WAS SENT TO YOUR EMAIL.');
+    else done(false, 'THE EMAIL COULD NOT BE SENT. PLEASE DOWNLOAD YOUR ACCESS PASS BELOW.');
+  } catch (e) { done(false, 'THE EMAIL COULD NOT BE SENT. PLEASE DOWNLOAD YOUR ACCESS PASS BELOW.'); }
+}
+async function dl() {
+  const el = $('#pass .tk'); if (!el) return;
+  const fname = 'ACCESS-PASS-' + $('#pass .id').textContent + '.png';
   let c;
-  try { c = await cap(false); c.toDataURL(); }          // toDataURL throws if a remote image blocked the export
-  catch (e) {
-    try { c = await cap(true); }                        // retry without remote (Drive) images
-    catch (e2) { console.error(e2); return alert('COULD NOT CREATE THE IMAGE. PLEASE TAKE A SCREENSHOT OF YOUR ACCESS PASS INSTEAD.'); }
-  }
+  try { c = await passCanvas(); } catch (e2) { console.error(e2); return alert('COULD NOT CREATE THE IMAGE. PLEASE TAKE A SCREENSHOT OF YOUR ACCESS PASS INSTEAD.'); }
   try {
     const blob = await new Promise(r => c.toBlob(r, 'image/png'));
     if (!blob) throw new Error('empty image');
@@ -623,7 +644,7 @@ async function loadLog() {
 }
 
 // ---- scanner (staff)
-let ST = { token: '', name: '', user: '' }, MODE = 'IN', STREAM = null, SCANNING = false, BUSY = false, LASTC = { c: '', t: 0 }, DET = null, RECENT = [], AC = null;
+let ST = { token: '', name: '', user: '' }, MODE = 'IN', TORCH = false, TRACK = null, STREAM = null, SCANNING = false, BUSY = false, LASTC = { c: '', t: 0 }, DET = null, RECENT = [], AC = null;
 const cvs = document.createElement('canvas'), cctx = cvs.getContext('2d', { willReadFrequently: true });
 const sget = k => { try { return sessionStorage.getItem(k) || ''; } catch (x) { return ''; } };
 const sset = (k, v) => { try { sessionStorage.setItem(k, v); } catch (x) {} };
@@ -666,6 +687,13 @@ function staffLogout(expired) {
 }
 function setStats(s) { if (!s) return; $('#t1').textContent = s.registered; $('#t2').textContent = s.checkedIn; $('#t3').textContent = s.inside; }
 function camErr(m) { $('#cerr').textContent = m; $('#cerr').hidden = false; }
+function torchUI() { const b = $('#torch'); b.className = TORCH ? 'grn' : 'alt'; b.innerHTML = ico('flash') + (TORCH ? 'FLASHLIGHT: ON' : 'FLASHLIGHT'); }
+async function torchToggle() {
+  if (!TRACK) return;
+  try { await TRACK.applyConstraints({ advanced: [{ torch: !TORCH }] }); TORCH = !TORCH; }
+  catch (e) { camErr('THE FLASHLIGHT IS NOT SUPPORTED ON THIS DEVICE OR BROWSER.'); }
+  torchUI();
+}
 const camToggle = () => STREAM ? camStop() : camStart();
 async function camStart() {
   $('#cerr').hidden = true;
@@ -673,6 +701,8 @@ async function camStart() {
   try {
     STREAM = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 } }, audio: false });
     const v = $('#vid'); v.srcObject = STREAM; await v.play();
+    TRACK = STREAM.getVideoTracks()[0]; let caps = {}; try { caps = TRACK.getCapabilities ? TRACK.getCapabilities() : {}; } catch (x) {}
+    TORCH = false; $('#torch').hidden = !caps.torch; torchUI();
     $('#cam').hidden = false; $('#scb').innerHTML = ico('camera') + 'STOP CAMERA'; SCANNING = true;
     DET = null; if ('BarcodeDetector' in window) { try { DET = new BarcodeDetector({ formats: ['qr_code'] }); } catch (x) { DET = null; } }
     if (!DET && !window.jsQR) camErr('QR READER FAILED TO LOAD. REFRESH THE PAGE, OR TYPE THE PASS ID BELOW.');
@@ -680,13 +710,13 @@ async function camStart() {
   } catch (e) { camStop(); camErr(e && e.name === 'NotAllowedError' ? 'CAMERA PERMISSION WAS DENIED. ALLOW CAMERA ACCESS FOR THIS SITE, THEN TAP START CAMERA.' : 'COULD NOT START THE CAMERA. TAP START CAMERA TO TRY AGAIN, OR TYPE THE PASS ID BELOW.'); }
 }
 function camStop() {
-  SCANNING = false; if (STREAM) STREAM.getTracks().forEach(t => t.stop()); STREAM = null;
+  SCANNING = false; if (STREAM) STREAM.getTracks().forEach(t => t.stop()); STREAM = null; TRACK = null; TORCH = false; $('#torch').hidden = true;
   const v = $('#vid'); if (v) v.srcObject = null; $('#cam').hidden = true; $('#scb').innerHTML = ico('camera') + 'START CAMERA';
 }
 async function tick() {
   if (!SCANNING) return;
   const v = $('#vid');
-  if (!BUSY && v.readyState >= 2 && v.videoWidth) {
+  if (!BUSY && $('#rm').hidden && v.readyState >= 2 && v.videoWidth) {
     let code = '';
     try {
       if (DET) { const r = await DET.detect(v); if (r.length) code = r[0].rawValue; }
@@ -725,6 +755,22 @@ function showRes(level, title, p, msg) {
   $('#sres').innerHTML = `<div style="background:${c[0]};border:2px solid ${c[2]};color:${c[1]};border-radius:14px;padding:16px;margin-top:14px;text-align:center"><div style="font-size:1.2rem;font-weight:800">${c[3]} ${esc(title)}</div>` +
     (p ? `<div style="font-size:1.25rem;font-weight:800;margin-top:8px;color:var(--tx)">${esc(p.name || '')}</div><div style="font-family:Consolas,monospace;font-weight:700;color:var(--tx)">${esc(p.id || '')}</div>` + (p.place ? `<div style="font-size:.8rem;margin-top:4px">${esc(p.place)}</div>` : '') : '') +
     (msg ? `<div style="font-size:.8rem;font-weight:700;margin-top:8px">${esc(msg)}</div>` : '') + '</div>';
+  showModal(level, title, p, msg);
+}
+let RMT = null;
+function closeModal() { clearTimeout(RMT); $('#rm').hidden = true; }
+function showModal(level, title, p, msg) {
+  const c = { OK: ['#16a34a', '#dcfce7', 'check'], WARN: ['#d97706', '#fef3c7', 'alert'], ERR: ['#dc2626', '#fee2e2', 'x'] }[level] || ['#dc2626', '#fee2e2', 'x'];
+  const sub = title === 'CHECKED IN' || title === 'RE-ENTRY RECORDED' ? 'WELCOME TO THE EVENT!' : title === 'CHECKED OUT' ? 'THANK YOU FOR ATTENDING!' : '';
+  $('#rmc').style.borderTopColor = c[0];
+  $('#rmc').innerHTML = `<div style="width:84px;height:84px;border-radius:50%;background:${c[1]};color:${c[0]};display:flex;align-items:center;justify-content:center;margin:0 auto 14px"><svg class="i" style="width:46px;height:46px;margin:0;stroke-width:2.6"><use href="#i-${c[2]}"/></svg></div>` +
+    `<div style="font-size:1.5rem;font-weight:800;color:${c[0]}">${esc(title)}</div>` + (sub ? `<div style="font-weight:700;color:var(--mu);margin-top:2px">${sub}</div>` : '') +
+    (p && p.name ? `<div style="font-size:1.3rem;font-weight:800;margin-top:14px;color:var(--tx)">${esc(p.name)}</div>` : '') +
+    (p && p.id ? `<div style="font-family:Consolas,monospace;font-weight:700;color:var(--tx)">${esc(p.id)}</div>` : '') +
+    (p && p.place ? `<div style="font-size:.8rem;margin-top:4px;color:var(--mu)">${esc(p.place)}</div>` : '') +
+    (msg ? `<div style="font-size:.82rem;font-weight:700;margin-top:10px;color:var(--mu)">${esc(msg)}</div>` : '') +
+    `<div class="row" style="margin-top:18px"><button onclick="closeModal()" style="flex-basis:100%">${ico('check')}OK, SCAN NEXT</button></div>`;
+  $('#rm').hidden = false; clearTimeout(RMT); RMT = setTimeout(closeModal, level === 'OK' ? 2200 : 4500);
 }
 function renderRecent() {
   $('#slog').innerHTML = RECENT.map(x => `<div class="rec"><div><b>${esc(x.n)}</b><span style="color:var(--mu);font-size:.72rem">${esc(x.id)} &middot; ${esc(x.t)}</span></div><span class="bg ${x.level === 'OK' ? 'y' : x.level === 'WARN' ? 'o' : ''}">${esc(x.title)}</span></div>`).join('');
