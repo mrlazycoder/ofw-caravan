@@ -184,6 +184,13 @@ linear-gradient(#fff,#fff) 100% 100%/36px 5px no-repeat,linear-gradient(#fff,#ff
 #scan.live .row{margin:0!important}
 .lman{display:none}#scan.live .lman{display:block;flex:none}
 .lman label{margin-bottom:6px;text-align:center}.lman .mr{display:flex;gap:8px}.lman input{height:54px;font-size:17px}.lman button{padding:0 22px;white-space:nowrap}
+/* ---- steps label only on the registration pages (display:flex was overriding [hidden]) ---- */
+#steps[hidden]{display:none}
+/* ---- scanner: no long-press menus / accidental selection on the camera screen ---- */
+#scan{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;touch-action:manipulation}
+#scan input{-webkit-user-select:text;user-select:text}
+#cam video{pointer-events:none}
+#rm button{touch-action:manipulation}
 </style>
 </head>
 <body>
