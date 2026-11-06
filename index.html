@@ -191,9 +191,16 @@ linear-gradient(#fff,#fff) 100% 100%/36px 5px no-repeat,linear-gradient(#fff,#ff
 #scan input{-webkit-user-select:text;user-select:text}
 #cam video{pointer-events:none}
 #rm button{touch-action:manipulation}
+/* ---- built-in browser notice ---- */
+#iab{position:sticky;top:0;z-index:70;background:#fff7e6;border-bottom:2px solid var(--ac);padding:10px 12px;font-size:.8rem;color:#7a4b00;text-align:center;line-height:1.5}
+#iab[hidden]{display:none}#iab .r{display:flex;gap:8px;justify-content:center;margin-top:8px;flex-wrap:wrap}#iab button{padding:8px 14px;font-size:.78rem;box-shadow:none}
+body.live #iab{display:none}
 </style>
 </head>
 <body>
+<div id="iab" hidden><b>YOU ARE USING A BUILT-IN BROWSER (MESSENGER / FACEBOOK).</b><br>Saving your access pass and using the camera may not work here. Please open this page in your phone's browser.
+  <div class="r"><button id="iabo" onclick="openExt()">OPEN IN CHROME</button><button class="alt" onclick="copyLink()" id="iabc">COPY LINK</button><button class="alt" onclick="$('#iab').hidden=true">&times;</button></div>
+  <div id="iabh" style="margin-top:6px;font-size:.74rem"></div></div>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
 <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></symbol>
 <symbol id="i-ban" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></symbol>
@@ -228,6 +235,15 @@ linear-gradient(#fff,#fff) 100% 100%/36px 5px no-repeat,linear-gradient(#fff,#ff
     <p>You may request correction or deletion of your data by contacting the event organizers.</p>
   </div>
   <div class="row"><button class="grn" onclick="show('form')"><svg class="i"><use href="#i-check"/></svg>I ACCEPT &amp; PROCEED</button><button class="red" onclick="show('declined')"><svg class="i"><use href="#i-x"/></svg>I DO NOT ACCEPT</button></div>
+  <p style="margin:16px 0 0;font-size:.85rem"><a href="#" onclick="show('getpass');return false" style="color:var(--p);font-weight:700">ALREADY REGISTERED? GET YOUR ACCESS PASS</a></p>
+</section>
+
+<section id="getpass" hidden>
+  <h2>GET YOUR ACCESS PASS</h2>
+  <p style="color:var(--mu);font-size:.9rem;margin-top:0">Enter the Pass ID shown on your access pass (also in your confirmation email) and your birthdate.</p>
+  <div class="g"><div><label>PASS ID</label><input id="gid" placeholder="OSC-0001-ABC" autocomplete="off"></div><div><label>BIRTHDATE</label><input id="gbd" type="date"></div></div>
+  <div id="gerr" class="err" hidden></div>
+  <div class="row"><button id="gbtn" onclick="findPass()">FIND MY ACCESS PASS</button><button class="alt" onclick="show('consent')">BACK</button></div>
 </section>
 
 <section id="declined" hidden class="c">
@@ -287,6 +303,7 @@ linear-gradient(#fff,#fff) 100% 100%/36px 5px no-repeat,linear-gradient(#fff,#ff
   <h2>THANK YOU FOR REGISTERING FOR THE OWWA SERBISYO CARAVAN!</h2>
   <p style="color:var(--mu)">Here is your Access Pass. Please present it at the venue &mdash; it will serve as your pass for the event.</p>
   <div id="pass"></div>
+  <div id="iabtip" class="note" hidden style="margin-top:12px"><b>CAN'T SAVE THE PASS HERE?</b><br>Take a screenshot of it, or check your email &mdash; the pass image is attached. You can also open this site in Chrome / Safari, tap <b>ALREADY REGISTERED? GET YOUR ACCESS PASS</b>, and enter your Pass ID and birthdate.</div>
   <p id="mailmsg" hidden style="font-size:.85rem;font-weight:700;color:var(--mu);margin:12px 0 0"></p>
   <div class="row"><button onclick="dl()"><svg class="i"><use href="#i-download"/></svg>DOWNLOAD ACCESS PASS</button><button class="alt" onclick="askExit()"><svg class="i"><use href="#i-plus"/></svg>REGISTER ANOTHER PERSON</button></div>
   <p style="font-size:.8rem;color:#64748b">Tip: save the image or take a screenshot. A copy of your Pass ID was also sent to your email.</p>
@@ -442,8 +459,31 @@ const DEF = { siteTitle: 'OWWA SERBISYO CARAVAN', siteSub: 'ONLINE REGISTRATION'
 
 const $ = s => document.querySelector(s), U = v => (v == null ? '' : String(v)).trim().toUpperCase();
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const IAB = /FBAN|FBAV|FB_IAB|Messenger|Instagram|Line\/|MicroMessenger|; wv\)/i.test(navigator.userAgent), ANDROID = /Android/i.test(navigator.userAgent);
 let UL = [], VER = 0, COUNT = 0, CFG = { ...DEF }, PW = '', DATA = [], HEAD = [], EDIT = null, PK = '', PWID = 0;
 const STEP = { consent: 1, form: 2, done: 3 };
+// ---- built-in browsers (Messenger / Facebook): offer a way out + get a pass back later
+function openExt() {
+  const u = location.href.split('#')[0].replace(/^https?:\/\//, '');
+  location.href = 'intent://' + u + '#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=' + encodeURIComponent(location.href.split('#')[0]) + ';end';
+}
+function copyLink() {
+  const u = location.href.split('#')[0], ok = () => { $('#iabc').textContent = 'LINK COPIED!'; setTimeout(() => $('#iabc').textContent = 'COPY LINK', 2500); };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(u).then(ok, () => prompt('COPY THIS LINK:', u));
+  else { const t = document.createElement('textarea'); t.value = u; document.body.appendChild(t); t.select(); try { document.execCommand('copy'); ok(); } catch (e) { prompt('COPY THIS LINK:', u); } t.remove(); }
+}
+if (IAB) { $('#iab').hidden = false; $('#iabo').hidden = !ANDROID; $('#iabh').textContent = ANDROID ? 'IF THE BUTTON DOES NOT WORK: TAP THE \u22EE OR \u22EF MENU AND CHOOSE "OPEN IN BROWSER".' : 'TAP THE \u22EF OR SHARE ICON AND CHOOSE "OPEN IN SAFARI" (OR "OPEN IN BROWSER").'; }
+async function findPass() {
+  const e = $('#gerr'), b = $('#gbtn'); e.hidden = true;
+  const id = $('#gid').value.trim().toUpperCase(), birth = $('#gbd').value;
+  if (!id || !birth) { e.textContent = 'PLEASE ENTER YOUR PASS ID AND BIRTHDATE.'; e.hidden = false; return; }
+  b.disabled = true; b.textContent = 'SEARCHING...';
+  try {
+    const r = await api({ action: 'getPass', id, birth });
+    if (r.ok) { pass(r.id, r.name, r.loc, false); COUNT--; } else { e.textContent = r.error || 'NOT FOUND.'; e.hidden = false; }
+  } catch (x) { e.textContent = 'NETWORK ERROR. PLEASE TRY AGAIN.'; e.hidden = false; }
+  b.disabled = false; b.textContent = 'FIND MY ACCESS PASS';
+}
 function show(id) {
   document.querySelectorAll('section').forEach(s => s.hidden = s.id !== id);
   $('#main').className = id === 'admin' ? 'wide' : '';
@@ -555,7 +595,7 @@ function passHTML(id, name, loc) {
     `<div class="ft">${esc(c.eventDate)}<br>${esc(c.venue)}<br><br>${esc(c.footer)}</div></div>`;
 }
 const mkQR = el => el.querySelectorAll('.qr').forEach(q => { q.innerHTML = ''; new QRCode(q, { text: q.dataset.t, width: 512, height: 512, correctLevel: QRCode.CorrectLevel.M }); });
-function pass(id, name, loc, mail) { COUNT++; $('#pass').innerHTML = passHTML(id, name, loc); mkQR($('#pass')); $('#mailmsg').hidden = true; show('done'); confetti(); if (mail) setTimeout(() => mailPass(id), 900);
+function pass(id, name, loc, mail) { COUNT++; $('#pass').innerHTML = passHTML(id, name, loc); mkQR($('#pass')); $('#mailmsg').hidden = true; $('#iabtip').hidden = !IAB; show('done'); confetti(); if (mail) setTimeout(() => mailPass(id), 900);
   const mode = CFG.passDl || 'ask', phone = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent), here = () => !$('#done').hidden;
   $('#dq').hidden = true;
   if (mode === 'auto' && !phone) setTimeout(() => { if (here()) dl(); }, 1800);                 // computers: save straight away
@@ -566,7 +606,7 @@ function dlYes() { $('#dq').hidden = true; dl(); }
 function showImg(src) {
   const o = document.createElement('div');
   o.style.cssText = 'position:fixed;inset:0;background:#0b1b4dcc;z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:16px;overflow:auto';
-  o.innerHTML = '<div style="color:#fff;font-weight:700;text-align:center;font-size:.9rem">PRESS AND HOLD THE IMAGE, THEN CHOOSE "SAVE IMAGE" / "DOWNLOAD IMAGE"</div><img src="' + src + '" style="max-width:340px;width:100%;border-radius:12px;background:#fff"><button class="alt" style="max-width:340px;width:100%">CLOSE</button>';
+  o.innerHTML = '<div style="color:#fff;font-weight:700;text-align:center;font-size:.9rem">PRESS AND HOLD THE IMAGE TO SAVE IT. IF NOTHING HAPPENS, TAKE A SCREENSHOT.</div><img src="' + src + '" style="max-width:340px;width:100%;border-radius:12px;background:#fff"><button class="alt" style="max-width:340px;width:100%">CLOSE</button>';
   o.querySelector('button').onclick = () => o.remove(); document.body.appendChild(o);
 }
 // makes the pass image (used for download and for the email attachment)
