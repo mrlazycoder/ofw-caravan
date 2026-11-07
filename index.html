@@ -379,7 +379,7 @@ td.act button.ib{width:auto;height:auto;padding:7px 10px;margin-right:4px;displa
 
 <section id="scan" hidden>
   <div class="lvh"><div id="lvt">OWWA SERBISYO CARAVAN</div><div id="lvc"></div></div>
-  <div class="idle"><h2 style="margin:0">QR SCANNER</h2></div>
+  <div class="idle ah"><h2 style="margin:0">QR SCANNER</h2><button class="lo" onclick="outStaff()" title="Sign out" aria-label="Sign out"><svg class="i"><use href="#i-logout"/></svg></button></div>
   <div id="swho" class="idle" style="font-size:.78rem;color:var(--mu);font-weight:700;margin:4px 0 12px"></div>
   <div class="seg"><label><input type="radio" name="sm" value="IN" checked><span><svg class="i"><use href="#i-login"/></svg>CHECK IN</span></label><label><input type="radio" name="sm" value="OUT"><span><svg class="i"><use href="#i-logout"/></svg>CHECK OUT</span></label></div>
   <div class="stats" style="margin-top:12px"><div><b id="t1">0</b>REGISTERED</div><div><b id="t2">0</b>CHECKED IN</div><div><b id="t3">0</b>INSIDE NOW</div></div>
@@ -392,7 +392,6 @@ td.act button.ib{width:auto;height:auto;padding:7px 10px;margin-right:4px;displa
   <label class="idle" style="margin-top:18px">CAMERA NOT WORKING? TYPE THE PASS ID</label>
   <div class="idle" style="display:flex;gap:8px"><input id="mid" placeholder="OSC-0001-ABC" autocomplete="off"><button onclick="manualScan()" style="white-space:nowrap">SUBMIT</button></div>
   <h3 class="idle" style="color:var(--pd);margin:20px 0 0;font-size:.95rem">RECENT SCANS (THIS DEVICE)</h3><div id="slog" class="idle"></div>
-  <div class="idle so"><button onclick="outStaff()"><svg class="i"><use href="#i-logout"/></svg>SIGN OUT</button></div>
 </section>
 
 <section id="admin" hidden>
