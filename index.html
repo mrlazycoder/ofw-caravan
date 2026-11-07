@@ -240,6 +240,8 @@ td.act button.ib{width:auto;height:auto;padding:7px 10px;margin-right:4px;displa
 .lo:hover,.lo:focus-visible{opacity:1;background:#eef2fa;transform:none;filter:none}.lo .i{width:20px;height:20px;margin:0}
 #ft{text-align:center;font-size:.72rem;font-weight:600;color:var(--mu);padding:4px 14px 26px;letter-spacing:.3px}#ft:empty,body.live #ft{display:none}
 #zp .zd{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);transform:translateX(-50%);white-space:nowrap;padding:14px 24px;box-shadow:0 8px 26px #0009;cursor:pointer}#zp .zd:hover{transform:translateX(-50%)}
+#rs{position:fixed;inset:0;background:#0b1b4d99;display:flex;align-items:center;justify-content:center;padding:20px;z-index:80;overflow:auto}#rs[hidden]{display:none}
+#rs>div{background:#fff;border-radius:18px;padding:26px 22px 22px;max-width:420px;width:100%;text-align:center;animation:pop .3s ease both}#rs h2{margin:0 0 8px}#rs p{line-height:1.6;margin:0;color:var(--mu);font-size:.88rem}
 </style>
 </head>
 <body>
@@ -274,6 +276,7 @@ td.act button.ib{width:auto;height:auto;padding:7px 10px;margin-right:4px;displa
 <symbol id="i-edit" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></symbol>
 <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></symbol>
 <symbol id="i-undo" viewBox="0 0 24 24"><path d="M3 7v6h6"/><path d="M3 13a9 9 0 1 0 3-6.7L3 9"/></symbol>
+<symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 20h16"/></symbol>
 <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2 21c0-4 3-6.5 7-6.5s7 2.5 7 6.5"/><path d="M17 4.5a3.5 3.5 0 0 1 0 7M22 21c0-3-1.5-5-4-6"/></symbol>
 </defs></svg>
 <div id="hero"><img id="logo" hidden alt="Logo"><div id="agency"></div><h1>OWWA SERBISYO CARAVAN</h1><p>ONLINE REGISTRATION</p>
@@ -473,7 +476,12 @@ td.act button.ib{width:auto;height:auto;padding:7px 10px;margin-right:4px;displa
         <div><label>CONFIRM NEW PASSWORD</label><input id="npw2" type="password" data-keep style="text-transform:none" autocomplete="new-password"></div>
         <div class="full"><button onclick="chPw()">CHANGE ADMIN PASSWORD</button><div id="pwmsg" style="font-weight:700;font-size:.82rem;margin-top:8px"></div></div>
       </div></div>
-      <div class="card"><h3>DATA &amp; BACKUP</h3><div class="row" style="margin:0"><button onclick="csv(1)"><svg class="i"><use href="#i-download"/></svg>DOWNLOAD ALL (CSV)</button><button class="alt" onclick="bak()">BACKUP (JSON)</button></div><p style="font-size:.8rem;color:var(--mu);margin-bottom:0">Keep a copy of every registration before and after the event.</p></div>
+      <div class="card"><h3>BACKUP &amp; RESTORE</h3>
+        <label>BACKUP</label>
+        <div class="row" style="margin:0 0 16px"><button onclick="csv(1)"><svg class="i"><use href="#i-download"/></svg>CSV</button><button class="alt" onclick="bak()"><svg class="i"><use href="#i-download"/></svg>JSON</button><button class="alt" onclick="bkDrive()">GOOGLE DRIVE</button></div>
+        <label>RESTORE</label>
+        <div class="row" style="margin:0"><button class="alt" onclick="$('#rf').click()"><svg class="i"><use href="#i-upload"/></svg>RESTORE FROM FILE</button></div>
+        <p style="font-size:.78rem;color:var(--mu);margin:10px 0 0">Restore accepts the CSV or JSON file downloaded from this page. Back up before and after the event.</p></div>
     </div>
   </div>
 
@@ -521,6 +529,11 @@ td.act button.ib{width:auto;height:auto;padding:7px 10px;margin-right:4px;displa
 
 <div id="modal" hidden><div><h2>EDIT RECORD</h2><div class="g" id="mf"></div><div class="row"><button onclick="saveEdit()">SAVE</button><button class="alt" onclick="$('#modal').hidden=true">CANCEL</button></div></div></div>
 <input type="file" id="fi" accept="image/*" hidden>
+<input type="file" id="rf" accept=".json,.csv,application/json,text/csv" hidden>
+<div id="rs" hidden><div><div class="ic am"><svg class="i"><use href="#i-alert"/></svg></div><h2>RESTORE FROM BACKUP</h2><p id="rsi" style="font-weight:700"></p>
+  <div class="seg" style="margin:14px 0 8px"><label><input type="radio" name="rsm" value="merge" checked onchange="rsd()"><span>ADD MISSING ONLY</span></label><label><input type="radio" name="rsm" value="replace" onchange="rsd()"><span>REPLACE ALL</span></label></div>
+  <p id="rsd"></p>
+  <div class="row"><button class="alt" onclick="$('#rs').hidden=true">CANCEL</button><button id="rsy" onclick="doRestore()">RESTORE</button></div></div></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -578,6 +591,8 @@ const LBL = {
   userUpdate: ['SAVING ACCOUNT', 'Please wait...'],
   userDelete: ['DELETING ACCOUNT', 'Please wait...'],
   scanlog: ['LOADING SCAN LOG', 'Please wait...'],
+  restore: ['RESTORING DATA', 'This may take a moment. Please do not close this page...'],
+  backupNow: ['BACKING UP TO GOOGLE DRIVE', 'Creating a copy of your spreadsheet...'],
   getPass: ['FINDING YOUR ACCESS PASS', 'Searching the registration list...']
 };
 const api = async (o, retry = true, quiet = false) => {
@@ -830,6 +845,62 @@ function dash() {
 }
 function fl() { PG = 0; render(); }
 function pgo(d) { PG = Math.max(0, PG + d); render(); $('#tb').scrollIntoView({ block: 'nearest' }); }
+async function bkDrive() {
+  if (!await ask({ t: 'BACK UP TO GOOGLE DRIVE?', m: 'A full copy of your spreadsheet will be saved in your Google Drive.', ok: 'BACK UP', k: 'gn' })) return;
+  try {
+    const r = await api({ action: 'backupNow', pw: PW });
+    note(r.ok ? 'BACKUP SAVED IN YOUR GOOGLE DRIVE AS \"' + r.name + '\".' : r.error === 'UNKNOWN ACTION' ? 'UPDATE YOUR APPS SCRIPT CODE AND DEPLOY A NEW VERSION FIRST.' : (r.error || 'BACKUP FAILED.'));
+  } catch (e) { note('NETWORK ERROR. PLEASE TRY AGAIN.'); }
+}
+function csvParse(t) {
+  const out = []; let r = [], f = '', q = false;
+  for (let i = 0; i < t.length; i++) {
+    const c = t[i];
+    if (q) { if (c === '"') { if (t[i + 1] === '"') { f += '"'; i++; } else q = false; } else f += c; }
+    else if (c === '"') q = true;
+    else if (c === ',') { r.push(f); f = ''; }
+    else if (c === '\n' || c === '\r') { if (c === '\r' && t[i + 1] === '\n') i++; r.push(f); out.push(r); r = []; f = ''; }
+    else f += c;
+  }
+  if (f !== '' || r.length) { r.push(f); out.push(r); }
+  return out;
+}
+async function readBackup(f) {
+  if (!HEAD.length) throw new Error('OPEN THE REGISTRANTS TAB FIRST, THEN TRY AGAIN.');
+  const t = (await f.text()).replace(/^\ufeff/, ''); let recs;
+  if (/\.json$/i.test(f.name) || t.trim()[0] === '[') {
+    const j = JSON.parse(t); if (!Array.isArray(j)) throw new Error('THIS IS NOT A VALID BACKUP FILE.');
+    recs = j.map(o => HEAD.map(h => o[h] == null ? '' : o[h]));
+  } else {
+    const a = csvParse(t); if (a.length < 2) throw new Error('THE FILE HAS NO RECORDS.');
+    const hd = a[0].map(x => x.trim().toUpperCase()), ix = HEAD.map(h => hd.indexOf(h.toUpperCase()));
+    if (ix[0] < 0 || ix[2] < 0 || ix[3] < 0) throw new Error('THIS DOES NOT LOOK LIKE A BACKUP FROM THIS SYSTEM.');
+    recs = a.slice(1).filter(r => r.some(x => x)).map(r => ix.map(i => i < 0 ? '' : r[i]));
+  }
+  if (!recs.length) throw new Error('THE FILE HAS NO RECORDS.');
+  return recs;
+}
+let RROWS = [];
+$('#rf').onchange = async e => {
+  const f = e.target.files[0]; e.target.value = ''; if (!f) return;
+  try { RROWS = await readBackup(f); $('#rsi').textContent = f.name + ' \u2014 ' + RROWS.length + ' RECORD(S) FOUND'; document.querySelector('[name=rsm][value=merge]').checked = true; rsd(); $('#rs').hidden = false; }
+  catch (x) { note(x && x.message ? x.message : 'COULD NOT READ THE FILE.'); }
+};
+function rsd() {
+  const rp = document.querySelector('[name=rsm]:checked').value === 'replace';
+  $('#rsd').textContent = rp ? 'Deletes ALL current records and loads the file instead. A copy of the current data is saved first as a new tab in your Google Sheet.' : 'Adds only the records that are not in the system yet. Existing records stay as they are.';
+  $('#rsy').className = rp ? 'red' : '';
+}
+async function doRestore() {
+  const rp = document.querySelector('[name=rsm]:checked').value === 'replace';
+  if (!await ask({ t: rp ? 'REPLACE ALL DATA?' : 'RESTORE RECORDS?', m: rp ? 'All ' + DATA.length + ' current records will be replaced by the ' + RROWS.length + ' records in the file. A copy of the current data is saved first.' : 'Add the missing records from the file? Existing records stay unchanged.', ok: rp ? 'REPLACE ALL' : 'RESTORE', k: rp ? 'rd' : 'gn' })) return;
+  $('#rs').hidden = true;
+  try {
+    const r = await api({ action: 'restore', pw: PW, mode: rp ? 'replace' : 'merge', rows: RROWS });
+    if (r.ok) { load(true); note('RESTORE COMPLETE. ' + r.added + ' RECORD(S) ADDED, ' + r.skipped + ' SKIPPED (ALREADY EXIST).' + (r.snapshot ? '\nYOUR PREVIOUS DATA WAS SAVED IN THE SHEET TAB \"' + r.snapshot + '\".' : '')); }
+    else note(r.error === 'UNKNOWN ACTION' ? 'UPDATE YOUR APPS SCRIPT CODE AND DEPLOY A NEW VERSION FIRST.' : (r.error || 'RESTORE FAILED.'));
+  } catch (e) { note('NETWORK ERROR. PLEASE TRY AGAIN. CHECK THE REGISTRANTS TAB BEFORE RETRYING.'); }
+}
 function bak() { const o = DATA.map(r => Object.fromEntries(HEAD.map((h, i) => [h, r[i]]))), a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(o, null, 1)], { type: 'application/json' })); a.download = 'caravan-backup-' + new Date().toISOString().slice(0, 10) + '.json'; a.click(); }
 async function chPw() {
   const a = $('#npw').value, b = $('#npw2').value, m = $('#pwmsg'); m.style.color = '#b91c1c';
