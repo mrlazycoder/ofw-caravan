@@ -226,6 +226,10 @@ body.live #iab{display:none}
 td.act button.ib{width:auto;height:auto;padding:7px 10px;margin-right:4px;display:inline-flex;align-items:center;justify-content:center;gap:5px;border-radius:9px;font-size:11px;white-space:nowrap}
 .ib .i{width:15px;height:15px;margin:0}.ib span{display:inline}
 @media(max-width:620px){.rt td.act{min-width:0}.rt td.act button.ib{flex:1 1 0;min-width:0;height:44px;margin:0;padding:0}.ib span{display:none}.ib .i{width:21px;height:21px;margin:0}}
+/* ---- manual ID entry: while typing, hide the camera so the box stays above the keyboard ---- */
+#scan.live{overflow-y:auto}
+#scan.typing .seg,#scan.typing .stats,#scan.typing #cam,#scan.typing .hint,#scan.typing .row{display:none!important}
+#scan.typing .lman{margin-top:14px}#scan.typing .lman label{font-size:.85rem}
 </style>
 </head>
 <body>
@@ -375,7 +379,7 @@ td.act button.ib{width:auto;height:auto;padding:7px 10px;margin-right:4px;displa
   <div class="hint">ALIGN THE QR CODE INSIDE THE FRAME</div>
   <div class="row" style="margin-top:12px"><button id="scb" onclick="camToggle()"><svg class="i"><use href="#i-camera"/></svg>START SCAN</button><button id="torch" class="alt" onclick="torchToggle()" hidden></button></div>
   <div id="cerr" class="err" hidden></div>
-  <div class="lman"><label>CAN'T SCAN? TYPE THE PASS ID</label><div class="mr"><input id="mid2" placeholder="OSC-0001-ABC" autocomplete="off" onkeydown="if(event.key==='Enter')manualScan2()"><button onclick="manualScan2()">SUBMIT</button></div></div>
+  <div class="lman"><label>CAN'T SCAN? TYPE THE PASS ID</label><div class="mr"><input id="mid2" placeholder="OSC-0001-ABC" autocomplete="off" autocapitalize="characters" enterkeyhint="go" onfocus="typing(true)" onblur="setTimeout(()=>typing(false),250)" onkeydown="if(event.key==='Enter')manualScan2()"><button onmousedown="event.preventDefault()" onclick="manualScan2()">SUBMIT</button></div></div>
   <div id="sres" class="idle"></div>
   <label class="idle" style="margin-top:18px">CAMERA NOT WORKING? TYPE THE PASS ID</label>
   <div class="idle" style="display:flex;gap:8px"><input id="mid" placeholder="OSC-0001-ABC" autocomplete="off"><button onclick="manualScan()" style="white-space:nowrap">SUBMIT</button></div>
@@ -1017,6 +1021,7 @@ function handleCode(raw, manual) {
   if (!m) { showRes('ERR', 'INVALID QR CODE', null, 'THIS IS NOT AN OWWA SERBISYO CARAVAN ACCESS PASS.'); beep('ERR'); return; }
   doScan(key);
 }
+function typing(on) { $('#scan').classList.toggle('typing', on); if (on) setTimeout(() => $('#mid2').scrollIntoView({ block: 'center' }), 120); }
 function manualScan2() { const i = $('#mid2'), v = i.value.trim(); if (!v) return; i.blur(); handleCode(v, true); i.value = ''; }
 function manualScan() { const v = $('#mid').value.trim(); if (!v) return; handleCode(v, true); $('#mid').value = ''; }
 async function doScan(id) {
