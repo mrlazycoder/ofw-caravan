@@ -559,7 +559,7 @@ function show(id) {
   CUR = id; $('#ntc').hidden = !(CFG.notice && STEP[id]);
   document.querySelectorAll('section').forEach(s => s.hidden = s.id !== id);
   $('#main').className = id === 'admin' ? 'wide' : '';
-  const n = STEP[id]; $('#steps').hidden = !n; [...$('#steps').children].forEach((s, i) => s.classList.toggle('on', i + 1 === n)); scrollTo(0, 0);
+  const n = STEP[id]; $('#steps').hidden = !n; [...$('#steps').children].forEach((s, i) => s.classList.toggle('on', i + 1 === n)); scrollTo(0, 0); guard();
 }
 // Apps Script sometimes answers with an HTML error page instead of JSON (busy / redeploying / wrong URL).
 // Read-only actions retry once automatically; otherwise the real message is shown so the problem can be identified.
@@ -764,6 +764,17 @@ async function outAdmin() { if (await ask({ t: 'SIGN OUT?', m: 'You will need yo
 async function outStaff() { if (await ask({ t: 'SIGN OUT?', m: 'The scanner will stop and you will need to sign in again.', ok: 'SIGN OUT', k: 'rd', ic: 'logout' })) staffLogout(); }
 function askExit() { $('#cx').hidden = false; }
 window.addEventListener('beforeunload', e => { if (!$('#done').hidden) { e.preventDefault(); e.returnValue = ''; } }); // closing / refreshing the tab on the pass screen
+// ---- phone Back button: stay on the page and ask first (admin, scanner staff, and the pass screen)
+function guard() { if (({ admin: 1, scan: 1, done: 1 })[CUR] && !(history.state && history.state.g)) history.pushState({ g: 1 }, ''); }
+window.addEventListener('popstate', () => {
+  if (!({ admin: 1, scan: 1, done: 1 })[CUR]) return;
+  history.pushState({ g: 1 }, '');                                   // keep the user on this page
+  if (!$('#cf').hidden || !$('#cx').hidden) return;                  // a confirmation is already open
+  if (CUR === 'admin') outAdmin();
+  else if (CUR === 'scan') { if ($('#scan').classList.contains('live')) stopScan(); else outStaff(); }
+  else askExit();
+});
+document.addEventListener('pointerdown', guard, { passive: true });  // re-arm after a page refresh
 function newReg() {
   $('#cx').hidden = true; $('#dq').hidden = true; $('#f').reset();
   ['muni', 'brgy'].forEach(i => { $('#' + i).innerHTML = ''; $('#' + i).disabled = true; });
