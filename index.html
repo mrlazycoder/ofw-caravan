@@ -239,6 +239,7 @@ td.act button.ib{width:auto;height:auto;padding:7px 10px;margin-right:4px;displa
 .lo{width:38px;height:38px;padding:0;border-radius:50%;background:transparent;color:var(--tx);box-shadow:none;opacity:.4;display:inline-flex;align-items:center;justify-content:center;transition:.2s}
 .lo:hover,.lo:focus-visible{opacity:1;background:#eef2fa;transform:none;filter:none}.lo .i{width:20px;height:20px;margin:0}
 #ft{text-align:center;font-size:.72rem;font-weight:600;color:var(--mu);padding:4px 14px 26px;letter-spacing:.3px}#ft:empty,body.live #ft{display:none}
+#zp .zd{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);transform:translateX(-50%);white-space:nowrap;padding:14px 24px;box-shadow:0 8px 26px #0009;cursor:pointer}#zp .zd:hover{transform:translateX(-50%)}
 </style>
 </head>
 <body>
@@ -473,7 +474,6 @@ td.act button.ib{width:auto;height:auto;padding:7px 10px;margin-right:4px;displa
         <div class="full"><button onclick="chPw()">CHANGE ADMIN PASSWORD</button><div id="pwmsg" style="font-weight:700;font-size:.82rem;margin-top:8px"></div></div>
       </div></div>
       <div class="card"><h3>DATA &amp; BACKUP</h3><div class="row" style="margin:0"><button onclick="csv(1)"><svg class="i"><use href="#i-download"/></svg>DOWNLOAD ALL (CSV)</button><button class="alt" onclick="bak()">BACKUP (JSON)</button></div><p style="font-size:.8rem;color:var(--mu);margin-bottom:0">Keep a copy of every registration before and after the event.</p></div>
-      <div class="card"><h3>SESSION</h3><p style="font-size:.8rem;color:var(--mu);margin-top:0">Sign out of the admin dashboard on this device.</p><button class="alt" onclick="outAdmin()"><svg class="i"><use href="#i-logout"/></svg>SIGN OUT</button></div>
     </div>
   </div>
 
@@ -687,16 +687,17 @@ function passHTML(id, name, loc) {
     `<div class="ft">${esc(c.eventDate)}<br>${esc(c.venue)}<br><br>${esc(c.footer)}</div></div>`;
 }
 const mkQR = el => el.querySelectorAll('.qr').forEach(q => { q.innerHTML = ''; new QRCode(q, { text: q.dataset.t, width: 512, height: 512, correctLevel: QRCode.CorrectLevel.M }); });
-function zoomPass(id, name, loc) {
+function zoomPass(id, name, loc, withDl) {
   const o = document.createElement('div'); o.id = 'zp';
-  o.innerHTML = '<div class="zh">TAP ANYWHERE TO CLOSE</div>' + passHTML(id, name, loc); mkQR(o);
+  o.innerHTML = '<div class="zh">TAP ANYWHERE TO CLOSE</div>' + passHTML(id, name, loc) + (withDl ? '<button class="zd">' + ico('download') + 'DOWNLOAD ACCESS PASS</button>' : ''); mkQR(o);
   document.body.appendChild(o);
-  const t = o.querySelector('.tk'), k = Math.min(innerWidth * .94 / t.offsetWidth, innerHeight * .9 / t.offsetHeight, 1.7);
+  const t = o.querySelector('.tk'), k = Math.min(innerWidth * .94 / t.offsetWidth, (withDl ? innerHeight - 170 : innerHeight * .9) / t.offsetHeight, 1.7);
   o.style.setProperty('--k', k.toFixed(3));
   const close = () => { o.remove(); document.removeEventListener('keydown', esc2); }, esc2 = e => { if (e.key === 'Escape') close(); };
   o.onclick = close; document.addEventListener('keydown', esc2);
+  const b = o.querySelector('.zd'); if (b) b.onclick = e => { e.stopPropagation(); dl(); };
 }
-document.addEventListener('click', e => { if (LASTP && e.target.closest('#pass .tk')) zoomPass(LASTP.id, LASTP.name, LASTP.loc); });
+document.addEventListener('click', e => { if (LASTP && e.target.closest('#pass .tk')) zoomPass(LASTP.id, LASTP.name, LASTP.loc, true); });
 function vpass(id) {
   const r = DATA.find(x => x[0] === id); if (!r) return;
   const sf = r[5] && String(r[5]).toUpperCase() !== 'N/A' ? r[5] : '';
