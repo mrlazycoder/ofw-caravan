@@ -243,6 +243,7 @@ td.act button.ib{width:auto;height:auto;padding:7px 10px;margin-right:4px;displa
 #rs{position:fixed;inset:0;background:#0b1b4d99;display:flex;align-items:center;justify-content:center;padding:20px;z-index:80;overflow:auto}#rs[hidden]{display:none}
 #rs>div{background:#fff;border-radius:18px;padding:26px 22px 22px;max-width:420px;width:100%;text-align:center;animation:pop .3s ease both}#rs h2{margin:0 0 8px}#rs p{line-height:1.6;margin:0;color:var(--mu);font-size:.88rem}
 .sw{text-align:center;margin:18px 0 0;font-size:.85rem;color:var(--mu)}.sw a{color:var(--p);font-weight:700;text-decoration:none}.sw a:hover{text-decoration:underline}
+.bg.r{background:#fee2e2;color:#991b1b}.tabs button[hidden]{display:none}
 </style>
 </head>
 <body>
@@ -278,6 +279,7 @@ td.act button.ib{width:auto;height:auto;padding:7px 10px;margin-right:4px;displa
 <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></symbol>
 <symbol id="i-undo" viewBox="0 0 24 24"><path d="M3 7v6h6"/><path d="M3 13a9 9 0 1 0 3-6.7L3 9"/></symbol>
 <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 20h16"/></symbol>
+<symbol id="i-scan" viewBox="0 0 24 24"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/><path d="M8 12h8"/></symbol>
 <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2 21c0-4 3-6.5 7-6.5s7 2.5 7 6.5"/><path d="M17 4.5a3.5 3.5 0 0 1 0 7M22 21c0-3-1.5-5-4-6"/></symbol>
 </defs></svg>
 <div id="hero"><img id="logo" hidden alt="Logo"><div id="agency"></div><h1>OWWA SERBISYO CARAVAN</h1><p>ONLINE REGISTRATION</p>
@@ -387,7 +389,7 @@ td.act button.ib{width:auto;height:auto;padding:7px 10px;margin-right:4px;displa
 
 <section id="scan" hidden>
   <div class="lvh"><div id="lvt">OWWA SERBISYO CARAVAN</div><div id="lvc"></div></div>
-  <div class="idle ah"><h2 style="margin:0">QR SCANNER</h2><button class="lo" onclick="outStaff()" title="Sign out" aria-label="Sign out"><svg class="i"><use href="#i-logout"/></svg></button></div>
+  <div class="idle ah"><h2 style="margin:0">QR SCANNER</h2><span style="display:flex;gap:8px;align-items:center"><button class="alt" id="sback" hidden onclick="encBack()" style="padding:8px 14px;font-size:12px">&larr; WORKSPACE</button><button class="lo" onclick="outStaff()" title="Sign out" aria-label="Sign out"><svg class="i"><use href="#i-logout"/></svg></button></span></div>
   <div id="swho" class="idle" style="font-size:.78rem;color:var(--mu);font-weight:700;margin:4px 0 12px"></div>
   <div class="seg"><label><input type="radio" name="sm" value="IN" checked><span><svg class="i"><use href="#i-login"/></svg>CHECK IN</span></label><label><input type="radio" name="sm" value="OUT"><span><svg class="i"><use href="#i-logout"/></svg>CHECK OUT</span></label></div>
   <div class="stats" style="margin-top:12px"><div><b id="t1">0</b>REGISTERED</div><div><b id="t2">0</b>CHECKED IN</div><div><b id="t3">0</b>INSIDE NOW</div></div>
@@ -403,8 +405,8 @@ td.act button.ib{width:auto;height:auto;padding:7px 10px;margin-right:4px;displa
 </section>
 
 <section id="admin" hidden>
-  <div class="ah"><h2 style="margin:0">ADMIN DASHBOARD</h2><button class="lo" onclick="outAdmin()" title="Sign out" aria-label="Sign out"><svg class="i"><use href="#i-logout"/></svg></button></div>
-  <div class="tabs" id="tabs"><button id="b1" class="on" onclick="tab('H')"><svg class="i"><use href="#i-chart"/></svg><span>DASHBOARD</span></button><button id="b2" onclick="tab('L')"><svg class="i"><use href="#i-list"/></svg><span>REGISTRANTS</span></button><button id="b3" onclick="tab('D')"><svg class="i"><use href="#i-brush"/></svg><span>DESIGN</span></button><button id="b4" onclick="tab('S')"><svg class="i"><use href="#i-sliders"/></svg><span>SETTINGS</span></button><button id="b5" onclick="tab('U')"><svg class="i"><use href="#i-users"/></svg><span>STAFF</span></button></div>
+  <div class="ah"><div><h2 id="ahT" style="margin:0">ADMIN DASHBOARD</h2><small id="ahS" style="color:var(--mu);font-weight:700;font-size:.7rem;letter-spacing:.5px"></small></div><button class="lo" onclick="outAdmin()" title="Sign out" aria-label="Sign out"><svg class="i"><use href="#i-logout"/></svg></button></div>
+  <div class="tabs" id="tabs"><button id="b1" class="on" onclick="tab('H')"><svg class="i"><use href="#i-chart"/></svg><span>DASHBOARD</span></button><button id="b2" onclick="tab('L')"><svg class="i"><use href="#i-list"/></svg><span>REGISTRANTS</span></button><button id="b3" onclick="tab('D')"><svg class="i"><use href="#i-brush"/></svg><span>DESIGN</span></button><button id="b4" onclick="tab('S')"><svg class="i"><use href="#i-sliders"/></svg><span>SETTINGS</span></button><button id="b5" onclick="tab('U')"><svg class="i"><use href="#i-users"/></svg><span>STAFF</span></button><button id="b6" onclick="tab('A')"><svg class="i"><use href="#i-list"/></svg><span>AUDIT LOG</span></button><button id="bscan" hidden onclick="encScan()"><svg class="i"><use href="#i-scan"/></svg><span>SCANNER</span></button></div>
 
   <div id="tabH">
     <div class="dh"><div><b style="color:var(--pd)">EVENT OVERVIEW</b><small id="dupd"></small></div><div class="row" style="margin:0"><label class="ar"><input type="checkbox" id="dauto" onchange="dauto()"> AUTO-REFRESH (1 MIN)</label><button class="alt" onclick="load()"><svg class="i"><use href="#i-refresh"/></svg>REFRESH</button></div></div>
@@ -415,7 +417,7 @@ td.act button.ib{width:auto;height:auto;padding:7px 10px;margin-right:4px;displa
 
   <div id="tabL">
     <div class="fb"><input id="q" placeholder="SEARCH NAME, PASS ID, CONTACT, MUNICIPALITY..."><select id="fst" onchange="fl()"><option value="">ALL STATUS</option><option value="R">REGISTERED ONLY</option><option value="I">CHECKED IN</option><option value="O">CHECKED OUT</option></select><select id="fpr" onchange="fl()"><option value="">ALL PROVINCES</option></select><select id="fct" onchange="fl()"><option value="">ALL CATEGORIES</option><option>LAND-BASED</option><option>SEA-BASED</option></select></div>
-    <div class="row" style="margin-top:12px"><button class="alt" onclick="load()"><svg class="i"><use href="#i-refresh"/></svg>REFRESH</button><button onclick="csv()"><svg class="i"><use href="#i-download"/></svg>EXPORT CSV (AS FILTERED)</button></div>
+    <div class="row" style="margin-top:12px"><button class="alt" onclick="load()"><svg class="i"><use href="#i-refresh"/></svg>REFRESH</button><button id="bcsv" onclick="csv()"><svg class="i"><use href="#i-download"/></svg>EXPORT CSV (AS FILTERED)</button></div>
     <div id="cnt" class="cn"></div>
     <div class="tw" style="margin-top:8px"><table id="tb" class="rt"></table></div>
     <div class="pgr"><button class="alt" onclick="pgo(-1)">&larr; PREV</button><span id="pgi"></span><button class="alt" onclick="pgo(1)">NEXT &rarr;</button></div>
@@ -491,10 +493,11 @@ td.act button.ib{width:auto;height:auto;padding:7px 10px;margin-right:4px;displa
 
   <div id="tabU" hidden>
     <div class="two">
-      <div class="card"><h3>ADD SCANNER STAFF ACCOUNT</h3><div class="g">
+      <div class="card"><h3>ADD STAFF ACCOUNT</h3><div class="g">
         <div class="full"><label>FULL NAME</label><input id="nn" autocomplete="off"></div>
         <div><label>USERNAME</label><input id="nu" data-keep style="text-transform:none" autocapitalize="none" autocomplete="off"></div>
         <div><label>PASSWORD (MIN. 6 CHARACTERS)</label><input id="np" data-keep style="text-transform:none" autocomplete="off"></div>
+        <div class="full"><label>ROLE</label><select id="nr"><option value="SCANNER">SCANNER STAFF (SCAN QR CODES ONLY)</option><option value="ENCODER">ENCODER (MANAGE REGISTRANTS, SCANNING OPTIONAL)</option><option value="VERIFIER">VERIFIER (VIEW ONLY)</option></select></div>
         <div class="full"><div class="row" style="margin:0"><button onclick="addUser()"><svg class="i"><use href="#i-user-plus"/></svg>ADD ACCOUNT</button><button class="alt" onclick="window.open(location.pathname+'#scan','_blank')">OPEN SCANNER<svg class="i" style="margin:0 0 0 .45em"><use href="#i-ext"/></svg></button></div><div id="umsg" class="ok"></div></div>
       </div></div>
       <div class="card"><h3>SCANNER LINK FOR STAFF</h3>
@@ -506,6 +509,14 @@ td.act button.ib{width:auto;height:auto;padding:7px 10px;margin-right:4px;displa
     <h3 style="color:var(--pd);margin-top:20px">RECENT SCANS (LAST 300)</h3>
     <div class="row" style="margin:0 0 10px"><button class="alt" onclick="loadLog()"><svg class="i"><use href="#i-refresh"/></svg>REFRESH LOG</button></div>
     <div class="tw"><table id="lt" class="rt"></table></div>
+  </div>
+
+  <div id="tabA" hidden>
+    <p style="font-size:.82rem;color:var(--mu);margin-top:0">A record of who did what and when: edits (with the old and new values), deletions, check-ins, logins, staff-account changes, settings and restores. Entries cannot be changed from this page.</p>
+    <div class="fb"><input id="aq" placeholder="SEARCH USER, ACTION, PASS ID, DETAILS..." oninput="aRender()"><select id="ausr" onchange="aRender()"><option value="">ALL USERS</option></select><select id="aact" onchange="aRender()"><option value="">ALL ACTIONS</option></select><span></span></div>
+    <div class="row" style="margin-top:12px"><button class="alt" onclick="loadAudit()"><svg class="i"><use href="#i-refresh"/></svg>REFRESH</button><button onclick="aCsv()"><svg class="i"><use href="#i-download"/></svg>EXPORT CSV</button></div>
+    <div id="acnt" class="cn"></div>
+    <div class="tw" style="margin-top:8px"><table id="at" class="rt"></table></div>
   </div>
 
   <div id="sv" hidden><div class="row"><button class="grn" onclick="saveCfg()"><svg class="i"><use href="#i-save"/></svg>SAVE CHANGES</button></div><div id="dmsg" class="ok c"></div></div>
@@ -528,6 +539,7 @@ td.act button.ib{width:auto;height:auto;padding:7px 10px;margin-right:4px;displa
   <div class="full"><label>FULL NAME</label><input id="en"></div>
   <div><label>NEW PASSWORD (BLANK = KEEP)</label><input id="ep" data-keep style="text-transform:none" autocomplete="off"></div>
   <div><label>STATUS</label><select id="ea"><option value="YES">ACTIVE</option><option value="NO">DISABLED</option></select></div>
+  <div class="full"><label>ROLE</label><select id="er"><option value="SCANNER">SCANNER STAFF</option><option value="ENCODER">ENCODER</option><option value="VERIFIER">VERIFIER (VIEW ONLY)</option></select></div>
 </div><div class="row"><button onclick="saveUser()">SAVE</button><button class="alt" onclick="$('#um').hidden=true">CANCEL</button></div></div></div>
 
 <div id="modal" hidden><div><h2>EDIT RECORD</h2><div class="g" id="mf"></div><div class="row"><button onclick="saveEdit()">SAVE</button><button class="alt" onclick="$('#modal').hidden=true">CANCEL</button></div></div></div>
@@ -550,7 +562,7 @@ const DEF = { notice: '', idleMin: '30', siteFooter: 'This system is developed b
 const $ = s => document.querySelector(s), U = v => (v == null ? '' : String(v)).trim().toUpperCase();
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const IAB = /FBAN|FBAV|FB_IAB|Messenger|Instagram|Line\/|MicroMessenger|; wv\)/i.test(navigator.userAgent), ANDROID = /Android/i.test(navigator.userAgent);
-let LASTP = null, BZ = 0, BT = 0, UL = [], FR = [], PG = 0, PER = 25, CUR = '', DAU = 0, IDLE = 0, VER = 0, COUNT = 0, CFG = { ...DEF }, PW = '', DATA = [], HEAD = [], EDIT = null, PK = '', PWID = 0;
+let ROLE = '', SSTATS = null, AL = [], LASTP = null, BZ = 0, BT = 0, UL = [], FR = [], PG = 0, PER = 25, CUR = '', DAU = 0, IDLE = 0, VER = 0, COUNT = 0, CFG = { ...DEF }, PW = '', DATA = [], HEAD = [], EDIT = null, PK = '', PWID = 0;
 const STEP = { consent: 1, form: 2, done: 3 };
 // ---- built-in browsers (Messenger / Facebook): offer a way out + get a pass back later
 function openExt() {
@@ -596,16 +608,18 @@ const LBL = {
   scanlog: ['LOADING SCAN LOG', 'Please wait...'],
   restore: ['RESTORING DATA', 'This may take a moment. Please do not close this page...'],
   backupNow: ['BACKING UP TO GOOGLE DRIVE', 'Creating a copy of your spreadsheet...'],
+  audit: ['LOADING AUDIT LOG', 'Please wait...'],
   getPass: ['FINDING YOUR ACCESS PASS', 'Searching the registration list...']
 };
 const api = async (o, retry = true, quiet = false) => {
   let t = '', tm = 0;
+  if ((ROLE === 'ENCODER' || ROLE === 'VERIFIER') && ST && ST.token && !o.token) o.token = ST.token;   // encoders sign in as staff: their token authorises the registrant actions
   const L = retry && !quiet && LBL[o.action]; if (L) busy(true, L[0], L[1]);
   try {
     const init = { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(o) };
     if (o.action === 'register' || o.action === 'scan') { const ctl = new AbortController(); init.signal = ctl.signal; tm = setTimeout(() => ctl.abort(), o.action === 'register' ? 60000 : 25000); } // time limits: registration 60s, scan 25s
     t = await (await fetch(API, init)).text();
-    return JSON.parse(t);
+    const j = JSON.parse(t); if (j && j.expired && (ROLE === 'ENCODER' || ROLE === 'VERIFIER')) setTimeout(() => staffLogout(true), 0); return j;
   } catch (e) {
     if (e && e.name === 'AbortError') throw new Error('TIMEOUT');
     if (retry && READONLY.includes(o.action)) { await new Promise(r => setTimeout(r, 1200)); return api(o, false); }
@@ -783,7 +797,7 @@ function ask({ t, m, ok = 'CONFIRM', k = 'am', ic, info }) {
   });
 }
 const note = m => ask({ t: 'NOTICE', m: String(m || ''), ok: 'OK', k: 'am', info: true });
-async function outAdmin() { if (await ask({ t: 'SIGN OUT?', m: 'You will need your password to sign in again.', ok: 'SIGN OUT', k: 'rd', ic: 'logout' })) logout(); }
+async function outAdmin() { if (await ask({ t: 'SIGN OUT?', m: 'You will need your password to sign in again.', ok: 'SIGN OUT', k: 'rd', ic: 'logout' })) { if (ROLE === 'ENCODER' || ROLE === 'VERIFIER') staffLogout(); else logout(); } }
 async function outStaff() { if (await ask({ t: 'SIGN OUT?', m: 'The scanner will stop and you will need to sign in again.', ok: 'SIGN OUT', k: 'rd', ic: 'logout' })) staffLogout(); }
 function askExit() { $('#cx').hidden = false; }
 window.addEventListener('beforeunload', e => { if (!$('#done').hidden) { e.preventDefault(); e.returnValue = ''; } }); // closing / refreshing the tab on the pass screen
@@ -794,7 +808,7 @@ window.addEventListener('popstate', () => {
   history.pushState({ g: 1 }, '');                                   // keep the user on this page
   if (!$('#cf').hidden || !$('#cx').hidden) return;                  // a confirmation is already open
   if (CUR === 'admin') outAdmin();
-  else if (CUR === 'scan') { if ($('#scan').classList.contains('live')) stopScan(); else outStaff(); }
+  else if (CUR === 'scan') { if ($('#scan').classList.contains('live')) stopScan(); else if (ROLE === 'ENCODER') encBack(); else outStaff(); }
   else askExit();
 });
 document.addEventListener('pointerdown', guard, { passive: true });  // re-arm after a page refresh
@@ -811,7 +825,7 @@ function newReg() {
 // ---- admin
 async function adminLogin() {
   PW = $('#pw').value; $('#lerr').hidden = true; busy(true, 'SIGNING IN', 'Verifying your password. Please wait...');
-  try { const r = await api({ action: 'login', pw: PW }); if (!r.ok) throw r.error; try { sessionStorage.setItem('osc_pw', PW); sessionStorage.setItem('osc_t', Date.now()); } catch (x) {} show('admin'); tab('H'); load(); }
+  try { const r = await api({ action: 'login', pw: PW }); if (!r.ok) throw r.error; try { sessionStorage.setItem('osc_pw', PW); sessionStorage.setItem('osc_t', Date.now()); } catch (x) {} ROLE = 'ADMIN'; applyRole(); show('admin'); tab('H'); load(); }
   catch (e) { $('#lerr').textContent = e || 'LOGIN FAILED'; $('#lerr').hidden = false; }
   finally { busy(false); }
 }
@@ -821,8 +835,19 @@ function busy(on, t, m) {
   if (on) { BZ++; $('#ldt').textContent = t; $('#ldm').textContent = m; $('#ld').hidden = false; }
   else { BZ = Math.max(0, BZ - 1); if (!BZ) BT = setTimeout(() => { if (!BZ) { $('#ld').hidden = true; $('#ldt').textContent = DEFT; $('#ldm').textContent = DEFM; } }, 150); }
 }
-const TABS = ['H', 'L', 'D', 'S', 'U'];
-function idleReset() { clearTimeout(IDLE); const m = +CFG.idleMin; if (!m || $('#admin').hidden) return; IDLE = setTimeout(() => { logout(); $('#lerr').textContent = 'YOU WERE LOGGED OUT BECAUSE OF INACTIVITY.'; $('#lerr').hidden = false; }, m * 6e4); }
+const TABS = ['H', 'L', 'D', 'S', 'U', 'A'];
+function applyRole() {
+  const lim = ROLE === 'ENCODER' || ROLE === 'VERIFIER';
+  ['b3', 'b4', 'b5', 'b6'].forEach(i => $('#' + i).hidden = lim);   // design, settings, staff accounts and the audit log are admin-only
+  $('#bscan').hidden = ROLE !== 'ENCODER';                          // verifiers are view-only: no scanning
+  $('#bcsv').hidden = ROLE === 'VERIFIER';                          // ...and no export
+  $('#ahT').textContent = ROLE === 'ENCODER' ? 'ENCODER WORKSPACE' : ROLE === 'VERIFIER' ? 'VERIFIER (VIEW ONLY)' : 'ADMIN DASHBOARD';
+  $('#ahS').textContent = lim ? ST.name + ' (' + ST.user + ')' : '';
+}
+function openEncoder(stats) { SSTATS = stats; PW = ''; applyRole(); show('admin'); tab('H'); load(); }
+function encScan() { openScanner(SSTATS); }
+function encBack() { stopScan(); show('admin'); }
+function idleReset() { clearTimeout(IDLE); const m = +CFG.idleMin; if (!m || $('#admin').hidden) return; IDLE = setTimeout(() => { if (ROLE === 'ENCODER' || ROLE === 'VERIFIER') { staffLogout(true); return; } logout(); $('#lerr').textContent = 'YOU WERE LOGGED OUT BECAUSE OF INACTIVITY.'; $('#lerr').hidden = false; }, m * 6e4); }
 ['click', 'keydown', 'touchstart', 'scroll'].forEach(ev => document.addEventListener(ev, idleReset, { passive: true }));
 function dauto() { clearInterval(DAU); const on = $('#dauto').checked; try { localStorage.setItem('osc_da', on ? '1' : '0'); } catch (x) {} if (on && !$('#tabH').hidden) DAU = setInterval(() => load(true), 60000); }
 const pdt = s => { const m = String(s || '').match(/(\d{1,2})\/(\d{1,2})\/(\d{4}),?\s*(\d{1,2}):(\d{2})(?::\d{2})?\s*([AaPp])/); if (!m) return null; let h = +m[4] % 12; if (/p/i.test(m[6])) h += 12; return { y: +m[3], m: +m[1], d: +m[2], h }; };
@@ -925,6 +950,7 @@ function tab(t) {
   $('#sv').hidden = !(t === 'D' || t === 'S'); $('#dmsg').textContent = '';
   clearInterval(DAU); if (t === 'H') { try { $('#dauto').checked = localStorage.getItem('osc_da') === '1'; } catch (x) {} dauto(); }
   if (t === 'U') loadUsers();
+  if (t === 'A') loadAudit();
   if (t === 'D' || t === 'S') { document.querySelectorAll('[data-k]').forEach(i => { const v = CFG[i.dataset.k]; i.type === 'checkbox' ? i.checked = !!v : i.value = v == null ? '' : v }); if (t === 'D') prev(); if (t === 'S') bstat(); }
   idleReset(); try { $('#b' + (TABS.indexOf(t) + 1)).scrollIntoView({ block: 'nearest', inline: 'center' }); } catch (x) {}
 }
@@ -974,7 +1000,7 @@ function render() {
       const st = !isIn(r) ? ['REGISTERED', ''] : r[25] ? ['CHECKED OUT', 'o'] : ['CHECKED IN', 'y'];
       return `<tr><td data-l="PASS ID"><b>${esc(r[0])}</b></td><td data-l="NAME">${esc(r[2])}, ${esc(r[3])} ${esc(r[4])}${r[5] && String(r[5]).toUpperCase() !== 'N/A' ? ' ' + esc(r[5]) : ''}</td><td data-l="BIRTHDATE">${esc(r[6])}</td><td data-l="CONTACT">${esc(r[8])}</td><td data-l="EMAIL">${esc(r[9])}</td><td data-l="MUNICIPALITY">${esc(r[11])}</td><td data-l="OFW?">${esc(r[14])}</td>` +
         `<td data-l="STATUS"><span class="bg ${st[1]}">${st[0]}</span></td><td data-l="CHECKED IN AT">${esc(r[24] || '-')}</td><td data-l="CHECKED OUT AT">${esc(r[25] || '-')}</td><td data-l="SCANNED BY">${esc(r[26] || '-')}</td>` +
-        `<td class="act">${ib('alt', `vpass('${esc(r[0])}')`, 'eye', 'VIEW PASS')}${ib('', `edit('${esc(r[0])}')`, 'edit', 'EDIT')}${ib('grn', `chk('${esc(r[0])}',${!isIn(r)})`, isIn(r) ? 'undo' : 'check', isIn(r) ? 'UNDO' : 'CHECK-IN')}${ib('red', `del('${esc(r[0])}')`, 'trash', 'DELETE')}</td></tr>`;
+        `<td class="act">${ib('alt', `vpass('${esc(r[0])}')`, 'eye', 'VIEW PASS')}${ROLE === 'VERIFIER' ? '' : `${ib('', `edit('${esc(r[0])}')`, 'edit', 'EDIT')}${ib('grn', `chk('${esc(r[0])}',${!isIn(r)})`, isIn(r) ? 'undo' : 'check', isIn(r) ? 'UNDO' : 'CHECK-IN')}${ib('red', `del('${esc(r[0])}')`, 'trash', 'DELETE')}`}</td></tr>`;
     }).join('');
 }
 $('#q').oninput = fl;
@@ -998,6 +1024,23 @@ function csv(all) {
 
 
 // ---- admin: staff accounts + scan log
+async function loadAudit() {
+  const r = await api({ action: 'audit', pw: PW }); if (!r.ok) return note(r.error === 'UNKNOWN ACTION' ? 'UPDATE YOUR APPS SCRIPT CODE AND DEPLOY A NEW VERSION FIRST.' : r.error);
+  AL = r.log;
+  const fill = (id, i, all) => { const sel = $('#' + id), cur = sel.value, v = [...new Set(AL.map(x => x[i]).filter(Boolean))].sort(); sel.innerHTML = '<option value="">' + all + '</option>' + v.map(x => `<option${x === cur ? ' selected' : ''}>${esc(x)}</option>`).join(''); };
+  fill('ausr', 1, 'ALL USERS'); fill('aact', 3, 'ALL ACTIONS'); aRender();
+}
+function aRender() {
+  const q = U($('#aq').value), u = $('#ausr').value, a = $('#aact').value;
+  const rows = AL.filter(x => (!q || x.join(' ').toUpperCase().includes(q)) && (!u || x[1] === u) && (!a || x[3] === a));
+  $('#acnt').textContent = 'SHOWING ' + rows.length + ' OF ' + AL.length + ' ENTRIES (LATEST 500)';
+  $('#at').innerHTML = '<tr><th>TIME</th><th>USER</th><th>ROLE</th><th>ACTION</th><th>TARGET</th><th>DETAILS</th></tr>' + (rows.length ? rows.map(x =>
+    `<tr><td data-l="TIME">${esc(x[0])}</td><td data-l="USER"><b>${esc(x[1])}</b></td><td data-l="ROLE"><span class="bg">${esc(x[2])}</span></td><td data-l="ACTION"><span class="bg ${/DELETE|FAILED/.test(x[3]) ? 'r' : /EDIT|CHANGED|UPDATED|RESTORE|SETTINGS|UNDONE/.test(x[3]) ? 'o' : 'y'}">${esc(x[3])}</span></td><td data-l="TARGET">${esc(x[4])}</td><td data-l="DETAILS" style="white-space:normal;min-width:260px">${esc(x[5])}</td></tr>`).join('') : '<tr><td data-l="">NO ENTRIES YET.</td></tr>');
+}
+function aCsv() {
+  const e = v => '"' + String(v).replace(/"/g, '""') + '"', t = [['TIMESTAMP', 'USER', 'ROLE', 'ACTION', 'TARGET', 'DETAILS'], ...AL].map(r => r.map(e).join(',')).join('\n');
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['\ufeff' + t], { type: 'text/csv' })); a.download = 'audit-log.csv'; a.click();
+}
 async function loadUsers() {
   $('#surl').textContent = location.origin + location.pathname + '#scan';
   if (VER < 4) return note('BACKEND IS OUTDATED. In Apps Script: Deploy > Manage deployments > pencil > Version: New version > Deploy.');
@@ -1005,24 +1048,24 @@ async function loadUsers() {
   UL = r.users; renderUsers(); loadLog();
 }
 function renderUsers() {
-  $('#ut').innerHTML = '<tr><th>USERNAME</th><th>FULL NAME</th><th>STATUS</th><th>LAST LOGIN</th><th>ACTIONS</th></tr>' + (UL.length ? UL.map(u =>
-    `<tr><td data-l="USERNAME"><b>${esc(u[0])}</b></td><td data-l="FULL NAME">${esc(u[1])}</td><td data-l="STATUS"><span class="bg ${u[2] === 'YES' ? 'y' : ''}">${u[2] === 'YES' ? 'ACTIVE' : 'DISABLED'}</span></td><td data-l="LAST LOGIN">${esc(u[4] || '-')}</td>` +
+  $('#ut').innerHTML = '<tr><th>USERNAME</th><th>FULL NAME</th><th>ROLE</th><th>STATUS</th><th>LAST LOGIN</th><th>ACTIONS</th></tr>' + (UL.length ? UL.map(u =>
+    `<tr><td data-l="USERNAME"><b>${esc(u[0])}</b></td><td data-l="FULL NAME">${esc(u[1])}</td><td data-l="ROLE"><span class="bg ${u[5] === 'ENCODER' ? 'o' : ''}">${esc(u[5] || 'SCANNER')}</span></td><td data-l="STATUS"><span class="bg ${u[2] === 'YES' ? 'y' : ''}">${u[2] === 'YES' ? 'ACTIVE' : 'DISABLED'}</span></td><td data-l="LAST LOGIN">${esc(u[4] || '-')}</td>` +
     `<td class="act">${ib('', `editUser('${esc(u[0])}')`, 'edit', 'EDIT')}${ib('red', `delUser('${esc(u[0])}')`, 'trash', 'DELETE')}</td></tr>`).join('') : '<tr><td data-l="">NO STAFF ACCOUNTS YET.</td></tr>');
 }
 async function addUser() {
   const m = $('#umsg'); m.textContent = '';
   if (!await ask({ t: 'CREATE ACCOUNT?', m: 'Add the staff account "' + $('#nu').value + '"?', ok: 'CREATE', k: 'gn' })) return;
-  const r = await api({ action: 'userAdd', pw: PW, username: $('#nu').value, name: $('#nn').value, password: $('#np').value });
+  const r = await api({ action: 'userAdd', pw: PW, username: $('#nu').value, name: $('#nn').value, password: $('#np').value, role: $('#nr').value });
   if (!r.ok) { m.textContent = r.error || 'FAILED'; return; }
   $('#nn').value = $('#nu').value = $('#np').value = ''; m.textContent = 'ACCOUNT ADDED.'; loadUsers();
 }
 function editUser(un) {
   const u = UL.find(x => x[0] === un); if (!u) return;
-  $('#eu').value = u[0]; $('#en').value = u[1]; $('#ep').value = ''; $('#ea').value = u[2] === 'YES' ? 'YES' : 'NO'; $('#um').hidden = false;
+  $('#eu').value = u[0]; $('#en').value = u[1]; $('#ep').value = ''; $('#ea').value = u[2] === 'YES' ? 'YES' : 'NO'; $('#er').value = u[5] || 'SCANNER'; $('#um').hidden = false;
 }
 async function saveUser() {
   if (!await ask({ t: 'SAVE ACCOUNT?', m: 'Update the staff account "' + $('#eu').value + '"?', ok: 'SAVE', k: 'gn' })) return;
-  const r = await api({ action: 'userUpdate', pw: PW, username: $('#eu').value, name: $('#en').value, password: $('#ep').value, active: $('#ea').value });
+  const r = await api({ action: 'userUpdate', pw: PW, username: $('#eu').value, name: $('#en').value, password: $('#ep').value, active: $('#ea').value, role: $('#er').value });
   if (r.ok) { $('#um').hidden = true; loadUsers(); } else note(r.error);
 }
 async function delUser(un) {
@@ -1053,12 +1096,12 @@ async function staffLogin() {
   try {
     const r = await api({ action: 'slogin', user: $('#su').value, upw: $('#sp').value }); if (!r.ok) throw r.error;
     ST = { token: r.token, name: r.name, user: r.user }; sset('osc_st', r.token); sset('osc_sn', r.name); sset('osc_su', r.user);
-    $('#sp').value = ''; openScanner(r.stats);
+    $('#sp').value = ''; ROLE = ['ENCODER', 'VERIFIER'].includes(r.role) ? r.role : 'SCANNER'; if (ROLE === 'SCANNER') openScanner(r.stats); else openEncoder(r.stats);
   } catch (e) { $('#slerr').textContent = e || 'LOGIN FAILED'; $('#slerr').hidden = false; }
   busy(false);
 }
 function openScanner(stats) {
-  show('scan'); $('#swho').textContent = 'SIGNED IN AS ' + ST.name + ' (' + ST.user + ')';
+  show('scan'); $('#sback').hidden = ROLE !== 'ENCODER'; $('#swho').textContent = 'SIGNED IN AS ' + ST.name + ' (' + ST.user + ')';
   MODE = sget('osc_mode') === 'OUT' ? 'OUT' : 'IN';
   document.querySelectorAll('input[name=sm]').forEach(i => { i.checked = i.value === MODE; i.onchange = () => { MODE = i.value; sset('osc_mode', MODE); }; });
   setStats(stats); setLive(false);
@@ -1068,13 +1111,13 @@ async function staffRestore() {
   $('#slogin').style.visibility = 'hidden';
   try {
     const r = await api({ action: 'sinfo', token: ST.token }); $('#slogin').style.visibility = 'visible';
-    if (!r.ok) return staffLogout(true); openScanner(r.stats);
+    if (!r.ok) return staffLogout(true); ROLE = ['ENCODER', 'VERIFIER'].includes(r.role) ? r.role : 'SCANNER'; if (ROLE === 'SCANNER') openScanner(r.stats); else openEncoder(r.stats);
   } catch (e) { $('#slogin').style.visibility = 'visible'; }
 }
 function staffLogout(expired) {
   stopScan(); if (ST.token) api({ action: 'slogout', token: ST.token }).catch(() => {});
   ['osc_st', 'osc_sn', 'osc_su'].forEach(k => { try { sessionStorage.removeItem(k); } catch (x) {} });
-  ST = { token: '', name: '', user: '' }; RECENT = []; $('#sres').innerHTML = ''; $('#slog').innerHTML = '';
+  ST = { token: '', name: '', user: '' }; ROLE = ''; RECENT = []; $('#sres').innerHTML = ''; $('#slog').innerHTML = '';
   $('#slogin').style.visibility = 'visible'; show('slogin');
   if (expired === true) { $('#slerr').textContent = 'SESSION EXPIRED. PLEASE LOGIN AGAIN.'; $('#slerr').hidden = false; }
 }
@@ -1198,7 +1241,7 @@ fetch(API, { cache: 'no-store' }).then(r => r.json()).then(r => { CFG = { ...DEF
 // ---- admin session: stays signed in after refresh (this tab only, max 8 hours, cleared on logout / closing the tab)
 function logout() {
   try { ['osc_pw', 'osc_t'].forEach(k => sessionStorage.removeItem(k)); } catch (x) {}
-  PW = ''; $('#pw').value = ''; $('#login').style.visibility = 'visible'; show('login');
+  PW = ''; ROLE = ''; $('#pw').value = ''; $('#login').style.visibility = 'visible'; show('login');
 }
 async function restore() {
   let pw = '', t = 0;
@@ -1207,9 +1250,9 @@ async function restore() {
   if (Date.now() - t > 8 * 36e5) return logout();
   $('#login').style.visibility = 'hidden'; PW = pw;
   try {
-    const r = await api({ action: 'login', pw: PW });
+    const r = await api({ action: 'login', pw: PW, restore: true });
     if (!r.ok) return logout();
-    $('#login').style.visibility = 'visible'; show('admin'); tab('H'); load();
+    $('#login').style.visibility = 'visible'; ROLE = 'ADMIN'; applyRole(); show('admin'); tab('H'); load();
   } catch (e) { $('#login').style.visibility = 'visible'; } // no connection: show the login form, keep the session
 }
 $('#pw').addEventListener('keydown', e => { if (e.key === 'Enter') adminLogin(); });
