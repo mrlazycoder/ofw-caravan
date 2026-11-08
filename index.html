@@ -242,6 +242,7 @@ td.act button.ib{width:auto;height:auto;padding:7px 10px;margin-right:4px;displa
 #zp .zd{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);transform:translateX(-50%);white-space:nowrap;padding:14px 24px;box-shadow:0 8px 26px #0009;cursor:pointer}#zp .zd:hover{transform:translateX(-50%)}
 #rs{position:fixed;inset:0;background:#0b1b4d99;display:flex;align-items:center;justify-content:center;padding:20px;z-index:80;overflow:auto}#rs[hidden]{display:none}
 #rs>div{background:#fff;border-radius:18px;padding:26px 22px 22px;max-width:420px;width:100%;text-align:center;animation:pop .3s ease both}#rs h2{margin:0 0 8px}#rs p{line-height:1.6;margin:0;color:var(--mu);font-size:.88rem}
+.sw{text-align:center;margin:18px 0 0;font-size:.85rem;color:var(--mu)}.sw a{color:var(--p);font-weight:700;text-decoration:none}.sw a:hover{text-decoration:underline}
 </style>
 </head>
 <body>
@@ -372,6 +373,7 @@ td.act button.ib{width:auto;height:auto;padding:7px 10px;margin-right:4px;displa
   <label>PASSWORD</label><input id="pw" type="password" style="text-transform:none">
   <div id="lerr" class="err" hidden></div>
   <div class="row"><button onclick="adminLogin()">LOGIN</button></div>
+  <p class="sw">Scanner staff? <a href="#scan" onclick="toStaff();return false">SCANNER STAFF LOGIN</a></p>
 </section>
 
 <section id="slogin" hidden>
@@ -380,6 +382,7 @@ td.act button.ib{width:auto;height:auto;padding:7px 10px;margin-right:4px;displa
   <label style="margin-top:12px">PASSWORD</label><input id="sp" type="password" style="text-transform:none" autocomplete="current-password">
   <div id="slerr" class="err" hidden></div>
   <div class="row"><button onclick="staffLogin()">LOGIN</button></div>
+  <p class="sw">Administrator? <a href="#admin" onclick="toAdmin();return false">ADMIN LOGIN</a></p>
 </section>
 
 <section id="scan" hidden>
@@ -795,6 +798,8 @@ window.addEventListener('popstate', () => {
   else askExit();
 });
 document.addEventListener('pointerdown', guard, { passive: true });  // re-arm after a page refresh
+function toAdmin() { try { history.replaceState(null, '', '#admin'); } catch (x) {} $('#slerr').hidden = true; show('login'); restore(); }
+function toStaff() { try { history.replaceState(null, '', '#scan'); } catch (x) {} $('#lerr').hidden = true; show('slogin'); staffRestore(); }
 function newReg() {
   $('#cx').hidden = true; $('#dq').hidden = true; $('#f').reset();
   ['muni', 'brgy'].forEach(i => { $('#' + i).innerHTML = ''; $('#' + i).disabled = true; });
