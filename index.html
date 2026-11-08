@@ -375,11 +375,12 @@ td.act button.ib{width:auto;height:auto;padding:7px 10px;margin-right:4px;displa
   <label>PASSWORD</label><input id="pw" type="password" style="text-transform:none">
   <div id="lerr" class="err" hidden></div>
   <div class="row"><button onclick="adminLogin()">LOGIN</button></div>
-  <p class="sw">Scanner staff? <a href="#scan" onclick="toStaff();return false">SCANNER STAFF LOGIN</a></p>
+  <p class="sw">Not an administrator? <a href="#scan" onclick="toStaff();return false">LOGIN WITH OTHER ACCOUNT</a></p>
 </section>
 
 <section id="slogin" hidden>
-  <h2>SCANNER STAFF LOGIN</h2>
+  <h2 style="margin-bottom:4px">ACCOUNT LOGIN</h2>
+  <p style="margin:0 0 14px;font-size:.82rem;color:var(--mu)">For scanner, encoder and verifier accounts.</p>
   <label>USERNAME</label><input id="su" data-keep style="text-transform:none" autocapitalize="none" autocomplete="username">
   <label style="margin-top:12px">PASSWORD</label><input id="sp" type="password" style="text-transform:none" autocomplete="current-password">
   <div id="slerr" class="err" hidden></div>
@@ -498,10 +499,10 @@ td.act button.ib{width:auto;height:auto;padding:7px 10px;margin-right:4px;displa
         <div><label>USERNAME</label><input id="nu" data-keep style="text-transform:none" autocapitalize="none" autocomplete="off"></div>
         <div><label>PASSWORD (MIN. 6 CHARACTERS)</label><input id="np" data-keep style="text-transform:none" autocomplete="off"></div>
         <div class="full"><label>ROLE</label><select id="nr"><option value="SCANNER">SCANNER STAFF (SCAN QR CODES ONLY)</option><option value="ENCODER">ENCODER (MANAGE REGISTRANTS, SCANNING OPTIONAL)</option><option value="VERIFIER">VERIFIER (VIEW ONLY)</option></select></div>
-        <div class="full"><div class="row" style="margin:0"><button onclick="addUser()"><svg class="i"><use href="#i-user-plus"/></svg>ADD ACCOUNT</button><button class="alt" onclick="window.open(location.pathname+'#scan','_blank')">OPEN SCANNER<svg class="i" style="margin:0 0 0 .45em"><use href="#i-ext"/></svg></button></div><div id="umsg" class="ok"></div></div>
+        <div class="full"><div class="row" style="margin:0"><button onclick="addUser()"><svg class="i"><use href="#i-user-plus"/></svg>ADD ACCOUNT</button><button class="alt" onclick="window.open(location.pathname+'#scan','_blank')">OPEN STAFF LOGIN<svg class="i" style="margin:0 0 0 .45em"><use href="#i-ext"/></svg></button></div><div id="umsg" class="ok"></div></div>
       </div></div>
-      <div class="card"><h3>SCANNER LINK FOR STAFF</h3>
-        <div style="font-size:.85rem;line-height:1.7;color:var(--mu)">Give each scanning officer their own account and this link. They sign in, choose <b>CHECK IN</b> or <b>CHECK OUT</b>, then point the phone camera at the QR code on the Access Pass.<div id="surl" style="margin-top:8px;padding:10px;background:#f5f8ff;border-radius:10px;font-family:Consolas,monospace;font-size:.78rem;word-break:break-all;color:var(--tx)"></div></div>
+      <div class="card"><h3>STAFF LOGIN LINK</h3>
+        <div style="font-size:.85rem;line-height:1.7;color:var(--mu)">Give each staff member their own account and this link. <b>Scanner</b> accounts sign in and scan the QR code on the Access Pass (check in or check out). <b>Encoder</b> accounts manage the registrants, and <b>Verifier</b> accounts can only view them.<div id="surl" style="margin-top:8px;padding:10px;background:#f5f8ff;border-radius:10px;font-family:Consolas,monospace;font-size:.78rem;word-break:break-all;color:var(--tx)"></div></div>
       </div>
     </div>
     <h3 style="color:var(--pd)">STAFF ACCOUNTS</h3>
