@@ -820,13 +820,13 @@ function newReg() {
   ['muni', 'brgy'].forEach(i => { $('#' + i).innerHTML = ''; $('#' + i).disabled = true; });
   $('#rel').hidden = true; ['oLast', 'oFirst', 'oSuf', 'relSel'].forEach(i => $('#' + i).required = false);
   $('#err').hidden = true; $('#pass').innerHTML = '';
-  isClosed() ? closed() : show('form');
+  LASTP = null; isClosed() ? closed() : show('consent');   // every new registrant starts again from the Data Privacy Consent
 }
 
 // ---- admin
 async function adminLogin() {
   PW = $('#pw').value; $('#lerr').hidden = true; busy(true, 'SIGNING IN', 'Verifying your password. Please wait...');
-  try { const r = await api({ action: 'login', pw: PW }); if (!r.ok) throw r.error; try { sessionStorage.setItem('osc_pw', PW); sessionStorage.setItem('osc_t', Date.now()); } catch (x) {} ROLE = 'ADMIN'; applyRole(); show('admin'); tab('H'); load(); }
+  try { const r = await api({ action: 'login', pw: PW }); if (!r.ok) throw r.error; try { sessionStorage.setItem('osc_pw', PW); sessionStorage.setItem('osc_t', Date.now()); } catch (x) {} ROLE = 'ADMIN'; applyRole(); show('admin'); tab('H'); load(); setTimeout(() => { if (ROLE === 'ADMIN') { loadAudit(true); loadUsers(true); } }, 2500); }
   catch (e) { $('#lerr').textContent = e || 'LOGIN FAILED'; $('#lerr').hidden = false; }
   finally { busy(false); }
 }
@@ -950,8 +950,8 @@ function tab(t) {
   TABS.forEach((k, i) => { $('#tab' + k).hidden = t !== k; $('#b' + (i + 1)).className = t === k ? 'on' : ''; });
   $('#sv').hidden = !(t === 'D' || t === 'S'); $('#dmsg').textContent = '';
   clearInterval(DAU); if (t === 'H') { try { $('#dauto').checked = localStorage.getItem('osc_da') === '1'; } catch (x) {} dauto(); }
-  if (t === 'U') loadUsers();
-  if (t === 'A') loadAudit();
+  if (t === 'U') { if (UL.length) { renderUsers(); loadUsers(true); } else loadUsers(); }
+  if (t === 'A') { if (AL.length) { aRender(); loadAudit(true); } else loadAudit(); }
   if (t === 'D' || t === 'S') { document.querySelectorAll('[data-k]').forEach(i => { const v = CFG[i.dataset.k]; i.type === 'checkbox' ? i.checked = !!v : i.value = v == null ? '' : v }); if (t === 'D') prev(); if (t === 'S') bstat(); }
   idleReset(); try { $('#b' + (TABS.indexOf(t) + 1)).scrollIntoView({ block: 'nearest', inline: 'center' }); } catch (x) {}
 }
@@ -1025,8 +1025,8 @@ function csv(all) {
 
 
 // ---- admin: staff accounts + scan log
-async function loadAudit() {
-  const r = await api({ action: 'audit', pw: PW }); if (!r.ok) return note(r.error === 'UNKNOWN ACTION' ? 'UPDATE YOUR APPS SCRIPT CODE AND DEPLOY A NEW VERSION FIRST.' : r.error);
+async function loadAudit(quiet) {
+  const r = await api({ action: 'audit', pw: PW }, true, quiet); if (!r.ok) return quiet ? 0 : note(r.error === 'UNKNOWN ACTION' ? 'UPDATE YOUR APPS SCRIPT CODE AND DEPLOY A NEW VERSION FIRST.' : r.error);
   AL = r.log;
   const fill = (id, i, all) => { const sel = $('#' + id), cur = sel.value, v = [...new Set(AL.map(x => x[i]).filter(Boolean))].sort(); sel.innerHTML = '<option value="">' + all + '</option>' + v.map(x => `<option${x === cur ? ' selected' : ''}>${esc(x)}</option>`).join(''); };
   fill('ausr', 1, 'ALL USERS'); fill('aact', 3, 'ALL ACTIONS'); aRender();
@@ -1042,11 +1042,11 @@ function aCsv() {
   const e = v => '"' + String(v).replace(/"/g, '""') + '"', t = [['TIMESTAMP', 'USER', 'ROLE', 'ACTION', 'TARGET', 'DETAILS'], ...AL].map(r => r.map(e).join(',')).join('\n');
   const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['\ufeff' + t], { type: 'text/csv' })); a.download = 'audit-log.csv'; a.click();
 }
-async function loadUsers() {
+async function loadUsers(quiet) {
   $('#surl').textContent = location.origin + location.pathname + '#scan';
   if (VER < 4) return note('BACKEND IS OUTDATED. In Apps Script: Deploy > Manage deployments > pencil > Version: New version > Deploy.');
-  const r = await api({ action: 'users', pw: PW }); if (!r.ok) return note(r.error);
-  UL = r.users; renderUsers(); loadLog();
+  const r = await api({ action: 'users', pw: PW }, true, quiet); if (!r.ok) return quiet ? 0 : note(r.error);
+  UL = r.users; renderUsers(); if (r.log) renderLog(r.log); else loadLog();
 }
 function renderUsers() {
   $('#ut').innerHTML = '<tr><th>USERNAME</th><th>FULL NAME</th><th>ROLE</th><th>STATUS</th><th>LAST LOGIN</th><th>ACTIONS</th></tr>' + (UL.length ? UL.map(u =>
@@ -1073,10 +1073,13 @@ async function delUser(un) {
   if (!await ask({ t: 'DELETE STAFF ACCOUNT?', m: 'Delete "' + un + '"? They will no longer be able to scan.', ok: 'DELETE', k: 'rd' })) return;
   const r = await api({ action: 'userDelete', pw: PW, username: un }); r.ok ? loadUsers() : note(r.error);
 }
+function renderLog(log) {
+  $('#lt').innerHTML = '<tr><th>TIME</th><th>PASS ID</th><th>NAME</th><th>ACTION</th><th>STAFF</th></tr>' + (log.length ? log.map(x =>
+    `<tr><td data-l="TIME">${esc(x[0])}</td><td data-l="PASS ID"><b>${esc(x[1])}</b></td><td data-l="NAME">${esc(x[2])}</td><td data-l="ACTION"><span class="bg ${x[3] === 'IN' ? 'y' : 'o'}">${x[3] === 'IN' ? 'CHECK IN' : 'CHECK OUT'}</span></td><td data-l="STAFF">${esc(x[4])}</td></tr>`).join('') : '<tr><td data-l="">NO SCANS YET.</td></tr>');
+}
 async function loadLog() {
   const r = await api({ action: 'scanlog', pw: PW }); if (!r.ok) return;
-  $('#lt').innerHTML = '<tr><th>TIME</th><th>PASS ID</th><th>NAME</th><th>ACTION</th><th>STAFF</th></tr>' + (r.log.length ? r.log.map(x =>
-    `<tr><td data-l="TIME">${esc(x[0])}</td><td data-l="PASS ID"><b>${esc(x[1])}</b></td><td data-l="NAME">${esc(x[2])}</td><td data-l="ACTION"><span class="bg ${x[3] === 'IN' ? 'y' : 'o'}">${x[3] === 'IN' ? 'CHECK IN' : 'CHECK OUT'}</span></td><td data-l="STAFF">${esc(x[4])}</td></tr>`).join('') : '<tr><td data-l="">NO SCANS YET.</td></tr>');
+  renderLog(r.log);
 }
 
 // ---- scanner (staff)
@@ -1253,7 +1256,7 @@ async function restore() {
   try {
     const r = await api({ action: 'login', pw: PW, restore: true });
     if (!r.ok) return logout();
-    $('#login').style.visibility = 'visible'; ROLE = 'ADMIN'; applyRole(); show('admin'); tab('H'); load();
+    $('#login').style.visibility = 'visible'; ROLE = 'ADMIN'; applyRole(); show('admin'); tab('H'); load(); setTimeout(() => { if (ROLE === 'ADMIN') { loadAudit(true); loadUsers(true); } }, 2500);
   } catch (e) { $('#login').style.visibility = 'visible'; } // no connection: show the login form, keep the session
 }
 $('#pw').addEventListener('keydown', e => { if (e.key === 'Enter') adminLogin(); });
