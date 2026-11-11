@@ -247,6 +247,16 @@ td.act button.ib{width:auto;height:auto;padding:7px 10px;margin-right:4px;displa
 .wkpill{display:none;margin:0 auto 10px;padding:5px 16px;border-radius:99px;background:var(--ac);color:#1a1a1a;font-weight:800;font-size:.72rem;letter-spacing:1.5px}body.walk .wkpill{display:inline-block}
 .fb{grid-template-columns:2fr 1fr 1fr 1fr 1fr}
 @media(max-width:700px){.fb{grid-template-columns:1fr 1fr}}
+/* ---- manual encoding ---- */
+.encbar,.encopt,.encshow{display:none}
+body.enc .encbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;background:#fff7e6;border:1.5px solid var(--ac);border-radius:12px;padding:10px 14px;margin:14px 0 12px}
+body.enc .encbar small{display:block;color:#7a4b00;font-weight:700;font-size:.7rem;letter-spacing:.4px}body.enc .encbar button{padding:8px 14px;font-size:12px}
+body.enc .encopt{display:block;margin-bottom:14px}body.enc .encshow{display:inline-flex}body.enc .wkpill{display:none}
+/* ---- full details of a registrant ---- */
+#dm{position:fixed;inset:0;background:#0b1b4d99;display:flex;align-items:flex-start;justify-content:center;padding:20px;z-index:100;overflow:auto}#dm[hidden]{display:none}
+#dm>div{background:#fff;border-radius:18px;padding:22px;max-width:560px;width:100%;margin:auto;animation:pop .3s ease both}#dm h2,#dm>div>p{text-align:center}
+.dt{margin:18px 0 4px;font-size:.7rem;font-weight:800;letter-spacing:1px;color:var(--p);border-bottom:2px solid #e6ecf8;padding-bottom:4px}
+.dr{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid #f1f5fb;font-size:.85rem}.dr span{color:var(--mu);font-weight:700;font-size:.72rem;letter-spacing:.3px;flex:0 0 40%}.dr b{text-align:right;word-break:break-word}
 </style>
 </head>
 <body>
@@ -327,6 +337,11 @@ td.act button.ib{width:auto;height:auto;padding:7px 10px;margin-right:4px;displa
     <h2 id="fh" style="font-size:1.4rem;margin:0">REGISTRATION FORM</h2>
     <p style="font-size:.85rem;color:var(--mu);margin:6px 0 0">Fields marked with <i style="color:#dc2626;font-style:normal">*</i> are required. Entries are automatically converted to CAPITAL LETTERS (email stays lowercase).</p>
   </div>
+  <div class="encbar"><div><b>MANUAL ENCODING</b><small id="encw"></small></div><button type="button" class="alt" onclick="encExit()">&larr; BACK TO WORKSPACE</button></div>
+  <div class="encopt"><div class="g">
+    <div><label>REGISTRATION TYPE <i>*</i></label><select id="etype"><option value="WALK-IN">WALK-IN</option><option value="ONLINE">ONLINE</option></select></div>
+    <div class="full"><label style="display:flex;gap:8px;align-items:flex-start;line-height:1.5"><input type="checkbox" id="econs"><span>I CONFIRM THAT THE REGISTRANT HAS GIVEN CONSENT TO THE DATA PRIVACY NOTICE.</span></label></div>
+  </div></div>
   <form id="f" autocomplete="off" novalidate>
     <div class="stt"><b>1</b>PERSONAL INFORMATION</div>
     <div class="g">
@@ -368,13 +383,13 @@ td.act button.ib{width:auto;height:auto;padding:7px 10px;margin-right:4px;displa
 
 <section id="done" hidden class="c">
   <div class="ic gn"><svg class="i"><use href="#i-ok"/></svg></div>
-  <h2>THANK YOU FOR REGISTERING FOR THE OWWA SERBISYO CARAVAN!</h2>
-  <p style="color:var(--mu)">Here is your Access Pass. Please present it at the venue &mdash; it will serve as your pass for the event.</p>
+  <h2 id="dh">THANK YOU FOR REGISTERING FOR THE OWWA SERBISYO CARAVAN!</h2>
+  <p id="dp" style="color:var(--mu)">Here is your Access Pass. Please present it at the venue &mdash; it will serve as your pass for the event.</p>
   <div id="pass"></div>
   <p class="zt">TAP THE ACCESS PASS TO VIEW IT FULL SIZE &mdash; GOOD FOR A CLEAR SCREENSHOT</p>
   <div id="iabtip" class="note" hidden style="margin-top:12px"><b>CAN'T SAVE THE PASS HERE?</b><br>Take a screenshot of it, or check your email &mdash; the pass image is attached. You can also open this site in Chrome / Safari, tap <b>ALREADY REGISTERED? GET YOUR ACCESS PASS</b>, and enter your Pass ID and birthdate.</div>
   <p id="mailmsg" hidden style="font-size:.85rem;font-weight:700;color:var(--mu);margin:12px 0 0"></p>
-  <div class="row"><button onclick="dl()"><svg class="i"><use href="#i-download"/></svg>DOWNLOAD ACCESS PASS</button><button class="alt" onclick="askExit()"><svg class="i"><use href="#i-plus"/></svg>REGISTER ANOTHER PERSON</button></div>
+  <div class="row"><button onclick="dl()"><svg class="i"><use href="#i-download"/></svg>DOWNLOAD ACCESS PASS</button><button class="alt" onclick="nextReg()"><svg class="i"><use href="#i-plus"/></svg>REGISTER ANOTHER PERSON</button><button class="alt encshow" onclick="encExit()">&larr; BACK TO WORKSPACE</button></div>
   <p style="font-size:.8rem;color:#64748b">Tip: save the image or take a screenshot. A copy of your Pass ID was also sent to your email.</p>
 </section>
 
@@ -416,7 +431,7 @@ td.act button.ib{width:auto;height:auto;padding:7px 10px;margin-right:4px;displa
 <section id="admin" hidden>
   <div id="mbar" class="err" hidden style="margin:0 0 12px"><b>MAINTENANCE MODE IS ON.</b> Registration and staff logins are blocked. Turn it off in Settings.</div>
   <div class="ah"><div><h2 id="ahT" style="margin:0">ADMIN DASHBOARD</h2><small id="ahS" style="color:var(--mu);font-weight:700;font-size:.7rem;letter-spacing:.5px"></small></div><button class="lo" onclick="outAdmin()" title="Sign out" aria-label="Sign out"><svg class="i"><use href="#i-logout"/></svg></button></div>
-  <div class="tabs" id="tabs"><button id="b1" class="on" onclick="tab('H')"><svg class="i"><use href="#i-chart"/></svg><span>DASHBOARD</span></button><button id="b2" onclick="tab('L')"><svg class="i"><use href="#i-list"/></svg><span>REGISTRANTS</span></button><button id="b3" onclick="tab('D')"><svg class="i"><use href="#i-brush"/></svg><span>DESIGN</span></button><button id="b4" onclick="tab('S')"><svg class="i"><use href="#i-sliders"/></svg><span>SETTINGS</span></button><button id="b5" onclick="tab('U')"><svg class="i"><use href="#i-users"/></svg><span>STAFF</span></button><button id="b6" onclick="tab('A')"><svg class="i"><use href="#i-list"/></svg><span>AUDIT LOG</span></button><button id="bscan" hidden onclick="encScan()"><svg class="i"><use href="#i-scan"/></svg><span>SCANNER</span></button></div>
+  <div class="tabs" id="tabs"><button id="b1" class="on" onclick="tab('H')"><svg class="i"><use href="#i-chart"/></svg><span>DASHBOARD</span></button><button id="b2" onclick="tab('L')"><svg class="i"><use href="#i-list"/></svg><span>REGISTRANTS</span></button><button id="b3" onclick="tab('D')"><svg class="i"><use href="#i-brush"/></svg><span>DESIGN</span></button><button id="b4" onclick="tab('S')"><svg class="i"><use href="#i-sliders"/></svg><span>SETTINGS</span></button><button id="b5" onclick="tab('U')"><svg class="i"><use href="#i-users"/></svg><span>STAFF</span></button><button id="b6" onclick="tab('A')"><svg class="i"><use href="#i-list"/></svg><span>AUDIT LOG</span></button><button id="benc" onclick="encStart()"><svg class="i"><use href="#i-plus"/></svg><span>ENCODE</span></button><button id="bscan" hidden onclick="encScan()"><svg class="i"><use href="#i-scan"/></svg><span>SCANNER</span></button></div>
 
   <div id="tabH">
     <div class="dh"><div><b style="color:var(--pd)">EVENT OVERVIEW</b><small id="dupd"></small></div><div class="row" style="margin:0"><label class="ar"><input type="checkbox" id="dauto" onchange="dauto()"> AUTO-REFRESH (1 MIN)</label><button class="alt" onclick="load()"><svg class="i"><use href="#i-refresh"/></svg>REFRESH</button></div></div>
@@ -427,7 +442,7 @@ td.act button.ib{width:auto;height:auto;padding:7px 10px;margin-right:4px;displa
 
   <div id="tabL">
     <div class="fb"><input id="q" placeholder="SEARCH NAME, PASS ID, CONTACT, MUNICIPALITY..."><select id="fst" onchange="fl()"><option value="">ALL STATUS</option><option value="R">REGISTERED ONLY</option><option value="I">CHECKED IN</option><option value="O">CHECKED OUT</option></select><select id="fpr" onchange="fl()"><option value="">ALL PROVINCES</option></select><select id="fct" onchange="fl()"><option value="">ALL CATEGORIES</option><option>LAND-BASED</option><option>SEA-BASED</option></select><select id="ftp" onchange="fl()"><option value="">ALL TYPES</option><option>ONLINE</option><option>WALK-IN</option></select></div>
-    <div class="row" style="margin-top:12px"><button class="alt" onclick="load()"><svg class="i"><use href="#i-refresh"/></svg>REFRESH</button><button id="bcsv" onclick="csv()"><svg class="i"><use href="#i-download"/></svg>EXPORT CSV (AS FILTERED)</button></div>
+    <div class="row" style="margin-top:12px"><button class="alt" onclick="load()"><svg class="i"><use href="#i-refresh"/></svg>REFRESH</button><button id="bnew" onclick="encStart()"><svg class="i"><use href="#i-plus"/></svg>NEW REGISTRATION</button><button id="bcsv" onclick="csv()"><svg class="i"><use href="#i-download"/></svg>EXPORT CSV (AS FILTERED)</button><button id="bxls" class="alt" onclick="xlsx()"><svg class="i"><use href="#i-download"/></svg>EXPORT EXCEL (AS FILTERED)</button></div>
     <div id="cnt" class="cn"></div>
     <div class="tw" style="margin-top:8px"><table id="tb" class="rt"></table></div>
     <div class="pgr"><button class="alt" onclick="pgo(-1)">&larr; PREV</button><span id="pgi"></span><button class="alt" onclick="pgo(1)">NEXT &rarr;</button></div>
@@ -508,7 +523,7 @@ td.act button.ib{width:auto;height:auto;padding:7px 10px;margin-right:4px;displa
       </div></div>
       <div class="card"><h3>BACKUP &amp; RESTORE</h3>
         <label>BACKUP</label>
-        <div class="row" style="margin:0 0 16px"><button onclick="csv(1)"><svg class="i"><use href="#i-download"/></svg>CSV</button><button class="alt" onclick="bak()"><svg class="i"><use href="#i-download"/></svg>JSON</button><button class="alt" onclick="bkDrive()">GOOGLE DRIVE</button></div>
+        <div class="row" style="margin:0 0 16px"><button onclick="csv(1)"><svg class="i"><use href="#i-download"/></svg>CSV</button><button class="alt" onclick="xlsx(1)"><svg class="i"><use href="#i-download"/></svg>EXCEL</button><button class="alt" onclick="bak()"><svg class="i"><use href="#i-download"/></svg>JSON</button><button class="alt" onclick="bkDrive()">GOOGLE DRIVE</button></div>
         <label>RESTORE</label>
         <div class="row" style="margin:0"><button class="alt" onclick="$('#rf').click()"><svg class="i"><use href="#i-upload"/></svg>RESTORE FROM FILE</button></div>
         <p style="font-size:.78rem;color:var(--mu);margin:10px 0 0">Restore accepts the CSV or JSON file downloaded from this page. Back up before and after the event.</p></div>
@@ -570,6 +585,7 @@ td.act button.ib{width:auto;height:auto;padding:7px 10px;margin-right:4px;displa
 <div id="modal" hidden><div><h2>EDIT RECORD</h2><div class="g" id="mf"></div><div class="row"><button onclick="saveEdit()">SAVE</button><button class="alt" onclick="$('#modal').hidden=true">CANCEL</button></div></div></div>
 <input type="file" id="fi" accept="image/*" hidden>
 <input type="file" id="rf" accept=".json,.csv,application/json,text/csv" hidden>
+<div id="dm" hidden><div><div class="ic"><svg class="i"><use href="#i-eye"/></svg></div><h2 id="dmn"></h2><p id="dmi" style="font-weight:700;margin:0 0 4px"></p><div id="dmb"></div><div class="row"><button class="alt" onclick="$('#dm').hidden=true">CLOSE</button><button id="dme" onclick="dmEdit()">EDIT</button></div></div></div>
 <div id="rs" hidden><div><div class="ic am"><svg class="i"><use href="#i-alert"/></svg></div><h2>RESTORE FROM BACKUP</h2><p id="rsi" style="font-weight:700"></p>
   <div class="seg" style="margin:14px 0 8px"><label><input type="radio" name="rsm" value="merge" checked onchange="rsd()"><span>ADD MISSING ONLY</span></label><label><input type="radio" name="rsm" value="replace" onchange="rsd()"><span>REPLACE ALL</span></label></div>
   <p id="rsd"></p>
@@ -587,7 +603,7 @@ const DEF = { notice: '', idleMin: '30', walkOpen: true, walkDeadline: '', maxWa
 const $ = s => document.querySelector(s), U = v => (v == null ? '' : String(v)).trim().toUpperCase();
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const IAB = /FBAN|FBAV|FB_IAB|Messenger|Instagram|Line\/|MicroMessenger|; wv\)/i.test(navigator.userAgent), ANDROID = /Android/i.test(navigator.userAgent);
-let MAINT = { on: false, msg: '' }, WALK = location.hash === '#walkin', WCOUNT = 0, ROLE = '', SSTATS = null, AL = [], LASTP = null, BZ = 0, BT = 0, UL = [], FR = [], PG = 0, PER = 25, CUR = '', DAU = 0, IDLE = 0, VER = 0, COUNT = 0, CFG = { ...DEF }, PW = '', DATA = [], HEAD = [], EDIT = null, PK = '', PWID = 0;
+let ENCMODE = false, MAINT = { on: false, msg: '' }, WALK = location.hash === '#walkin', WCOUNT = 0, ROLE = '', SSTATS = null, AL = [], LASTP = null, BZ = 0, BT = 0, UL = [], FR = [], PG = 0, PER = 25, CUR = '', DAU = 0, IDLE = 0, VER = 0, COUNT = 0, CFG = { ...DEF }, PW = '', DATA = [], HEAD = [], EDIT = null, PK = '', PWID = 0;
 const STEP = { consent: 1, form: 2, done: 3 };
 // ---- built-in browsers (Messenger / Facebook): offer a way out + get a pass back later
 function openExt() {
@@ -607,12 +623,12 @@ async function findPass() {
   b.disabled = true; b.textContent = 'SEARCHING...';
   try {
     const r = await api({ action: 'getPass', id, birth });
-    if (r.ok) { pass(r.id, r.name, r.loc, false, r.type); if (WALK) WCOUNT--; else COUNT--; } else { e.textContent = r.error || 'NOT FOUND.'; e.hidden = false; }
+    if (r.ok) { pass(r.id, r.name, r.loc, false, r.type); if (r.type === 'WALK-IN') WCOUNT--; else COUNT--; } else { e.textContent = r.error || 'NOT FOUND.'; e.hidden = false; }
   } catch (x) { e.textContent = 'NETWORK ERROR. PLEASE TRY AGAIN.'; e.hidden = false; }
   b.disabled = false; b.textContent = 'FIND MY ACCESS PASS';
 }
 function show(id) {
-  CUR = id; $('#ntc').hidden = !(CFG.notice && STEP[id]);
+  CUR = id; if (id !== 'form' && id !== 'done' && ENCMODE) { ENCMODE = false; document.body.classList.remove('enc'); } $('#ntc').hidden = !(CFG.notice && STEP[id]);
   document.querySelectorAll('section').forEach(s => s.hidden = s.id !== id);
   $('#main').className = id === 'admin' ? 'wide' : '';
   const n = STEP[id]; $('#steps').hidden = !n; [...$('#steps').children].forEach((s, i) => s.classList.toggle('on', i + 1 === n)); scrollTo(0, 0); guard();
@@ -726,17 +742,18 @@ const IDS = ['last', 'first', 'middle', 'suffix', 'birth', 'sex', 'phone', 'prov
 $('#f').addEventListener('submit', async e => {
   e.preventDefault(); const er = $('#err'); er.hidden = true;
   if (!$('#f').reportValidity()) return;
-  if (!await ask({ t: 'SUBMIT REGISTRATION?', m: 'Please make sure all your details are correct before submitting.', ok: 'YES, SUBMIT', k: 'gn' })) return;
+  if (ENCMODE && !$('#econs').checked) { er.textContent = 'PLEASE CONFIRM THAT THE REGISTRANT HAS GIVEN CONSENT TO THE DATA PRIVACY NOTICE.'; er.hidden = false; $('#econs').scrollIntoView({ block: 'center' }); return; }
+  if (!await ask({ t: ENCMODE ? 'SAVE REGISTRATION?' : 'SUBMIT REGISTRATION?', m: ENCMODE ? 'Please check the details against the registrant\'s form before saving.' : 'Please make sure all your details are correct before submitting.', ok: ENCMODE ? 'YES, SAVE' : 'YES, SUBMIT', k: 'gn' })) return;
   const d = {}; IDS.forEach(i => d[i] = U($('#' + i).value));
-  d.email = $('#email').value.trim().toLowerCase(); d.type = WALK ? 'WALK-IN' : 'ONLINE';
+  d.email = $('#email').value.trim().toLowerCase(); d.type = ENCMODE ? $('#etype').value : WALK ? 'WALK-IN' : 'ONLINE';
   d.isOfw = document.querySelector('[name=isOfw]:checked').value; d.rel = U($('#relSel').value);
   const b = $('#sub'); b.disabled = true; b.textContent = 'SUBMITTING...'; $('#ld').hidden = false;
   try {
-    const r = await api({ action: 'register', data: d });
-    if (r.ok) pass(r.id, d.first + ' ' + (d.middle ? d.middle[0] + '. ' : '') + d.last + (d.suffix && d.suffix !== 'N/A' ? ' ' + d.suffix : ''), d.muni + ', ' + d.prov, r.mail);
+    const r = await api(ENCMODE ? { action: 'encode', pw: PW, data: d } : { action: 'register', data: d });
+    if (r.ok) pass(r.id, d.first + ' ' + (d.middle ? d.middle[0] + '. ' : '') + d.last + (d.suffix && d.suffix !== 'N/A' ? ' ' + d.suffix : ''), d.muni + ', ' + d.prov, r.mail, d.type);
     else if (r.closed) closed(r.error); else { er.textContent = r.error || 'SOMETHING WENT WRONG.'; er.hidden = false; }
   } catch (x) { er.textContent = x && x.message === 'TIMEOUT' ? 'THE CONNECTION TOOK TOO LONG. YOUR REGISTRATION MAY HAVE GONE THROUGH, SO CHECK YOUR EMAIL FOR YOUR PASS ID BEFORE SUBMITTING AGAIN. IF YOU DID NOT GET AN EMAIL, TRY AGAIN.' : 'NETWORK ERROR. PLEASE TRY AGAIN.'; er.hidden = false; }
-  $('#ld').hidden = true; b.disabled = false; b.textContent = 'SUBMIT REGISTRATION';
+  $('#ld').hidden = true; b.disabled = false; b.textContent = ENCMODE ? 'SAVE REGISTRATION' : 'SUBMIT REGISTRATION';
 });
 
 // ---- access pass (design comes from CFG)
@@ -751,23 +768,23 @@ function passHTML(id, name, loc, type) {
     `<div class="ft">${esc(c.eventDate)}<br>${esc(c.venue)}<br><br>${esc(c.footer)}</div></div>`;
 }
 const mkQR = el => el.querySelectorAll('.qr').forEach(q => { q.innerHTML = ''; new QRCode(q, { text: q.dataset.t, width: 512, height: 512, correctLevel: QRCode.CorrectLevel.M }); });
-function zoomPass(id, name, loc, withDl, type) {
+function zoomPass(id, name, loc, withDl, type, withDet) {
   const o = document.createElement('div'); o.id = 'zp';
-  o.innerHTML = '<div class="zh">TAP ANYWHERE TO CLOSE</div>' + passHTML(id, name, loc, type) + (withDl ? '<button class="zd">' + ico('download') + 'DOWNLOAD ACCESS PASS</button>' : ''); mkQR(o);
+  o.innerHTML = '<div class="zh">TAP ANYWHERE TO CLOSE</div>' + passHTML(id, name, loc, type) + (withDl ? '<button class="zd">' + ico('download') + 'DOWNLOAD ACCESS PASS</button>' : withDet ? '<button class="zd">' + ico('list') + 'VIEW FULL DETAILS</button>' : ''); mkQR(o);
   document.body.appendChild(o);
-  const t = o.querySelector('.tk'), k = Math.min(innerWidth * .94 / t.offsetWidth, (withDl ? innerHeight - 170 : innerHeight * .9) / t.offsetHeight, 1.7);
+  const t = o.querySelector('.tk'), k = Math.min(innerWidth * .94 / t.offsetWidth, (withDl || withDet ? innerHeight - 170 : innerHeight * .9) / t.offsetHeight, 1.7);
   o.style.setProperty('--k', k.toFixed(3));
   const close = () => { o.remove(); document.removeEventListener('keydown', esc2); }, esc2 = e => { if (e.key === 'Escape') close(); };
   o.onclick = close; document.addEventListener('keydown', esc2);
-  const b = o.querySelector('.zd'); if (b) b.onclick = e => { e.stopPropagation(); dl(); };
+  const b = o.querySelector('.zd'); if (b) b.onclick = e => { e.stopPropagation(); if (withDet) { close(); vdetails(id); } else dl(); };
 }
 document.addEventListener('click', e => { if (LASTP && e.target.closest('#pass .tk')) zoomPass(LASTP.id, LASTP.name, LASTP.loc, true, LASTP.type); });
 function vpass(id) {
   const r = DATA.find(x => x[0] === id); if (!r) return;
   const sf = r[5] && String(r[5]).toUpperCase() !== 'N/A' ? r[5] : '';
-  zoomPass(r[0], [r[3], r[4] ? r[4][0] + '.' : '', r[2], sf].filter(Boolean).join(' '), r[11] + ', ' + r[10], false, r[HEAD.length - 1]);
+  zoomPass(r[0], [r[3], r[4] ? r[4][0] + '.' : '', r[2], sf].filter(Boolean).join(' '), r[11] + ', ' + r[10], false, r[HEAD.length - 1], true);
 }
-function pass(id, name, loc, mail, type) { if (WALK) WCOUNT++; else COUNT++; type = type || (WALK ? 'WALK-IN' : 'ONLINE'); LASTP = { id, name, loc, type }; $('#pass').innerHTML = passHTML(id, name, loc, type); mkQR($('#pass')); $('#mailmsg').hidden = true; $('#iabtip').hidden = !IAB; show('done'); confetti(); if (mail) setTimeout(() => mailPass(id), 900);
+function pass(id, name, loc, mail, type) { type = type || (WALK ? 'WALK-IN' : 'ONLINE'); if (type === 'WALK-IN') WCOUNT++; else COUNT++; $('#dh').textContent = ENCMODE ? 'REGISTRATION SAVED' : 'THANK YOU FOR REGISTERING FOR THE OWWA SERBISYO CARAVAN!'; $('#dp').textContent = ENCMODE ? 'Access Pass for ' + name + '. Print it, show it full size, or download it for the registrant.' : 'Here is your Access Pass. Please present it at the venue \u2014 it will serve as your pass for the event.'; LASTP = { id, name, loc, type }; $('#pass').innerHTML = passHTML(id, name, loc, type); mkQR($('#pass')); $('#mailmsg').hidden = true; $('#iabtip').hidden = !IAB; show('done'); confetti(); if (mail) setTimeout(() => mailPass(id), 900);
   const mode = CFG.passDl || 'ask', phone = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent), here = () => !$('#done').hidden;
   $('#dq').hidden = true;
   if (mode === 'auto' && !phone) setTimeout(() => { if (here()) dl(); }, 1800);                 // computers: save straight away
@@ -834,26 +851,39 @@ async function outStaff() { if (await ask({ t: 'SIGN OUT?', m: 'The scanner will
 function askExit() { $('#cx').hidden = false; }
 window.addEventListener('beforeunload', e => { if (!$('#done').hidden) { e.preventDefault(); e.returnValue = ''; } }); // closing / refreshing the tab on the pass screen
 // ---- phone Back button: stay on the page and ask first (admin, scanner staff, and the pass screen)
-function guard() { if (({ admin: 1, scan: 1, done: 1 })[CUR] && !(history.state && history.state.g)) history.pushState({ g: 1 }, ''); }
+const guarded = () => ({ admin: 1, scan: 1, done: 1 })[CUR] || (ENCMODE && CUR === 'form');
+function guard() { if (guarded() && !(history.state && history.state.g)) history.pushState({ g: 1 }, ''); }
 window.addEventListener('popstate', () => {
-  if (!({ admin: 1, scan: 1, done: 1 })[CUR]) return;
+  if (!guarded()) return;
   history.pushState({ g: 1 }, '');                                   // keep the user on this page
   if (!$('#cf').hidden || !$('#cx').hidden) return;                  // a confirmation is already open
   if (CUR === 'admin') outAdmin();
   else if (CUR === 'scan') { if ($('#scan').classList.contains('live')) stopScan(); else if (ROLE === 'ENCODER') encBack(); else outStaff(); }
+  else if (ENCMODE) encExit();
   else askExit();
 });
 document.addEventListener('pointerdown', guard, { passive: true });  // re-arm after a page refresh
 function toAdmin() { try { history.replaceState(null, '', '#admin'); } catch (x) {} $('#slerr').hidden = true; show('login'); restore(); }
 function toStaff() { try { history.replaceState(null, '', '#scan'); } catch (x) {} $('#lerr').hidden = true; show('slogin'); staffRestore(); }
 window.addEventListener('hashchange', () => { if ((location.hash === '#walkin') !== WALK && ['consent', 'form', 'done', 'closed', 'maint'].includes(CUR)) location.reload(); });
-function newReg() {
+function formReset() {
   $('#cx').hidden = true; $('#dq').hidden = true; $('#f').reset();
   ['muni', 'brgy'].forEach(i => { $('#' + i).innerHTML = ''; $('#' + i).disabled = true; });
   $('#rel').hidden = true; ['oLast', 'oFirst', 'oSuf', 'relSel'].forEach(i => $('#' + i).required = false);
-  $('#err').hidden = true; $('#pass').innerHTML = '';
-  LASTP = null; isClosed() ? closed() : show('consent');   // every new registrant starts again from the Data Privacy Consent
+  $('#err').hidden = true; $('#pass').innerHTML = ''; $('#econs').checked = false; LASTP = null;
 }
+function newReg() {
+  formReset();
+  if (ENCMODE) { show('form'); return; }                                   // encoder: straight to the next form
+  isClosed() ? closed() : show('consent');                                 // everyone else starts again from the Data Privacy Consent
+}
+function nextReg() { if (ENCMODE) newReg(); else askExit(); }
+function encStart() {
+  formReset(); ENCMODE = true; document.body.classList.add('enc');
+  $('#encw').textContent = ROLE === 'ENCODER' ? 'ENCODED BY ' + ST.name + ' (' + ST.user + ')' : 'ENCODED BY ADMIN';
+  $('#sub').textContent = 'SAVE REGISTRATION'; show('form');
+}
+function encExit() { ENCMODE = false; document.body.classList.remove('enc'); formReset(); show('admin'); load(true); }
 
 // ---- admin
 async function adminLogin() {
@@ -873,7 +903,7 @@ function applyRole() {
   const lim = ROLE === 'ENCODER' || ROLE === 'VERIFIER';
   ['b3', 'b4', 'b5', 'b6'].forEach(i => $('#' + i).hidden = lim);   // design, settings, staff accounts and the audit log are admin-only
   $('#bscan').hidden = ROLE !== 'ENCODER';                          // verifiers are view-only: no scanning
-  $('#bcsv').hidden = ROLE === 'VERIFIER';                          // ...and no export
+  $('#benc').hidden = $('#bnew').hidden = ROLE === 'VERIFIER';   // verifiers are view-only: no encoding (they can still view details and export)
   $('#ahT').textContent = ROLE === 'ENCODER' ? 'ENCODER WORKSPACE' : ROLE === 'VERIFIER' ? 'VERIFIER (VIEW ONLY)' : 'ADMIN DASHBOARD';
   $('#ahS').textContent = lim ? ST.name + ' (' + ST.user + ')' : '';
   maintUI();
@@ -1068,11 +1098,44 @@ async function saveEdit() {
   const values = {}; document.querySelectorAll('#mf [data-h]').forEach(i => values[i.dataset.h] = i.value);
   const r = await api({ action: 'update', pw: PW, id: EDIT[0], values }); if (r.ok) { $('#modal').hidden = true; load(); } else note(r.error);
 }
+const safe = v => { v = String(v == null ? '' : v); return /^[=+\-@\t\r]/.test(v) ? "'" + v : v; };   // stops a cell such as =HYPERLINK(...) from running when opened in Excel
+const today = () => new Date().toISOString().slice(0, 10);
+function logExp(fmt, n, all) { api({ action: 'logexp', pw: PW, fmt, n, note: all ? 'ALL RECORDS' : 'AS FILTERED' }, true, true).catch(() => {}); }
 function csv(all) {
-  const e = v => '"' + String(v).replace(/"/g, '""') + '"';
-  const t = [HEAD, ...(all ? DATA : FR)].map(r => r.map(e).join(',')).join('\n');
-  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['\ufeff' + t], { type: 'text/csv' })); a.download = 'caravan-registrations.csv'; a.click();
+  const rows = all ? DATA : FR, e = v => '"' + safe(v).replace(/"/g, '""') + '"';
+  const t = [HEAD, ...rows].map(r => r.map(e).join(',')).join('\n');
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['\ufeff' + t], { type: 'text/csv' })); a.download = 'caravan-registrations-' + today() + '.csv'; a.click();
+  logExp('CSV', rows.length, all);
 }
+async function xlsx(all) {
+  const rows = all ? DATA : FR;
+  try {
+    if (!window.XLSX) await new Promise((res, rej) => { const sc = document.createElement('script'); sc.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js'; sc.onload = res; sc.onerror = rej; document.head.appendChild(sc); });
+    const ws = XLSX.utils.aoa_to_sheet([HEAD, ...rows.map(r => r.map(v => v == null ? '' : String(v)))]);
+    ws['!cols'] = HEAD.map(h => ({ wch: Math.min(34, Math.max(13, h.length + 2)) }));
+    const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Registrations');
+    XLSX.writeFile(wb, 'caravan-registrations-' + today() + '.xlsx');
+    logExp('EXCEL', rows.length, all);
+  } catch (e) { note('THE EXCEL FILE COULD NOT BE CREATED (IT NEEDS AN INTERNET CONNECTION). PLEASE USE EXPORT CSV INSTEAD \u2014 IT OPENS IN EXCEL TOO.'); }
+}
+let DMID = '';
+function vdetails(id) {
+  const r = DATA.find(x => x[0] === id); if (!r) return; DMID = id;
+  const h = i => r[i] == null ? '' : String(r[i]).trim(), na = v => v && v.toUpperCase() !== 'N/A' ? v : '';
+  const nm = (l, f, m, sf) => [l ? l + ',' : '', f, m, na(sf)].filter(Boolean).join(' ');
+  const b = new Date(h(6)), age = isNaN(b) ? '' : Math.floor((Date.now() - b) / 31557600000);
+  const self = h(14) === 'YES', st = h(23) !== 'YES' ? 'REGISTERED' : h(25) ? 'CHECKED OUT' : 'CHECKED IN', type = h(28) === 'WALK-IN' ? 'WALK-IN' : 'ONLINE', me = nm(h(2), h(3), h(4), h(5));
+  const row = (l, v) => `<div class="dr"><span>${l}</span><b>${esc(v || '-')}</b></div>`, sec = (t, rows) => `<div class="dt">${t}</div>${rows.join('')}`;
+  $('#dmn').textContent = me; $('#dmi').textContent = id + ' \u00b7 ' + type + ' \u00b7 ' + st;
+  $('#dmb').innerHTML =
+    sec('PERSONAL INFORMATION', [row('FULL NAME', me), row('BIRTHDATE', h(6) + (age !== '' ? '  (' + age + ' YEARS OLD)' : '')), row('SEX', h(7)), row('CONTACT NUMBER', h(8)), row('EMAIL ADDRESS', h(9))]) +
+    sec('ADDRESS', [row('PROVINCE', h(10)), row('MUNICIPALITY / CITY', h(11)), row('BARANGAY', h(12)), row('STREET / LOT / HOUSE NO.', h(13))]) +
+    sec('OFW INFORMATION', [row('REGISTERED BY', self ? 'THE OFW THEMSELVES' : 'A RELATIVE / REPRESENTATIVE'), row('OFW NAME', self ? me : nm(h(15), h(16), h(17), h(18))), ...(self ? [] : [row('RELATIONSHIP TO OFW', h(19))]), row('CATEGORY', h(20)), row('JOBSITE (COUNTRY)', h(21)), row('POSITION / OCCUPATION', h(22))]) +
+    sec('REGISTRATION & STATUS', [row('PASS ID', id), row('REGISTRATION TYPE', type), row('REGISTERED AT', h(1)), row('STATUS', st), row('CHECKED IN AT', h(24)), row('CHECKED OUT AT', h(25)), row('SCANNED BY', h(26)), row('PASS EMAILED AT', h(27))]);
+  $('#dme').hidden = ROLE === 'VERIFIER'; $('#dm').hidden = false;
+}
+$('#dm').onclick = e => { if (e.target.id === 'dm') $('#dm').hidden = true; };
+function dmEdit() { $('#dm').hidden = true; edit(DMID); }
 
 
 // ---- admin: staff accounts + scan log
