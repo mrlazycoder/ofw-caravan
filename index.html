@@ -244,6 +244,9 @@ td.act button.ib{width:auto;height:auto;padding:7px 10px;margin-right:4px;displa
 #rs>div{background:#fff;border-radius:18px;padding:26px 22px 22px;max-width:420px;width:100%;text-align:center;animation:pop .3s ease both}#rs h2{margin:0 0 8px}#rs p{line-height:1.6;margin:0;color:var(--mu);font-size:.88rem}
 .sw{text-align:center;margin:18px 0 0;font-size:.85rem;color:var(--mu)}.sw a{color:var(--p);font-weight:700;text-decoration:none}.sw a:hover{text-decoration:underline}
 .bg.r{background:#fee2e2;color:#991b1b}.tabs button[hidden]{display:none}
+.wkpill{display:none;margin:0 auto 10px;padding:5px 16px;border-radius:99px;background:var(--ac);color:#1a1a1a;font-weight:800;font-size:.72rem;letter-spacing:1.5px}body.walk .wkpill{display:inline-block}
+.fb{grid-template-columns:2fr 1fr 1fr 1fr 1fr}
+@media(max-width:700px){.fb{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
@@ -280,6 +283,7 @@ td.act button.ib{width:auto;height:auto;padding:7px 10px;margin-right:4px;displa
 <symbol id="i-undo" viewBox="0 0 24 24"><path d="M3 7v6h6"/><path d="M3 13a9 9 0 1 0 3-6.7L3 9"/></symbol>
 <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 20h16"/></symbol>
 <symbol id="i-scan" viewBox="0 0 24 24"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/><path d="M8 12h8"/></symbol>
+<symbol id="i-wrench" viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.6-.6-.6-2.6Z"/></symbol>
 <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2 21c0-4 3-6.5 7-6.5s7 2.5 7 6.5"/><path d="M17 4.5a3.5 3.5 0 0 1 0 7M22 21c0-3-1.5-5-4-6"/></symbol>
 </defs></svg>
 <div id="hero"><img id="logo" hidden alt="Logo"><div id="agency"></div><h1>OWWA SERBISYO CARAVAN</h1><p>ONLINE REGISTRATION</p>
@@ -288,6 +292,7 @@ td.act button.ib{width:auto;height:auto;padding:7px 10px;margin-right:4px;displa
 
 <section id="consent" class="c">
   <div class="ic"><svg class="i"><use href="#i-shield"/></svg></div>
+  <div class="wkpill">WALK-IN REGISTRATION</div>
   <h2>DATA PRIVACY CONSENT NOTICE</h2>
   <div class="note" id="cnote">
     <p>In compliance with the <b>Data Privacy Act of 2012 (Republic Act No. 10173)</b>, the organizers of the OWWA Serbisyo Caravan collect your personal information solely for event registration, verification of identity and eligibility, queue management, and service delivery during the caravan.</p>
@@ -312,11 +317,14 @@ td.act button.ib{width:auto;height:auto;padding:7px 10px;margin-right:4px;displa
   <button class="alt" onclick="show('consent')">GO BACK</button>
 </section>
 
+<section id="maint" hidden class="c"><div class="ic am"><svg class="i"><use href="#i-wrench"/></svg></div><h2>SYSTEM UNDER MAINTENANCE</h2><p id="mmsgp" style="color:var(--mu)"></p><button class="alt" onclick="location.reload()">TRY AGAIN</button></section>
+
 <section id="closed" hidden class="c"><div class="ic am"><svg class="i"><use href="#i-clock"/></svg></div><h2>REGISTRATION CLOSED</h2><p id="cmsg" style="color:var(--mu)"></p></section>
 
 <section id="form" hidden>
   <div class="c">
-    <h2 style="font-size:1.4rem;margin:0">REGISTRATION FORM</h2>
+    <div class="wkpill">WALK-IN REGISTRATION</div>
+    <h2 id="fh" style="font-size:1.4rem;margin:0">REGISTRATION FORM</h2>
     <p style="font-size:.85rem;color:var(--mu);margin:6px 0 0">Fields marked with <i style="color:#dc2626;font-style:normal">*</i> are required. Entries are automatically converted to CAPITAL LETTERS (email stays lowercase).</p>
   </div>
   <form id="f" autocomplete="off" novalidate>
@@ -406,6 +414,7 @@ td.act button.ib{width:auto;height:auto;padding:7px 10px;margin-right:4px;displa
 </section>
 
 <section id="admin" hidden>
+  <div id="mbar" class="err" hidden style="margin:0 0 12px"><b>MAINTENANCE MODE IS ON.</b> Registration and staff logins are blocked. Turn it off in Settings.</div>
   <div class="ah"><div><h2 id="ahT" style="margin:0">ADMIN DASHBOARD</h2><small id="ahS" style="color:var(--mu);font-weight:700;font-size:.7rem;letter-spacing:.5px"></small></div><button class="lo" onclick="outAdmin()" title="Sign out" aria-label="Sign out"><svg class="i"><use href="#i-logout"/></svg></button></div>
   <div class="tabs" id="tabs"><button id="b1" class="on" onclick="tab('H')"><svg class="i"><use href="#i-chart"/></svg><span>DASHBOARD</span></button><button id="b2" onclick="tab('L')"><svg class="i"><use href="#i-list"/></svg><span>REGISTRANTS</span></button><button id="b3" onclick="tab('D')"><svg class="i"><use href="#i-brush"/></svg><span>DESIGN</span></button><button id="b4" onclick="tab('S')"><svg class="i"><use href="#i-sliders"/></svg><span>SETTINGS</span></button><button id="b5" onclick="tab('U')"><svg class="i"><use href="#i-users"/></svg><span>STAFF</span></button><button id="b6" onclick="tab('A')"><svg class="i"><use href="#i-list"/></svg><span>AUDIT LOG</span></button><button id="bscan" hidden onclick="encScan()"><svg class="i"><use href="#i-scan"/></svg><span>SCANNER</span></button></div>
 
@@ -417,7 +426,7 @@ td.act button.ib{width:auto;height:auto;padding:7px 10px;margin-right:4px;displa
   </div>
 
   <div id="tabL">
-    <div class="fb"><input id="q" placeholder="SEARCH NAME, PASS ID, CONTACT, MUNICIPALITY..."><select id="fst" onchange="fl()"><option value="">ALL STATUS</option><option value="R">REGISTERED ONLY</option><option value="I">CHECKED IN</option><option value="O">CHECKED OUT</option></select><select id="fpr" onchange="fl()"><option value="">ALL PROVINCES</option></select><select id="fct" onchange="fl()"><option value="">ALL CATEGORIES</option><option>LAND-BASED</option><option>SEA-BASED</option></select></div>
+    <div class="fb"><input id="q" placeholder="SEARCH NAME, PASS ID, CONTACT, MUNICIPALITY..."><select id="fst" onchange="fl()"><option value="">ALL STATUS</option><option value="R">REGISTERED ONLY</option><option value="I">CHECKED IN</option><option value="O">CHECKED OUT</option></select><select id="fpr" onchange="fl()"><option value="">ALL PROVINCES</option></select><select id="fct" onchange="fl()"><option value="">ALL CATEGORIES</option><option>LAND-BASED</option><option>SEA-BASED</option></select><select id="ftp" onchange="fl()"><option value="">ALL TYPES</option><option>ONLINE</option><option>WALK-IN</option></select></div>
     <div class="row" style="margin-top:12px"><button class="alt" onclick="load()"><svg class="i"><use href="#i-refresh"/></svg>REFRESH</button><button id="bcsv" onclick="csv()"><svg class="i"><use href="#i-download"/></svg>EXPORT CSV (AS FILTERED)</button></div>
     <div id="cnt" class="cn"></div>
     <div class="tw" style="margin-top:8px"><table id="tb" class="rt"></table></div>
@@ -459,7 +468,7 @@ td.act button.ib{width:auto;height:auto;padding:7px 10px;margin-right:4px;displa
 
   <div id="tabS" hidden>
     <div class="two">
-      <div class="card"><h3>REGISTRATION CONTROL</h3><div class="g">
+      <div class="card"><h3>ONLINE REGISTRATION CONTROL</h3><div class="g">
         <div class="full"><label style="display:flex;gap:8px;align-items:center"><input type="checkbox" data-k="regOpen"> REGISTRATION IS OPEN</label></div>
         <div class="full"><label style="display:flex;gap:8px;align-items:center"><input type="checkbox" data-k="emailPass"> AUTOMATICALLY EMAIL THE ACCESS PASS (IMAGE ATTACHED) AFTER REGISTRATION</label></div>
         <div class="full"><label>ACCESS PASS DOWNLOAD AFTER REGISTRATION</label><select data-k="passDl"><option value="ask">ASK: "WOULD YOU LIKE TO DOWNLOAD YOUR ACCESS PASS?" (YES / NO)</option><option value="auto">DOWNLOAD AUTOMATICALLY (PHONES ASK INSTEAD)</option><option value="off">DO NOTHING (DOWNLOAD BUTTON ONLY)</option></select></div>
@@ -474,6 +483,21 @@ td.act button.ib{width:auto;height:auto;padding:7px 10px;margin-right:4px;displa
         <div class="full"><label style="display:flex;gap:8px;align-items:center"><input type="checkbox" data-k="anim"> ENABLE ANIMATIONS</label></div>
         <div class="full"><label>FOOTER TEXT (BLANK = HIDDEN)</label><input data-k="siteFooter" data-keep style="text-transform:none" placeholder="This system is developed by OWWA RWO III"></div>
         <div class="full"><label>CUSTOM DATA PRIVACY NOTICE (BLANK = DEFAULT TEXT)</label><textarea data-k="consentText" rows="6"></textarea></div>
+      </div></div>
+      <div class="card"><h3>WALK-IN REGISTRATION</h3><div class="g">
+        <div class="full"><label style="display:flex;gap:8px;align-items:center"><input type="checkbox" data-k="walkOpen"> WALK-IN REGISTRATION IS OPEN</label></div>
+        <div><label>CLOSING DATE (OPTIONAL)</label><input type="date" data-k="walkDeadline"></div>
+        <div><label>MAX WALK-IN REGISTRANTS (OPTIONAL)</label><input type="number" min="0" data-k="maxWalk" placeholder="UNLIMITED"></div>
+        <div class="full" id="wst" style="font-size:.8rem;font-weight:700"></div>
+        <div class="full"><label>MESSAGE SHOWN WHEN WALK-IN IS CLOSED</label><textarea data-k="walkClosedMsg"></textarea></div>
+        <div class="full"><label>WALK-IN LINK</label><div id="wurl" style="padding:10px;background:#f5f8ff;border-radius:10px;font-family:Consolas,monospace;font-size:.78rem;word-break:break-all"></div>
+          <div class="row" style="margin:8px 0 0"><button class="alt" onclick="copyWalk()">COPY LINK</button><button class="alt" onclick="window.open(walkUrl(),'_blank')">OPEN</button></div></div>
+      </div></div>
+      <div class="card"><h3>MAINTENANCE MODE</h3><div class="g">
+        <div class="full" id="mstat" style="font-weight:800;font-size:.85rem"></div>
+        <div class="full"><label>MESSAGE SHOWN TO USERS</label><textarea id="mmsg" placeholder="THE SYSTEM IS UNDER MAINTENANCE. PLEASE TRY AGAIN LATER."></textarea></div>
+        <div class="full"><p style="font-size:.78rem;color:var(--mu);margin:0">While ON, registration (online and walk-in) and all staff logins (scanner, encoder, verifier) are blocked, and signed-in staff are logged out. Admins can still sign in.</p></div>
+        <div class="full"><button id="mbtn" class="red" onclick="setMaint()">TURN ON MAINTENANCE MODE</button></div>
       </div></div>
       <div class="card"><h3>ANNOUNCEMENT BANNER</h3><div class="g"><div class="full"><label>MESSAGE SHOWN AT THE TOP OF THE REGISTRATION PAGES (BLANK = HIDDEN)</label><textarea data-k="notice" placeholder="E.G. PLEASE BRING A VALID ID AND YOUR ACCESS PASS ON EVENT DAY."></textarea></div></div></div>
       <div class="card"><h3>ADMIN SECURITY</h3><div class="g">
@@ -558,12 +582,12 @@ td.act button.ib{width:auto;height:auto;padding:7px 10px;margin-right:4px;displa
 const API = 'https://script.google.com/macros/s/AKfycbwxIKGNlCelLpJnQfG9W3gPsl2qv_jFwLz6TyfJPl2T6KxpPfTrWqI63M5Tq7dZ8b4M/exec';
 const PSGC = 'https://psgc.gitlab.io/api/';
 const COUNTRIES = 'Afghanistan,Albania,Algeria,Angola,Argentina,Australia,Austria,Bahrain,Bangladesh,Belgium,Brazil,Brunei,Bulgaria,Cambodia,Canada,Chile,China,Colombia,Croatia,Cyprus,Czech Republic,Denmark,Egypt,Ethiopia,Fiji,Finland,France,Germany,Ghana,Greece,Guam,Hong Kong,Hungary,India,Indonesia,Iran,Iraq,Ireland,Israel,Italy,Japan,Jordan,Kazakhstan,Kenya,Kuwait,Laos,Lebanon,Libya,Macau,Malaysia,Maldives,Malta,Mexico,Morocco,Myanmar,Nepal,Netherlands,New Zealand,Nigeria,Northern Mariana Islands,Norway,Oman,Pakistan,Palau,Panama,Papua New Guinea,Peru,Poland,Portugal,Qatar,Romania,Russia,Saipan,Saudi Arabia,Singapore,Slovakia,South Africa,South Korea,Spain,Sri Lanka,Sudan,Sweden,Switzerland,Syria,Taiwan,Thailand,Turkey,Ukraine,United Arab Emirates,United Kingdom,United States,Vietnam,Yemen,Other / Vessel (International Waters)'.split(',');
-const DEF = { notice: '', idleMin: '30', siteFooter: 'This system is developed by OWWA RWO III', siteTitle: 'OWWA SERBISYO CARAVAN', siteSub: 'ONLINE REGISTRATION', siteText: true, siteBanner: '', passTitle: 'OWWA SERBISYO CARAVAN', passSub: 'ACCESS PASS', eventDate: 'EVENT DATE: TO BE ANNOUNCED', venue: 'VENUE: TO BE ANNOUNCED', footer: 'PRESENT THIS PASS AT THE VENUE', color1: '#1e3a8a', color2: '#2563eb', passBanner: '', showQR: true, showLoc: true, showAgency: true, logo: '', agencyName: 'OVERSEAS WORKERS WELFARE ADMINISTRATION', colP: '#1d4ed8', colA: '#f5b700', regOpen: true, emailPass: true, passDl: 'ask', deadline: '', maxReg: '', closedMsg: 'REGISTRATION IS NOW CLOSED. THANK YOU FOR YOUR INTEREST.', consentText: '', anim: true };
+const DEF = { notice: '', idleMin: '30', walkOpen: true, walkDeadline: '', maxWalk: '', walkClosedMsg: 'WALK-IN REGISTRATION IS NOW CLOSED. THANK YOU.', siteFooter: 'This system is developed by OWWA RWO III', siteTitle: 'OWWA SERBISYO CARAVAN', siteSub: 'ONLINE REGISTRATION', siteText: true, siteBanner: '', passTitle: 'OWWA SERBISYO CARAVAN', passSub: 'ACCESS PASS', eventDate: 'EVENT DATE: TO BE ANNOUNCED', venue: 'VENUE: TO BE ANNOUNCED', footer: 'PRESENT THIS PASS AT THE VENUE', color1: '#1e3a8a', color2: '#2563eb', passBanner: '', showQR: true, showLoc: true, showAgency: true, logo: '', agencyName: 'OVERSEAS WORKERS WELFARE ADMINISTRATION', colP: '#1d4ed8', colA: '#f5b700', regOpen: true, emailPass: true, passDl: 'ask', deadline: '', maxReg: '', closedMsg: 'REGISTRATION IS NOW CLOSED. THANK YOU FOR YOUR INTEREST.', consentText: '', anim: true };
 
 const $ = s => document.querySelector(s), U = v => (v == null ? '' : String(v)).trim().toUpperCase();
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const IAB = /FBAN|FBAV|FB_IAB|Messenger|Instagram|Line\/|MicroMessenger|; wv\)/i.test(navigator.userAgent), ANDROID = /Android/i.test(navigator.userAgent);
-let ROLE = '', SSTATS = null, AL = [], LASTP = null, BZ = 0, BT = 0, UL = [], FR = [], PG = 0, PER = 25, CUR = '', DAU = 0, IDLE = 0, VER = 0, COUNT = 0, CFG = { ...DEF }, PW = '', DATA = [], HEAD = [], EDIT = null, PK = '', PWID = 0;
+let MAINT = { on: false, msg: '' }, WALK = location.hash === '#walkin', WCOUNT = 0, ROLE = '', SSTATS = null, AL = [], LASTP = null, BZ = 0, BT = 0, UL = [], FR = [], PG = 0, PER = 25, CUR = '', DAU = 0, IDLE = 0, VER = 0, COUNT = 0, CFG = { ...DEF }, PW = '', DATA = [], HEAD = [], EDIT = null, PK = '', PWID = 0;
 const STEP = { consent: 1, form: 2, done: 3 };
 // ---- built-in browsers (Messenger / Facebook): offer a way out + get a pass back later
 function openExt() {
@@ -583,7 +607,7 @@ async function findPass() {
   b.disabled = true; b.textContent = 'SEARCHING...';
   try {
     const r = await api({ action: 'getPass', id, birth });
-    if (r.ok) { pass(r.id, r.name, r.loc, false); COUNT--; } else { e.textContent = r.error || 'NOT FOUND.'; e.hidden = false; }
+    if (r.ok) { pass(r.id, r.name, r.loc, false, r.type); if (WALK) WCOUNT--; else COUNT--; } else { e.textContent = r.error || 'NOT FOUND.'; e.hidden = false; }
   } catch (x) { e.textContent = 'NETWORK ERROR. PLEASE TRY AGAIN.'; e.hidden = false; }
   b.disabled = false; b.textContent = 'FIND MY ACCESS PASS';
 }
@@ -610,6 +634,7 @@ const LBL = {
   restore: ['RESTORING DATA', 'This may take a moment. Please do not close this page...'],
   backupNow: ['BACKING UP TO GOOGLE DRIVE', 'Creating a copy of your spreadsheet...'],
   audit: ['LOADING AUDIT LOG', 'Please wait...'],
+  setMaint: ['UPDATING MAINTENANCE MODE', 'Please wait...'],
   getPass: ['FINDING YOUR ACCESS PASS', 'Searching the registration list...']
 };
 const api = async (o, retry = true, quiet = false) => {
@@ -620,7 +645,8 @@ const api = async (o, retry = true, quiet = false) => {
     const init = { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(o) };
     if (o.action === 'register' || o.action === 'scan') { const ctl = new AbortController(); init.signal = ctl.signal; tm = setTimeout(() => ctl.abort(), o.action === 'register' ? 60000 : 25000); } // time limits: registration 60s, scan 25s
     t = await (await fetch(API, init)).text();
-    const j = JSON.parse(t); if (j && j.expired && (ROLE === 'ENCODER' || ROLE === 'VERIFIER')) setTimeout(() => staffLogout(true), 0); return j;
+    const j = JSON.parse(t); if (j && j.maintenance && ROLE !== 'ADMIN') setTimeout(() => { MAINT = { on: true, msg: j.error }; try { if (ROLE) staffLogout(true); } catch (x) {} showMaint(j.error); }, 0);
+    if (j && j.expired && (ROLE === 'ENCODER' || ROLE === 'VERIFIER')) setTimeout(() => staffLogout(true), 0); return j;
   } catch (e) {
     if (e && e.name === 'AbortError') throw new Error('TIMEOUT');
     if (retry && READONLY.includes(o.action)) { await new Promise(r => setTimeout(r, 1200)); return api(o, false); }
@@ -635,7 +661,8 @@ function hero() {
   const h = $('#hero'), b = CFG.siteBanner, r = document.documentElement.style;
   h.style.backgroundImage = b ? (CFG.siteText ? `linear-gradient(180deg,#0b1b4d88,#0b1b4dcc),url(${b})` : `url(${b})`) : '';
   h.classList.toggle('img', !!b);
-  h.querySelector('h1').textContent = CFG.siteTitle; h.querySelector('p').textContent = CFG.siteSub;
+  h.querySelector('h1').textContent = CFG.siteTitle; h.querySelector('p').textContent = WALK ? 'WALK-IN REGISTRATION' : CFG.siteSub;
+  document.body.classList.toggle('walk', WALK); $('#fh').textContent = WALK ? 'WALK-IN REGISTRATION FORM' : 'REGISTRATION FORM'; document.title = (WALK ? 'Walk-in Registration' : 'Registration') + ' | ' + (CFG.siteTitle || 'OWWA Serbisyo Caravan');
   h.classList.toggle('notext', !CFG.siteText && !!b);
   $('#logo').hidden = !CFG.logo; if (CFG.logo) $('#logo').src = CFG.logo;
   $('#agency').textContent = CFG.agencyName || '';
@@ -645,8 +672,12 @@ function hero() {
   document.body.classList.toggle('noanim', !CFG.anim);
   $('#cnote').innerHTML = CFG.consentText && CFG.consentText.trim() ? esc(CFG.consentText).replace(/\n/g, '<br>') : DEFNOTE;
 }
-function isClosed() { return CFG.regOpen === false || (CFG.deadline && new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Manila' }) > CFG.deadline) || (+CFG.maxReg > 0 && COUNT >= +CFG.maxReg); }
-function closed(msg) { $('#cmsg').textContent = msg || CFG.closedMsg; show('closed'); }
+function isClosed() {
+  const open = WALK ? CFG.walkOpen : CFG.regOpen, dl = WALK ? CFG.walkDeadline : CFG.deadline, mx = +(WALK ? CFG.maxWalk : CFG.maxReg), used = WALK ? WCOUNT : COUNT;
+  return open === false || (dl && new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Manila' }) > dl) || (mx > 0 && used >= mx);
+}
+function closed(msg) { $('#cmsg').textContent = msg || (WALK ? CFG.walkClosedMsg : CFG.closedMsg); show('closed'); }
+function showMaint(msg) { $('#mmsgp').textContent = msg || MAINT.msg || 'THE SYSTEM IS UNDER MAINTENANCE. PLEASE TRY AGAIN LATER.'; show('maint'); }
 function confetti() {
   if (!CFG.anim) return; const cl = ['#f5b700', '#22c55e', '#3b82f6', '#ef4444', '#a855f7'];
   for (let i = 0; i < 70; i++) {
@@ -697,7 +728,7 @@ $('#f').addEventListener('submit', async e => {
   if (!$('#f').reportValidity()) return;
   if (!await ask({ t: 'SUBMIT REGISTRATION?', m: 'Please make sure all your details are correct before submitting.', ok: 'YES, SUBMIT', k: 'gn' })) return;
   const d = {}; IDS.forEach(i => d[i] = U($('#' + i).value));
-  d.email = $('#email').value.trim().toLowerCase();
+  d.email = $('#email').value.trim().toLowerCase(); d.type = WALK ? 'WALK-IN' : 'ONLINE';
   d.isOfw = document.querySelector('[name=isOfw]:checked').value; d.rel = U($('#relSel').value);
   const b = $('#sub'); b.disabled = true; b.textContent = 'SUBMITTING...'; $('#ld').hidden = false;
   try {
@@ -709,20 +740,20 @@ $('#f').addEventListener('submit', async e => {
 });
 
 // ---- access pass (design comes from CFG)
-function passHTML(id, name, loc) {
+function passHTML(id, name, loc, type) {
   const c = CFG;
   return `<div class="tk">` +
     (c.passBanner ? `<img src="${c.passBanner}">` : `<div class="th" style="background:linear-gradient(135deg,${esc(c.color1)},${esc(c.color2)})">${c.logo && c.showAgency ? `<img class="lg" src="${c.logo}">` : ''}${c.showAgency && c.agencyName ? `<span class="ag">${esc(c.agencyName)}</span>` : ''}${esc(c.passTitle)}</div>`) +
-    `<div class="ps" style="background:${c.passBanner ? esc(c.color1) : esc(c.colA)};color:${c.passBanner ? '#fff' : '#1a1a1a'}">${esc(c.passSub)}</div>` +
+    `<div class="ps" style="background:${c.passBanner ? esc(c.color1) : esc(c.colA)};color:${c.passBanner ? '#fff' : '#1a1a1a'}">${esc(c.passSub)}${type === 'WALK-IN' ? ' &middot; WALK-IN' : ''}</div>` +
     `<div class="bd"><div class="nm">${esc(name)}</div>${c.showLoc ? `<small>${esc(loc)}</small>` : ''}` +
     (c.showQR ? `<div class="qr" data-t="${esc(id)}"></div>` : '<div style="height:10px"></div>') +
     `<small>ACCESS PASS ID</small><div class="id" style="color:${esc(c.color1)}">${esc(id)}</div></div>` +
     `<div class="ft">${esc(c.eventDate)}<br>${esc(c.venue)}<br><br>${esc(c.footer)}</div></div>`;
 }
 const mkQR = el => el.querySelectorAll('.qr').forEach(q => { q.innerHTML = ''; new QRCode(q, { text: q.dataset.t, width: 512, height: 512, correctLevel: QRCode.CorrectLevel.M }); });
-function zoomPass(id, name, loc, withDl) {
+function zoomPass(id, name, loc, withDl, type) {
   const o = document.createElement('div'); o.id = 'zp';
-  o.innerHTML = '<div class="zh">TAP ANYWHERE TO CLOSE</div>' + passHTML(id, name, loc) + (withDl ? '<button class="zd">' + ico('download') + 'DOWNLOAD ACCESS PASS</button>' : ''); mkQR(o);
+  o.innerHTML = '<div class="zh">TAP ANYWHERE TO CLOSE</div>' + passHTML(id, name, loc, type) + (withDl ? '<button class="zd">' + ico('download') + 'DOWNLOAD ACCESS PASS</button>' : ''); mkQR(o);
   document.body.appendChild(o);
   const t = o.querySelector('.tk'), k = Math.min(innerWidth * .94 / t.offsetWidth, (withDl ? innerHeight - 170 : innerHeight * .9) / t.offsetHeight, 1.7);
   o.style.setProperty('--k', k.toFixed(3));
@@ -730,13 +761,13 @@ function zoomPass(id, name, loc, withDl) {
   o.onclick = close; document.addEventListener('keydown', esc2);
   const b = o.querySelector('.zd'); if (b) b.onclick = e => { e.stopPropagation(); dl(); };
 }
-document.addEventListener('click', e => { if (LASTP && e.target.closest('#pass .tk')) zoomPass(LASTP.id, LASTP.name, LASTP.loc, true); });
+document.addEventListener('click', e => { if (LASTP && e.target.closest('#pass .tk')) zoomPass(LASTP.id, LASTP.name, LASTP.loc, true, LASTP.type); });
 function vpass(id) {
   const r = DATA.find(x => x[0] === id); if (!r) return;
   const sf = r[5] && String(r[5]).toUpperCase() !== 'N/A' ? r[5] : '';
-  zoomPass(r[0], [r[3], r[4] ? r[4][0] + '.' : '', r[2], sf].filter(Boolean).join(' '), r[11] + ', ' + r[10]);
+  zoomPass(r[0], [r[3], r[4] ? r[4][0] + '.' : '', r[2], sf].filter(Boolean).join(' '), r[11] + ', ' + r[10], false, r[HEAD.length - 1]);
 }
-function pass(id, name, loc, mail) { COUNT++; LASTP = { id, name, loc }; $('#pass').innerHTML = passHTML(id, name, loc); mkQR($('#pass')); $('#mailmsg').hidden = true; $('#iabtip').hidden = !IAB; show('done'); confetti(); if (mail) setTimeout(() => mailPass(id), 900);
+function pass(id, name, loc, mail, type) { if (WALK) WCOUNT++; else COUNT++; type = type || (WALK ? 'WALK-IN' : 'ONLINE'); LASTP = { id, name, loc, type }; $('#pass').innerHTML = passHTML(id, name, loc, type); mkQR($('#pass')); $('#mailmsg').hidden = true; $('#iabtip').hidden = !IAB; show('done'); confetti(); if (mail) setTimeout(() => mailPass(id), 900);
   const mode = CFG.passDl || 'ask', phone = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent), here = () => !$('#done').hidden;
   $('#dq').hidden = true;
   if (mode === 'auto' && !phone) setTimeout(() => { if (here()) dl(); }, 1800);                 // computers: save straight away
@@ -815,6 +846,7 @@ window.addEventListener('popstate', () => {
 document.addEventListener('pointerdown', guard, { passive: true });  // re-arm after a page refresh
 function toAdmin() { try { history.replaceState(null, '', '#admin'); } catch (x) {} $('#slerr').hidden = true; show('login'); restore(); }
 function toStaff() { try { history.replaceState(null, '', '#scan'); } catch (x) {} $('#lerr').hidden = true; show('slogin'); staffRestore(); }
+window.addEventListener('hashchange', () => { if ((location.hash === '#walkin') !== WALK && ['consent', 'form', 'done', 'closed', 'maint'].includes(CUR)) location.reload(); });
 function newReg() {
   $('#cx').hidden = true; $('#dq').hidden = true; $('#f').reset();
   ['muni', 'brgy'].forEach(i => { $('#' + i).innerHTML = ''; $('#' + i).disabled = true; });
@@ -844,6 +876,7 @@ function applyRole() {
   $('#bcsv').hidden = ROLE === 'VERIFIER';                          // ...and no export
   $('#ahT').textContent = ROLE === 'ENCODER' ? 'ENCODER WORKSPACE' : ROLE === 'VERIFIER' ? 'VERIFIER (VIEW ONLY)' : 'ADMIN DASHBOARD';
   $('#ahS').textContent = lim ? ST.name + ' (' + ST.user + ')' : '';
+  maintUI();
 }
 function openEncoder(stats) { SSTATS = stats; PW = ''; applyRole(); show('admin'); tab('H'); load(); }
 function encScan() { openScanner(SSTATS); }
@@ -859,16 +892,16 @@ const vbar = (t, lab, val, ev) => { const mx = Math.max(1, ...val); return `<div
 function dash() {
   const R = DATA, n = R.length, isIn = r => r[23] === 'YES', inn = R.filter(isIn).length, ins = R.filter(r => isIn(r) && !r[25]).length;
   const day = ms => new Date(ms).toLocaleDateString('en-CA', { timeZone: 'Asia/Manila' }), today = day(Date.now());
-  const k = (v, l, c) => `<div class="kpi ${c}"><b>${v}</b><span>${l}</span></div>`;
-  $('#dk').innerHTML = k(n, 'TOTAL REGISTERED', 'b') + k(R.filter(r => ymd(pdt(r[1])) === today).length, 'REGISTERED TODAY', 'p') + k(inn, 'CHECKED IN', 'g') + k(ins, 'INSIDE NOW', 'o') + k(n ? Math.round(inn / n * 100) + '%' : '0%', 'CHECK-IN RATE', 'b') + k(R.filter(r => r[14] === 'YES').length, 'OFW SELF-REGISTERED', 'p');
-  const m = +CFG.maxReg, pc = m > 0 ? Math.min(100, Math.round(n / m * 100)) : (n ? Math.round(inn / n * 100) : 0);
-  $('#dcap').innerHTML = `<h3 style="margin-bottom:10px">${m > 0 ? 'REGISTRATION CAPACITY: ' + n + ' / ' + m : 'CHECK-IN PROGRESS: ' + inn + ' / ' + n} (${pc}%)</h3><div class="pg"><i style="width:${pc}%"></i></div>`;
+  const k = (v, l, c) => `<div class="kpi ${c}"><b>${v}</b><span>${l}</span></div>`, wk = R.filter(r => r[28] === 'WALK-IN').length, on = n - wk;
+  $('#dk').innerHTML = k(n, 'TOTAL REGISTERED', 'b') + k(R.filter(r => ymd(pdt(r[1])) === today).length, 'REGISTERED TODAY', 'p') + k(inn, 'CHECKED IN', 'g') + k(ins, 'INSIDE NOW', 'o') + k(n ? Math.round(inn / n * 100) + '%' : '0%', 'CHECK-IN RATE', 'b') + k(R.filter(r => r[14] === 'YES').length, 'OFW SELF-REGISTERED', 'p') + k(wk, 'WALK-IN REGISTRATIONS', 'o');
+  const bar = (t, v, mx) => { const p = mx > 0 ? Math.min(100, Math.round(v / mx * 100)) : (n ? Math.round(v / n * 100) : 0); return `<div style="margin-bottom:14px"><h3 style="margin:0 0 8px">${t}: ${v}${mx > 0 ? ' / ' + mx : ''} (${p}%)</h3><div class="pg"><i style="width:${p}%"></i></div></div>`; };
+  $('#dcap').innerHTML = bar('ONLINE REGISTRATIONS', on, +CFG.maxReg) + bar('WALK-IN REGISTRATIONS', wk, +CFG.maxWalk) + bar('CHECK-IN PROGRESS', inn, n);
   const ds = Array.from({ length: 14 }, (_, i) => day(Date.now() - (13 - i) * 864e5)), dv = ds.map(y => R.filter(r => ymd(pdt(r[1])) === y).length);
   const hv = Array(24).fill(0); R.forEach(r => { const o = pdt(r[24]); if (o) hv[o.h]++; });
   const age = r => { const b = new Date(r[6]); return isNaN(b) ? -1 : Math.floor((Date.now() - b) / 31557600000); };
   const ag = [['UNDER 18', 0, 17], ['18-29', 18, 29], ['30-44', 30, 44], ['45-59', 45, 59], ['60 AND UP', 60, 200]].map(([l, a, z]) => [l, R.filter(r => { const x = age(r); return x >= a && x <= z; }).length]).filter(x => x[1] > 0);
   $('#dc').innerHTML = vbar('REGISTRATIONS - LAST 14 DAYS', ds.map(y => y.slice(5).replace('-', '/')), dv, 2) + vbar('CHECK-INS BY HOUR OF DAY', Array.from({ length: 24 }, (_, i) => String(i)), hv, 3) +
-    hbar('BY PROVINCE', tally(R, r => r[10])) + hbar('TOP MUNICIPALITIES / CITIES', tally(R, r => r[11] ? r[11] + ' (' + r[10] + ')' : '')) +
+    hbar('ONLINE VS WALK-IN', tally(R, r => r[28] === 'WALK-IN' ? 'WALK-IN' : 'ONLINE')) + hbar('BY PROVINCE', tally(R, r => r[10])) + hbar('TOP MUNICIPALITIES / CITIES', tally(R, r => r[11] ? r[11] + ' (' + r[10] + ')' : '')) +
     hbar('TOP JOBSITES (COUNTRY)', tally(R, r => r[21])) + hbar('CATEGORY', tally(R, r => r[20])) +
     hbar('WHO REGISTERED', tally(R, r => r[14] === 'YES' ? 'THE OFW THEMSELVES' : r[14] === 'NO' ? 'A RELATIVE / REPRESENTATIVE' : '')) + hbar('SEX', tally(R, r => r[7])) +
     hbar('AGE GROUPS', ag) + hbar('RELATIONSHIP TO OFW', tally(R, r => r[19])) + hbar('TOP OCCUPATIONS', tally(R, r => r[22]));
@@ -952,15 +985,33 @@ function tab(t) {
   clearInterval(DAU); if (t === 'H') { try { $('#dauto').checked = localStorage.getItem('osc_da') === '1'; } catch (x) {} dauto(); }
   if (t === 'U') { if (UL.length) { renderUsers(); loadUsers(true); } else loadUsers(); }
   if (t === 'A') { if (AL.length) { aRender(); loadAudit(true); } else loadAudit(); }
-  if (t === 'D' || t === 'S') { document.querySelectorAll('[data-k]').forEach(i => { const v = CFG[i.dataset.k]; i.type === 'checkbox' ? i.checked = !!v : i.value = v == null ? '' : v }); if (t === 'D') prev(); if (t === 'S') bstat(); }
+  if (t === 'D' || t === 'S') { document.querySelectorAll('[data-k]').forEach(i => { const v = CFG[i.dataset.k]; i.type === 'checkbox' ? i.checked = !!v : i.value = v == null ? '' : v }); if (t === 'D') prev(); if (t === 'S') { bstat(); maintUI(); refreshMaint(); $('#wurl').textContent = walkUrl(); } }
   idleReset(); try { $('#b' + (TABS.indexOf(t) + 1)).scrollIntoView({ block: 'nearest', inline: 'center' }); } catch (x) {}
+}
+const walkUrl = () => location.origin + location.pathname + '#walkin';
+function copyWalk() { const u = walkUrl(); (navigator.clipboard ? navigator.clipboard.writeText(u) : Promise.reject()).then(() => note('WALK-IN LINK COPIED:\n' + u), () => prompt('COPY THIS LINK:', u)); }
+function maintUI() {
+  const on = MAINT.on, st = $('#mstat'); if (!st) return;
+  st.textContent = on ? 'STATUS: MAINTENANCE MODE IS ON' : 'STATUS: SYSTEM IS LIVE'; st.style.color = on ? '#b91c1c' : '#166534';
+  $('#mmsg').value = MAINT.msg || ''; $('#mbtn').textContent = on ? 'TURN OFF MAINTENANCE MODE' : 'TURN ON MAINTENANCE MODE'; $('#mbtn').className = on ? 'grn' : 'red';
+  $('#mbar').hidden = !(on && ROLE === 'ADMIN');
+}
+function refreshMaint() { fetch(API, { cache: 'no-store' }).then(r => r.json()).then(r => { MAINT = r.maint || { on: false, msg: '' }; maintUI(); }).catch(() => {}); }
+async function setMaint() {
+  const on = !MAINT.on;
+  if (!await ask({ t: on ? 'TURN ON MAINTENANCE?' : 'TURN OFF MAINTENANCE?', m: on ? 'Registration (online and walk-in) and all staff logins will be blocked, and signed-in staff will be logged out. Admins can still sign in.' : 'The system will be available to everyone again.', ok: on ? 'TURN ON' : 'TURN OFF', k: on ? 'rd' : 'gn' })) return;
+  try {
+    const r = await api({ action: 'setMaint', pw: PW, on, msg: $('#mmsg').value.trim() });
+    if (r.ok) { MAINT = r.maint; maintUI(); } else note(r.error === 'UNKNOWN ACTION' ? 'UPDATE YOUR APPS SCRIPT CODE AND DEPLOY A NEW VERSION FIRST.' : (r.error || 'FAILED.'));
+  } catch (e) { note('NETWORK ERROR. PLEASE TRY AGAIN.'); }
 }
 function bstat() {
   const el = $('#bst'); if (!el) return; const m = +CFG.maxReg;
   el.style.color = VER >= 3 ? '#166534' : '#b91c1c';
   el.textContent = VER >= 3
-    ? 'BACKEND OK \u00b7 REGISTERED: ' + COUNT + (m > 0 ? ' / ' + m + (COUNT >= m ? ' \u00b7 FULL - NEW REGISTRATIONS ARE BLOCKED' : '') : ' \u00b7 NO LIMIT')
+    ? 'BACKEND OK \u00b7 ONLINE REGISTERED: ' + COUNT + (m > 0 ? ' / ' + m + (COUNT >= m ? ' \u00b7 FULL - NEW REGISTRATIONS ARE BLOCKED' : '') : ' \u00b7 NO LIMIT')
     : 'WARNING: BACKEND IS OUTDATED, SO LIMITS ARE NOT ENFORCED. In Apps Script: Deploy > Manage deployments > pencil > Version: New version > Deploy.';
+  const w = $('#wst'), mw = +CFG.maxWalk; if (w) { w.style.color = '#166534'; w.textContent = 'WALK-IN REGISTERED: ' + WCOUNT + (mw > 0 ? ' / ' + mw + (WCOUNT >= mw ? ' \u00b7 FULL - NEW WALK-INS ARE BLOCKED' : '') : ' \u00b7 NO LIMIT'); }
 }
 const prev = () => { $('#pv').innerHTML = passHTML('OSC-0001-ABC', 'JUAN D. DELA CRUZ', 'CABANATUAN CITY, NUEVA ECIJA'); mkQR($('#pv')); };
 ['input', 'change'].forEach(ev => document.addEventListener(ev, e => {
@@ -985,21 +1036,21 @@ async function saveCfg() {
 }
 async function load(quiet) {
   const r = await api({ action: 'list', pw: PW }, true, quiet); if (!r.ok) { if (/PASSWORD/i.test(r.error || '')) logout(); return note(r.error); }
-  HEAD = r.head; DATA = r.rows; COUNT = DATA.length; render(); bstat(); dash();
+  HEAD = r.head; DATA = r.rows; WCOUNT = DATA.filter(r => r[28] === 'WALK-IN').length; COUNT = DATA.length - WCOUNT; render(); bstat(); dash();
 }
 function render() {
-  const q = U($('#q').value), fs = $('#fst').value, fp = $('#fpr').value, fc = $('#fct').value;
+  const q = U($('#q').value), fs = $('#fst').value, fp = $('#fpr').value, fc = $('#fct').value, ft = $('#ftp').value;
   const isIn = r => r[23] === 'YES', stOf = r => !isIn(r) ? 'R' : r[25] ? 'O' : 'I';
   const ps = [...new Set(DATA.map(r => r[10]).filter(Boolean))].sort(), sel = $('#fpr');
   if (sel.options.length !== ps.length + 1) sel.innerHTML = '<option value="">ALL PROVINCES</option>' + ps.map(p => `<option${p === fp ? ' selected' : ''}>${esc(p)}</option>`).join('');
-  FR = DATA.filter(r => (!q || r.join(' ').toUpperCase().includes(q)) && (!fs || stOf(r) === fs) && (!fp || r[10] === fp) && (!fc || r[20] === fc));
+  FR = DATA.filter(r => (!q || r.join(' ').toUpperCase().includes(q)) && (!fs || stOf(r) === fs) && (!fp || r[10] === fp) && (!fc || r[20] === fc) && (!ft || (r[28] === 'WALK-IN' ? 'WALK-IN' : 'ONLINE') === ft));
   const pages = Math.max(1, Math.ceil(FR.length / PER)); PG = Math.min(PG, pages - 1);
   const rows = FR.slice(PG * PER, PG * PER + PER);
   $('#cnt').textContent = 'SHOWING ' + FR.length + ' OF ' + DATA.length + ' REGISTRATIONS'; $('#pgi').textContent = 'PAGE ' + (PG + 1) + ' OF ' + pages;
-  $('#tb').innerHTML = '<tr><th>PASS ID</th><th>NAME</th><th>BIRTHDATE</th><th>CONTACT</th><th>EMAIL</th><th>MUNICIPALITY</th><th>OFW?</th><th>STATUS</th><th>IN</th><th>OUT</th><th>BY</th><th>ACTIONS</th></tr>' +
+  $('#tb').innerHTML = '<tr><th>PASS ID</th><th>TYPE</th><th>NAME</th><th>BIRTHDATE</th><th>CONTACT</th><th>EMAIL</th><th>MUNICIPALITY</th><th>OFW?</th><th>STATUS</th><th>IN</th><th>OUT</th><th>BY</th><th>ACTIONS</th></tr>' +
     rows.map(r => {
       const st = !isIn(r) ? ['REGISTERED', ''] : r[25] ? ['CHECKED OUT', 'o'] : ['CHECKED IN', 'y'];
-      return `<tr><td data-l="PASS ID"><b>${esc(r[0])}</b></td><td data-l="NAME">${esc(r[2])}, ${esc(r[3])} ${esc(r[4])}${r[5] && String(r[5]).toUpperCase() !== 'N/A' ? ' ' + esc(r[5]) : ''}</td><td data-l="BIRTHDATE">${esc(r[6])}</td><td data-l="CONTACT">${esc(r[8])}</td><td data-l="EMAIL">${esc(r[9])}</td><td data-l="MUNICIPALITY">${esc(r[11])}</td><td data-l="OFW?">${esc(r[14])}</td>` +
+      return `<tr><td data-l="PASS ID"><b>${esc(r[0])}</b></td><td data-l="TYPE"><span class="bg ${r[28] === 'WALK-IN' ? 'o' : ''}">${r[28] === 'WALK-IN' ? 'WALK-IN' : 'ONLINE'}</span></td><td data-l="NAME">${esc(r[2])}, ${esc(r[3])} ${esc(r[4])}${r[5] && String(r[5]).toUpperCase() !== 'N/A' ? ' ' + esc(r[5]) : ''}</td><td data-l="BIRTHDATE">${esc(r[6])}</td><td data-l="CONTACT">${esc(r[8])}</td><td data-l="EMAIL">${esc(r[9])}</td><td data-l="MUNICIPALITY">${esc(r[11])}</td><td data-l="OFW?">${esc(r[14])}</td>` +
         `<td data-l="STATUS"><span class="bg ${st[1]}">${st[0]}</span></td><td data-l="CHECKED IN AT">${esc(r[24] || '-')}</td><td data-l="CHECKED OUT AT">${esc(r[25] || '-')}</td><td data-l="SCANNED BY">${esc(r[26] || '-')}</td>` +
         `<td class="act">${ib('alt', `vpass('${esc(r[0])}')`, 'eye', 'VIEW PASS')}${ROLE === 'VERIFIER' ? '' : `${ib('', `edit('${esc(r[0])}')`, 'edit', 'EDIT')}${ib('grn', `chk('${esc(r[0])}',${!isIn(r)})`, isIn(r) ? 'undo' : 'check', isIn(r) ? 'UNDO' : 'CHECK-IN')}${ib('red', `del('${esc(r[0])}')`, 'trash', 'DELETE')}`}</td></tr>`;
     }).join('');
@@ -1240,8 +1291,9 @@ $('#mid').addEventListener('keydown', e => { if (e.key === 'Enter') manualScan()
 window.addEventListener('hashchange', () => location.reload());
 
 // ---- init
+hero();
 show('consent');
-fetch(API, { cache: 'no-store' }).then(r => r.json()).then(r => { CFG = { ...DEF, ...(r.config || {}) }; COUNT = +r.count || 0; VER = +r.ver || 0; hero(); if (isClosed() && !['#admin', '#scan'].includes(location.hash)) closed(); }).catch(() => {});
+fetch(API, { cache: 'no-store' }).then(r => r.json()).then(r => { CFG = { ...DEF, ...(r.config || {}) }; COUNT = +r.count || 0; WCOUNT = +r.walk || 0; MAINT = r.maint || MAINT; VER = +r.ver || 0; hero(); if (MAINT.on && location.hash !== '#admin') { showMaint(); return; } if (isClosed() && !['#admin', '#scan'].includes(location.hash)) closed(); }).catch(() => {});
 // ---- admin session: stays signed in after refresh (this tab only, max 8 hours, cleared on logout / closing the tab)
 function logout() {
   try { ['osc_pw', 'osc_t'].forEach(k => sessionStorage.removeItem(k)); } catch (x) {}
