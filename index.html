@@ -431,7 +431,7 @@ body.enc .encopt{display:block;margin-bottom:14px}body.enc .encshow{display:inli
 <section id="admin" hidden>
   <div id="mbar" class="err" hidden style="margin:0 0 12px"><b>MAINTENANCE MODE IS ON.</b> Registration and staff logins are blocked. Turn it off in Settings.</div>
   <div class="ah"><div><h2 id="ahT" style="margin:0">ADMIN DASHBOARD</h2><small id="ahS" style="color:var(--mu);font-weight:700;font-size:.7rem;letter-spacing:.5px"></small></div><button class="lo" onclick="outAdmin()" title="Sign out" aria-label="Sign out"><svg class="i"><use href="#i-logout"/></svg></button></div>
-  <div class="tabs" id="tabs"><button id="b1" class="on" onclick="tab('H')"><svg class="i"><use href="#i-chart"/></svg><span>DASHBOARD</span></button><button id="b2" onclick="tab('L')"><svg class="i"><use href="#i-list"/></svg><span>REGISTRANTS</span></button><button id="b3" onclick="tab('D')"><svg class="i"><use href="#i-brush"/></svg><span>DESIGN</span></button><button id="b4" onclick="tab('S')"><svg class="i"><use href="#i-sliders"/></svg><span>SETTINGS</span></button><button id="b5" onclick="tab('U')"><svg class="i"><use href="#i-users"/></svg><span>STAFF</span></button><button id="b6" onclick="tab('A')"><svg class="i"><use href="#i-list"/></svg><span>AUDIT LOG</span></button><button id="benc" onclick="encStart()"><svg class="i"><use href="#i-plus"/></svg><span>ENCODE</span></button><button id="bscan" hidden onclick="encScan()"><svg class="i"><use href="#i-scan"/></svg><span>SCANNER</span></button></div>
+  <div class="tabs" id="tabs"><button id="b1" class="on" onclick="tab('H')"><svg class="i"><use href="#i-chart"/></svg><span>DASHBOARD</span></button><button id="b2" onclick="tab('L')"><svg class="i"><use href="#i-list"/></svg><span>REGISTRANTS</span></button><button id="b3" onclick="tab('D')"><svg class="i"><use href="#i-brush"/></svg><span>DESIGN</span></button><button id="b4" onclick="tab('S')"><svg class="i"><use href="#i-sliders"/></svg><span>SETTINGS</span></button><button id="b5" onclick="tab('U')"><svg class="i"><use href="#i-users"/></svg><span>STAFF</span></button><button id="b6" onclick="tab('A')"><svg class="i"><use href="#i-list"/></svg><span>AUDIT LOG</span></button><button id="bscan" hidden onclick="encScan()"><svg class="i"><use href="#i-scan"/></svg><span>SCANNER</span></button></div>
 
   <div id="tabH">
     <div class="dh"><div><b style="color:var(--pd)">EVENT OVERVIEW</b><small id="dupd"></small></div><div class="row" style="margin:0"><label class="ar"><input type="checkbox" id="dauto" onchange="dauto()"> AUTO-REFRESH (1 MIN)</label><button class="alt" onclick="load()"><svg class="i"><use href="#i-refresh"/></svg>REFRESH</button></div></div>
@@ -513,6 +513,10 @@ body.enc .encopt{display:block;margin-bottom:14px}body.enc .encshow{display:inli
         <div class="full"><label>MESSAGE SHOWN TO USERS</label><textarea id="mmsg" placeholder="THE SYSTEM IS UNDER MAINTENANCE. PLEASE TRY AGAIN LATER."></textarea></div>
         <div class="full"><p style="font-size:.78rem;color:var(--mu);margin:0">While ON, registration (online and walk-in) and all staff logins (scanner, encoder, verifier) are blocked, and signed-in staff are logged out. Admins can still sign in.</p></div>
         <div class="full"><button id="mbtn" class="red" onclick="setMaint()">TURN ON MAINTENANCE MODE</button></div>
+      </div></div>
+      <div class="card"><h3>STAFF PERMISSIONS</h3><div class="g">
+        <div class="full"><label style="display:flex;gap:8px;align-items:flex-start;line-height:1.5"><input type="checkbox" data-k="verExport"><span>ALLOW VERIFIERS TO DOWNLOAD THE REGISTRANT TABLE (EXCEL / CSV)</span></label></div>
+        <div class="full"><p style="font-size:.78rem;color:var(--mu);margin:0">When off, the download buttons are hidden for Verifier accounts. Click <b>Save changes</b> to apply. Every download by any account is recorded in the Audit Log.</p></div>
       </div></div>
       <div class="card"><h3>ANNOUNCEMENT BANNER</h3><div class="g"><div class="full"><label>MESSAGE SHOWN AT THE TOP OF THE REGISTRATION PAGES (BLANK = HIDDEN)</label><textarea data-k="notice" placeholder="E.G. PLEASE BRING A VALID ID AND YOUR ACCESS PASS ON EVENT DAY."></textarea></div></div></div>
       <div class="card"><h3>ADMIN SECURITY</h3><div class="g">
@@ -598,12 +602,12 @@ body.enc .encopt{display:block;margin-bottom:14px}body.enc .encshow{display:inli
 const API = 'https://script.google.com/macros/s/AKfycbwxIKGNlCelLpJnQfG9W3gPsl2qv_jFwLz6TyfJPl2T6KxpPfTrWqI63M5Tq7dZ8b4M/exec';
 const PSGC = 'https://psgc.gitlab.io/api/';
 const COUNTRIES = 'Afghanistan,Albania,Algeria,Angola,Argentina,Australia,Austria,Bahrain,Bangladesh,Belgium,Brazil,Brunei,Bulgaria,Cambodia,Canada,Chile,China,Colombia,Croatia,Cyprus,Czech Republic,Denmark,Egypt,Ethiopia,Fiji,Finland,France,Germany,Ghana,Greece,Guam,Hong Kong,Hungary,India,Indonesia,Iran,Iraq,Ireland,Israel,Italy,Japan,Jordan,Kazakhstan,Kenya,Kuwait,Laos,Lebanon,Libya,Macau,Malaysia,Maldives,Malta,Mexico,Morocco,Myanmar,Nepal,Netherlands,New Zealand,Nigeria,Northern Mariana Islands,Norway,Oman,Pakistan,Palau,Panama,Papua New Guinea,Peru,Poland,Portugal,Qatar,Romania,Russia,Saipan,Saudi Arabia,Singapore,Slovakia,South Africa,South Korea,Spain,Sri Lanka,Sudan,Sweden,Switzerland,Syria,Taiwan,Thailand,Turkey,Ukraine,United Arab Emirates,United Kingdom,United States,Vietnam,Yemen,Other / Vessel (International Waters)'.split(',');
-const DEF = { notice: '', idleMin: '30', walkOpen: true, walkDeadline: '', maxWalk: '', walkClosedMsg: 'WALK-IN REGISTRATION IS NOW CLOSED. THANK YOU.', siteFooter: 'This system is developed by OWWA RWO III', siteTitle: 'OWWA SERBISYO CARAVAN', siteSub: 'ONLINE REGISTRATION', siteText: true, siteBanner: '', passTitle: 'OWWA SERBISYO CARAVAN', passSub: 'ACCESS PASS', eventDate: 'EVENT DATE: TO BE ANNOUNCED', venue: 'VENUE: TO BE ANNOUNCED', footer: 'PRESENT THIS PASS AT THE VENUE', color1: '#1e3a8a', color2: '#2563eb', passBanner: '', showQR: true, showLoc: true, showAgency: true, logo: '', agencyName: 'OVERSEAS WORKERS WELFARE ADMINISTRATION', colP: '#1d4ed8', colA: '#f5b700', regOpen: true, emailPass: true, passDl: 'ask', deadline: '', maxReg: '', closedMsg: 'REGISTRATION IS NOW CLOSED. THANK YOU FOR YOUR INTEREST.', consentText: '', anim: true };
+const DEF = { verExport: true, notice: '', idleMin: '30', walkOpen: true, walkDeadline: '', maxWalk: '', walkClosedMsg: 'WALK-IN REGISTRATION IS NOW CLOSED. THANK YOU.', siteFooter: 'This system is developed by OWWA RWO III', siteTitle: 'OWWA SERBISYO CARAVAN', siteSub: 'ONLINE REGISTRATION', siteText: true, siteBanner: '', passTitle: 'OWWA SERBISYO CARAVAN', passSub: 'ACCESS PASS', eventDate: 'EVENT DATE: TO BE ANNOUNCED', venue: 'VENUE: TO BE ANNOUNCED', footer: 'PRESENT THIS PASS AT THE VENUE', color1: '#1e3a8a', color2: '#2563eb', passBanner: '', showQR: true, showLoc: true, showAgency: true, logo: '', agencyName: 'OVERSEAS WORKERS WELFARE ADMINISTRATION', colP: '#1d4ed8', colA: '#f5b700', regOpen: true, emailPass: true, passDl: 'ask', deadline: '', maxReg: '', closedMsg: 'REGISTRATION IS NOW CLOSED. THANK YOU FOR YOUR INTEREST.', consentText: '', anim: true };
 
 const $ = s => document.querySelector(s), U = v => (v == null ? '' : String(v)).trim().toUpperCase();
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const IAB = /FBAN|FBAV|FB_IAB|Messenger|Instagram|Line\/|MicroMessenger|; wv\)/i.test(navigator.userAgent), ANDROID = /Android/i.test(navigator.userAgent);
-let ENCMODE = false, MAINT = { on: false, msg: '' }, WALK = location.hash === '#walkin', WCOUNT = 0, ROLE = '', SSTATS = null, AL = [], LASTP = null, BZ = 0, BT = 0, UL = [], FR = [], PG = 0, PER = 25, CUR = '', DAU = 0, IDLE = 0, VER = 0, COUNT = 0, CFG = { ...DEF }, PW = '', DATA = [], HEAD = [], EDIT = null, PK = '', PWID = 0;
+let PERM = { verExport: false }, ENCMODE = false, MAINT = { on: false, msg: '' }, WALK = location.hash === '#walkin', WCOUNT = 0, ROLE = '', SSTATS = null, AL = [], LASTP = null, BZ = 0, BT = 0, UL = [], FR = [], PG = 0, PER = 25, CUR = '', DAU = 0, IDLE = 0, VER = 0, COUNT = 0, CFG = { ...DEF }, PW = '', DATA = [], HEAD = [], EDIT = null, PK = '', PWID = 0;
 const STEP = { consent: 1, form: 2, done: 3 };
 // ---- built-in browsers (Messenger / Facebook): offer a way out + get a pass back later
 function openExt() {
@@ -903,12 +907,13 @@ function applyRole() {
   const lim = ROLE === 'ENCODER' || ROLE === 'VERIFIER';
   ['b3', 'b4', 'b5', 'b6'].forEach(i => $('#' + i).hidden = lim);   // design, settings, staff accounts and the audit log are admin-only
   $('#bscan').hidden = ROLE !== 'ENCODER';                          // verifiers are view-only: no scanning
-  $('#benc').hidden = $('#bnew').hidden = ROLE === 'VERIFIER';   // verifiers are view-only: no encoding (they can still view details and export)
+  $('#bnew').hidden = ROLE === 'VERIFIER';   // verifiers are view-only: no encoding
+  $('#bcsv').hidden = $('#bxls').hidden = ROLE === 'VERIFIER' && !PERM.verExport;   // the admin can switch verifier downloads off in Settings
   $('#ahT').textContent = ROLE === 'ENCODER' ? 'ENCODER WORKSPACE' : ROLE === 'VERIFIER' ? 'VERIFIER (VIEW ONLY)' : 'ADMIN DASHBOARD';
   $('#ahS').textContent = lim ? ST.name + ' (' + ST.user + ')' : '';
   maintUI();
 }
-function openEncoder(stats) { SSTATS = stats; PW = ''; applyRole(); show('admin'); tab('H'); load(); }
+function openEncoder(stats) { SSTATS = stats; PW = ''; applyRole(); show('admin'); tab(ROLE === 'ENCODER' ? 'L' : 'H'); load(); }
 function encScan() { openScanner(SSTATS); }
 function encBack() { stopScan(); show('admin'); }
 function idleReset() { clearTimeout(IDLE); const m = +CFG.idleMin; if (!m || $('#admin').hidden) return; IDLE = setTimeout(() => { if (ROLE === 'ENCODER' || ROLE === 'VERIFIER') { staffLogout(true); return; } logout(); $('#lerr').textContent = 'YOU WERE LOGGED OUT BECAUSE OF INACTIVITY.'; $('#lerr').hidden = false; }, m * 6e4); }
@@ -1066,6 +1071,7 @@ async function saveCfg() {
 }
 async function load(quiet) {
   const r = await api({ action: 'list', pw: PW }, true, quiet); if (!r.ok) { if (/PASSWORD/i.test(r.error || '')) logout(); return note(r.error); }
+  if (r.perm) { PERM = r.perm; applyRole(); }
   HEAD = r.head; DATA = r.rows; WCOUNT = DATA.filter(r => r[28] === 'WALK-IN').length; COUNT = DATA.length - WCOUNT; render(); bstat(); dash();
 }
 function render() {
@@ -1101,13 +1107,16 @@ async function saveEdit() {
 const safe = v => { v = String(v == null ? '' : v); return /^[=+\-@\t\r]/.test(v) ? "'" + v : v; };   // stops a cell such as =HYPERLINK(...) from running when opened in Excel
 const today = () => new Date().toISOString().slice(0, 10);
 function logExp(fmt, n, all) { api({ action: 'logexp', pw: PW, fmt, n, note: all ? 'ALL RECORDS' : 'AS FILTERED' }, true, true).catch(() => {}); }
+const noExport = () => { if (ROLE === 'VERIFIER' && !PERM.verExport) { note('DOWNLOADS ARE NOT ALLOWED FOR YOUR ACCOUNT.'); return true; } return false; };
 function csv(all) {
+  if (noExport()) return;
   const rows = all ? DATA : FR, e = v => '"' + safe(v).replace(/"/g, '""') + '"';
   const t = [HEAD, ...rows].map(r => r.map(e).join(',')).join('\n');
   const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['\ufeff' + t], { type: 'text/csv' })); a.download = 'caravan-registrations-' + today() + '.csv'; a.click();
   logExp('CSV', rows.length, all);
 }
 async function xlsx(all) {
+  if (noExport()) return;
   const rows = all ? DATA : FR;
   try {
     if (!window.XLSX) await new Promise((res, rej) => { const sc = document.createElement('script'); sc.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js'; sc.onload = res; sc.onerror = rej; document.head.appendChild(sc); });
